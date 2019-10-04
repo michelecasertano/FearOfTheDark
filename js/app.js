@@ -12,12 +12,12 @@
 
 class Room {
 	// this object needs to be initiated each time that a new room is created
-	constructor(inputWidth, inputHeight){
+	constructor(inputHeight,inputWidth){
 		// mapCoord leveraged to put room in the map
 		this.mapCoord = [];
 		// Room could be potentially of any size. To make it easier, set it to 10x10
-		this.width = inputWidth;
-		this.height = inputHeight;
+		this.width = inputWidth
+		this.height = inputHeight
 		//array in which the map is stored. 
 		// An empty map looks like this
 		// [
@@ -35,11 +35,13 @@ class Room {
 		// when walls, obstacles, enemies are added using a code as specified in the object
 		// named const elementDictionary.
 		// each element is also stored in separete array -> I might not need this.
-		this.map = [[]];
-		this.wallCoord = [[]];
-		this.trapCoord = [[]];
-		this.enemyCoord = [[]];
-		this.doorCoord = [[]];
+		
+		//this.map = [height,width]
+		this.map = [];
+		this.wallCoord = [];
+		this.trapCoord = [];
+		this.enemyCoord = [];
+		this.doorCoord = [];
 	}
 
 	// printRoom helps print a room to console to make debugging easier
@@ -63,11 +65,11 @@ const game = {
 	// Because in the initial version I am only using a straght line of room,
 	// I simplified it to be an array of objects.
 	// map: [[{},0,0]]
-	map: [],
+	gameMap: [],
 
 	start(){
 		mapGeneration.initiateRoom()
-		console.log(this.map);
+		console.log(this.gameMap);
 	}
 }
 
@@ -79,22 +81,26 @@ const mapGeneration = {
 	// room: {}, -> i don't think I need this
 
 	initiateRoom(){
+		console.log('i am in initiateRoom')
 		this.createEmptyRoom()
 	},
 
 	createEmptyRoom(){
-		//initiate a room object and call it roomMap
-		const room = new Room
-		room.width = 10
-		room.height = 10
-		for (let i = 0; i < room.width; i++){
-			for (let j = 0; j < room.height; j++){
-				room.map[i,j] = 0
+		//initiate a room object and call it room.
+		// Have the dimension of the room fix to 10 and 10
+		const room = new Room(10,10);
+		console.log('i am in createEmptyRoom')
+		for (let i = 0; i < room.height; i++){
+			const mapRow = []
+			for (let j = 0; j < room.width; j++){
+				mapRow[j]=0
 				console.log('creating a new room')
 			}
-		} 
+			room.map.push(mapRow);
+		}
 
-		game.map.push(room)
+		game.gameMap.push(room)
+		console.log(room)
 		// assign the roomMap object to the key room in the mapGeneration object
 		// create enough array of zero, as much as the max height and width specified.
 		// currently hard coded
