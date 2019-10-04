@@ -103,6 +103,8 @@ Field of view is limited to a circle of light at night.
 
 
 | Good Room Layout | Bad Room Layout |
+| --- | --- |
+| ![alt good room](https://github.com/mightymitch86/FearOfTheDark/blob/master/wireframes/goodLayout.png "Good room") | ![alt bad room](https://github.com/mightymitch86/FearOfTheDark/blob/master/wireframes/badLayout.png 'Bad room') |
 
 
 ### Version 1 (MVP)
@@ -153,4 +155,4 @@ Field of view is limited to a circle of light at night.
 
 ### Wireframes
 
-![alt game layout](https://github.com/mightymitch86/FearOfTheDark/blob/master/wireframes/goodLayout.png&s=100 "Game layout")
+![alt game layout](https://github.com/mightymitch86/FearOfTheDark/blob/master/wireframes/goodLayout.png "Game layout")
