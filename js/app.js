@@ -33,13 +33,21 @@ class Room {
 		// [0,0,0,0,0,0,0,0,0,0],
 		// ]
 		// when walls, obstacles, enemies are added using a code as specified in the object
-		// named const elementDictionary
+		// named const elementDictionary.
+		// each element is also stored in separete array -> I might not need this.
 		this.map = [[]];
-		this.wallMap = [[]];
-		this.trapMap = [[]];
-		this.enemyMap = [[]];
-		this.doorMap = [[]];
-	} 
+		this.wallCoord = [[]];
+		this.trapCoord = [[]];
+		this.enemyCoord = [[]];
+		this.doorCoord = [[]];
+	}
+
+	// printRoom helps print a room to console to make debugging easier
+// 	printRoom(){
+// 		for(let j = 0; j < this.height; j++){
+
+// 		}
+// 	}
 }
 
 
@@ -51,11 +59,15 @@ class Room {
 const game = {
 	// map holds all the object rooms that were created, including the coordinates.
 	// in the first version of the game (single room), a single row will be created.
-	// map = [[{room object}, x coordinate of the room, y coordiante of the room]]
-	map: [[{},0,0]],
+	// map = [[{room object}, x coordinate of the room, y coordiante of the room]].
+	// Because in the initial version I am only using a straght line of room,
+	// I simplified it to be an array of objects.
+	// map: [[{},0,0]]
+	map: [],
 
 	start(){
 		mapGeneration.initiateRoom()
+		console.log(this.map);
 	}
 }
 
@@ -64,11 +76,31 @@ const game = {
 // in the first version of the game, mapGeneration only creates a single room.
 
 const mapGeneration = {
-	room: {},
+	// room: {}, -> i don't think I need this
 
 	initiateRoom(){
-		console.log('creating a room')
+		this.createEmptyRoom()
+	},
+
+	createEmptyRoom(){
+		//initiate a room object and call it roomMap
+		const room = new Room
+		room.width = 10
+		room.height = 10
+		for (let i = 0; i < room.width; i++){
+			for (let j = 0; j < room.height; j++){
+				room.map[i,j] = 0
+				console.log('creating a new room')
+			}
+		} 
+
+		game.map.push(room)
+		// assign the roomMap object to the key room in the mapGeneration object
+		// create enough array of zero, as much as the max height and width specified.
+		// currently hard coded
 	}
+
+
 }
 
 
