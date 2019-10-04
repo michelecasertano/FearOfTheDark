@@ -189,9 +189,11 @@ const mapGeneration = {
 	// },
 
 	leftWallRandom(room){
-		const randomSpot = Math.floor(Math.random()*room.height);
-		console.log('value from leftWallRandom -> ', [randomSpot,0])
-		return [randomSpot,0]
+		const randomRow = Math.floor(Math.random()*room.mapAvailable.length);
+		const randomRowIndexString = room.mapAvailable[randomRow][0]
+		const randomRowNumber = parseInt(randomRowIndexString[randomRowIndexString.length - 1])
+		console.log('value from leftWallRandom -> ', [randomRow,0])
+		return [randomRowNumber,0]
 	},
 
 	rightWallRandom(room){
