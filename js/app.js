@@ -197,8 +197,11 @@ const mapGeneration = {
 	},
 
 	rightWallRandom(room){
-		const randomSpot = Math.floor(Math.random()*room.width);
-		return [randomSpot, room.width - 1]
+		const randomRow = Math.floor(Math.random()*room.mapAvailable.length);
+		const randomRowIndexString = room.mapAvailable[randomRow][0]
+		const randomRowNumber = parseInt(randomRowIndexString[randomRowIndexString.length - 1])
+		console.log('value from rightWallRandom -> ', [randomRow,room.width - 1])
+		return [randomRowNumber, room.width - 1]
 
 	},
 
