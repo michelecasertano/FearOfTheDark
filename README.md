@@ -45,20 +45,20 @@ Field of view is limited to a circle of light at night.
 
 
 | Day (dmg / life) | Night (dmg / life) | Weapon | Points awarded |
-------------------| -------------------|-----------------|-----
+---| --- | --- | ---
 | Worm (-1 / 1)    | Snake (-2 / 1)     | None / collision| +10 |
----|---|---|---
+--- | --- | --- | ---
 | Bird (-1/ 1) | Bat (-3 / 3) | Shoot seed / shoot seed | +15 |
----|---|---|---
+--- | --- |--- | ---
 | Dragon (-5 / 10) | NA | Shoot fire / collision | +100 |
----|---|---|---
+--- | --- | --- | ---
 
 ## Development roadmap
 ### Version 0 (Random room generation)
 * Room 1 is procedurally generated 
 * Rooms have: walls, traps, two doors 
 * Check that generated room is ‘correct’
-* No ‘closed loop’ 
+* No ‘closed loops’ 
 * Player can go from one side to the other of the room to access the exit door 
 
 ### Version 1 (MVP)
@@ -110,53 +110,50 @@ Field of view is limited to a circle of light at night.
  --- | --- 
 
 
+### Version 1 (MVP)
+*UI*
+1. Player health loaded top of screen
+2. Player has 5 hearts
+3. If player is damaged, one heart is lost
+4. Score set to zero
 
+*Starting the game*
+1. Player clicks anywhere on screen
+2. First room is loaded 
+3. In room: player (LHS middle of screen)
+4. RHS of the room 4 monsters appear
 
-Version 1 (MVP)
-UI
-Player health loaded top of screen
-Player has 5 hearts
-If player is damaged, one heart is lost
-Score set to zero
+*Moving the player around*
+1. Player presses ‘W’ character turn up and moves up
+2. Player presses ‘A’ character turns left and moves left
+3. Player presses ‘D’ character turns right and moves right
+4. Player presses ‘S’ character turns down and moves down 
+5. If the player hits a wall / player cannot move forward 
 
-Starting the game
-Player clicks anywhere on screen
-First room is loaded 
-In room: player (LHS middle of screen)
-Rhs of the room 4 monsters appear
+*Attacking a foe*
+1. Player presses spacebar to use the sword
+2. Sword direction depends on the direction the player if facing
+3. Player cannot move while using the sword 
+4. If there is a collision between foe and sword, foe is damaged
+5. If foe health is zero, foe dies. 
+6. Score is increased 
 
-Moving the player around
-Player presses ‘W’ character turn up and moves up
-Player presses ‘A’ character turns left and moves left
-Player presses ‘D’ character turns right and moves right
-Player presses ‘S’ character turns down and moves down 
-If the player hits a wall / player cannot move forward 
+*Foe chasing and attacking the player (worm)*
+1. Foe looks for where player is
+2. Foe gets closer to player 
+3. If foe collides with player, player is damaged 
+4. Foe moves slower than player 
 
-Attacking a foe
-Player presses spacebar to use the sword
-Sword direction depends on the direction the player if facing
-Player cannot move while using the sword 
-If there is a collision between foe and sword, foe is damaged
-If foe health is zero, foe dies. 
-Score is increased 
+*Player dies*
+1. Player health is equal or less than zero
+2. Player disappears from screen
+3. Game over screen appears (‘YOU DIED’)
+4. Player can start again the game 
 
-Foe chasing and attacking the player (worm)
-Foe looks for where player is
-Foe gets closer to player 
-If foe collides with player, player is damaged 
-Foe moves slower than player 
+*Defeating a room*
+1. Last enemy is killed
+2. Room score increases +1 
+3. Door opens to the right
+4. Player enters door and access the next room
 
-Player dies 
-Player health is equal or less than zero
-Player disappears from screen
-Game over screen appears (‘YOU DIED’)
-Player can start again the game 
-
-Defeating a room
-Last enemy is killed
-Room score increases +1 
-Door opens to the right
-Player enters door and access the next room
-
-
-Wireframe 
+### Wireframes
