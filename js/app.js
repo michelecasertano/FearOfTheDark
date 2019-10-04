@@ -56,6 +56,18 @@ class Room {
 		this.enemy = 3;
 		this.door = 4;
 		this.hero = 5;
+
+		// restrictions on the map elements
+		this.maxNumberWalls = 4;
+		this.minNumberWalls = 2;
+
+		this.maxWallLength = 15;
+		this.minWallLength = 5;
+
+		this.maxWallCoverage = 0.2;
+
+
+
 	}
 }
 
@@ -188,17 +200,26 @@ const mapGeneration = {
 	// 		mapAvailable.splice(y,1)}
 	// },
 
+
+	// select a random spot from the left wall.
+	// the function return the indexes to be used in the room map.
+	// random number only selects rows that are available (i.e., still have cells)
 	leftWallRandom(room){
 		const randomRow = Math.floor(Math.random()*room.mapAvailable.length);
 		const randomRowIndexString = room.mapAvailable[randomRow][0]
+		// because the row index is stored as row #, I need to select the number and convert it to int from string
 		const randomRowNumber = parseInt(randomRowIndexString[randomRowIndexString.length - 1])
 		console.log('value from leftWallRandom -> ', [randomRow,0])
 		return [randomRowNumber,0]
 	},
 
+	// select a random spot from the left wall.
+	// the function return the indexes to be used in the room map.
+	// random number only selects rows that are available (i.e., still have cells)
 	rightWallRandom(room){
 		const randomRow = Math.floor(Math.random()*room.mapAvailable.length);
 		const randomRowIndexString = room.mapAvailable[randomRow][0]
+		// because the row index is stored as row #, I need to select the number and convert it to int from string
 		const randomRowNumber = parseInt(randomRowIndexString[randomRowIndexString.length - 1])
 		console.log('value from rightWallRandom -> ', [randomRow,room.width - 1])
 		return [randomRowNumber, room.width - 1]
