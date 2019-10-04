@@ -37,6 +37,12 @@ class Room {
 		
 		//this.map = [height,width]
 		this.map = [];
+		//map available is a map of all the available indexes.
+		//it allows me to reduce computational need, by only focusing on a 
+		//subset of available cells. Dimension of the matrix will change if a position is
+		//removed from the array. the first element of the array is a string with 
+		//the row number in it. This allows me to remove complete rows if necessary.
+		this.mapAvailable = [];
 		this.wallCoord = [];
 		this.trapCoord = [];
 		this.enemyCoord = [];
@@ -79,6 +85,14 @@ const game = {
 			for (let i = 0; i < room.height; i++)
 			console.log(room.map[i]);
 		})
+	},
+
+	printAvailable(){
+		this.gameMap.forEach(function(room,i){
+			console.log(`---- AVAILABLE SPACE IN ROOM ${i} ----`)
+			for (let i = 0; i < room.height; i++)
+			console.log(room.mapAvailable[i]);
+		})	
 	}
 
 
@@ -101,6 +115,7 @@ const mapGeneration = {
 		this.addDoors(room)
 		game.gameMap.push(room)
 		console.log(game.printRooms())
+		console.log(game.printAvailable())
 	},
 
 	// make the room empty assiging all cells value to zero.
@@ -108,10 +123,15 @@ const mapGeneration = {
 	createEmptyRoom(room){
 		for (let i = 0; i < room.height; i++){
 			const mapRow = []
+			const mapAvailableRow = []
 			for (let j = 0; j < room.width; j++){
 				mapRow[j]=0
+				mapAvailableRow[j] = j
 			}
 			room.map.push(mapRow);
+			//adding the row index to the mapAvailableRow
+			mapAvailableRow.unshift('row ' + i)
+			room.mapAvailable.push(mapAvailableRow)
 		}
 	},
 
@@ -139,14 +159,12 @@ const mapGeneration = {
 
 	leftWallRandom(room){
 		const randomSpot = Math.floor(Math.random()*room.height);
-		console.log(randomSpot, ' <-- randomSpot on leftWall')
 		console.log('value from leftWallRandom -> ', [randomSpot,0])
 		return [randomSpot,0]
 	},
 
 	rightWallRandom(room){
 		const randomSpot = Math.floor(Math.random()*room.width);
-		console.log(randomSpot, ' <-- randomSpot on rightWall')
 		return [randomSpot, room.width - 1]
 
 	},
