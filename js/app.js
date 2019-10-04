@@ -88,7 +88,6 @@ const game = {
 
 	start(){
 		mapGeneration.initiateRoom()
-		testMapAvailable = this.gameMap[0].mapAvailable
 	},
 
 	printRooms(){
@@ -125,6 +124,8 @@ const mapGeneration = {
 		//in this first version, doors are added to left wall and right wall.
 		//in expansion could be randomized.
 		this.addDoors(room)
+		this.generateWalls(room)
+
 		game.gameMap.push(room)
 		console.log(game.printRooms())
 		console.log(game.printAvailable())
@@ -171,6 +172,12 @@ const mapGeneration = {
 		room.map[yCoordExit][xCoordExit] = room.door;
 		//remove the exit coordinates from the available index map
 		this.removeUsedIndex(room,yCoordExit,xCoordExit);
+	},
+
+	generateWalls(room){
+		const numberOfWallSeeds = Math.floor(Math.random()*
+			(room.maxNumberWalls - room.minNumberWalls + 1)) + room.minNumberWalls
+		console.log(numberOfWallSeeds, ' random number of wall seeds')
 	},
 
 	//this function updates the available index map, by removing indexes that were 
