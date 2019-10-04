@@ -152,3 +152,5 @@ Field of view is limited to a circle of light at night.
 4. Player enters door and access the next room
 
 ### Wireframes
+
+![alt game layout](https://github.com/mightymitch86/FearOfTheDark/blob/master/wireframes/goodLayout.png "Game layout")
