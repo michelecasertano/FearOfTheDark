@@ -32,8 +32,7 @@ class Room {
 		// [0,0,0,0,0,0,0,0,0,0],
 		// [0,0,0,0,0,0,0,0,0,0],
 		// ]
-		// when walls, obstacles, enemies are added using a code as specified in the object
-		// named const elementDictionary.
+		// when walls, obstacles, enemies are added using a code as specified in dictionatry below
 		// each element is also stored in separete array -> I might not need this.
 		
 		//this.map = [height,width]
@@ -42,6 +41,15 @@ class Room {
 		this.trapCoord = [];
 		this.enemyCoord = [];
 		this.doorCoord = [];
+		this.visited = -1;
+
+		// dictionary of values for the map
+		this.unvisited = 0;
+		this.wall = 1;
+		this.trap = 2;
+		this.enemy = 3;
+		this.door = 4;
+		this.hero = 5;
 	}
 }
 
@@ -54,7 +62,7 @@ class Room {
 const game = {
 	// map holds all the object rooms that were created, including the coordinates.
 	// in the first version of the game (single room), a single row will be created.
-	// map = [[{room object}, x coordinate of the room, y coordiante of the room]].
+	// map = [[{room object}, y coordinate of the room, x coordiante of the room]].
 	// Because in the initial version I am only using a straght line of room,
 	// I simplified it to be an array of objects.
 	// map: [[{},0,0]]
@@ -82,34 +90,74 @@ const game = {
 
 const mapGeneration = {
 	// room: {}, -> i don't think I need this
-
+	
 	initiateRoom(){
-		console.log('i am in initiateRoom')
-		this.createEmptyRoom()
+		// initiate a room object and call it room.
+		const room = new Room(10,10)
+		this.createEmptyRoom(room)
+
+		//in this first version, doors are added to left wall and right wall.
+		//in expansion could be randomized.
+		this.addDoors(room)
+		game.gameMap.push(room)
+		console.log(game.printRooms())
 	},
 
-	createEmptyRoom(){
-		//initiate a room object and call it room.
-		// Have the dimension of the room fix to 10 and 10
-		const room = new Room(10,10);
-		console.log('i am in createEmptyRoom')
+	// make the room empty assiging all cells value to zero.
+	// Have the dimension of the room fix to 10 and 10
+	createEmptyRoom(room){
 		for (let i = 0; i < room.height; i++){
 			const mapRow = []
 			for (let j = 0; j < room.width; j++){
 				mapRow[j]=0
-				console.log('creating a new room')
 			}
 			room.map.push(mapRow);
 		}
+	},
 
-		game.gameMap.push(room)
-		console.log(room)
-		// assign the roomMap object to the key room in the mapGeneration object
-		// create enough array of zero, as much as the max height and width specified.
-		// currently hard coded
+	// This function adds the entrance and the exit door to the room.
+	// Currently the function will add the entrance room on the left wall, and the 
+	// exit door in the right door. This could be expanded to be on any room.
+	// Not clear if doors could be on same wall. 
+
+	addDoors(room){
+
+		//find a random spot on the leftWall to assign a door.
+		const entranceDoor = this.leftWallRandom(room)
+		const yCoordEntrance = entranceDoor[0]
+		const xCoordEntrance = entranceDoor[1]
+		//update the map to have the entrance door
+		room.map[yCoordEntrance][xCoordEntrance] = room.door;
+
+		//find a random spot on  the rightWall to assign a door.
+		const exitDoor = this.rightWallRandom(room)
+		const yCoordExit = exitDoor[0]
+		const xCoordExit = exitDoor[1]
+		//update the map to have the exit door
+		room.map[yCoordExit][xCoordExit] = room.door;
+	},
+
+	leftWallRandom(room){
+		const randomSpot = Math.floor(Math.random()*room.height);
+		console.log(randomSpot, ' <-- randomSpot on leftWall')
+		console.log('value from leftWallRandom -> ', [randomSpot,0])
+		return [randomSpot,0]
+	},
+
+	rightWallRandom(room){
+		const randomSpot = Math.floor(Math.random()*room.width);
+		console.log(randomSpot, ' <-- randomSpot on rightWall')
+		return [randomSpot, room.width - 1]
+
+	},
+
+	topWallRandom(room){
+
+	},
+
+	bottomWallRandom(room){
+
 	}
-
-
 }
 
 
