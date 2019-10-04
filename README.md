@@ -153,4 +153,4 @@ Field of view is limited to a circle of light at night.
 
 ### Wireframes
 
-![alt game layout](https://github.com/mightymitch86/FearOfTheDark/blob/master/wireframes/goodLayout.png "Game layout"){:width="200px"}
+![alt game layout](https://github.com/mightymitch86/FearOfTheDark/blob/master/wireframes/goodLayout.png&s=100 "Game layout")
