@@ -45,13 +45,13 @@ Field of view is limited to a circle of light at night.
 
 
 | Day (dmg / life) | Night (dmg / life) | Weapon | Points awarded |
-|------------------| -------------------|-----------------|-----|
+------------------| -------------------|-----------------|-----
 | Worm (-1 / 1)    | Snake (-2 / 1)     | None / collision| +10 |
-|---|---|---|---|
+---|---|---|---
 | Bird (-1/ 1) | Bat (-3 / 3) | Shoot seed / shoot seed | +15 |
-|---|---|---|---|
+---|---|---|---
 | Dragon (-5 / 10) | NA | Shoot fire / collision | +100 |
-|---|---|---|---|
+---|---|---|---
 
 ## Development roadmap
 ### Version 0 (Random room generation)
@@ -107,7 +107,7 @@ Field of view is limited to a circle of light at night.
 
 
 | Good Room Layout | Bad Room Layout |
-| --- | --- |
+ --- | --- 
 
 
 
