@@ -43,13 +43,6 @@ class Room {
 		this.enemyCoord = [];
 		this.doorCoord = [];
 	}
-
-	// printRoom helps print a room to console to make debugging easier
-// 	printRoom(){
-// 		for(let j = 0; j < this.height; j++){
-
-// 		}
-// 	}
 }
 
 
@@ -70,7 +63,17 @@ const game = {
 	start(){
 		mapGeneration.initiateRoom()
 		console.log(this.gameMap);
+	},
+
+	printRooms(){
+		this.gameMap.forEach(function(room,i){
+			console.log(`---- ROOM ${i} ----`)
+			for (let i = 0; i < room.height; i++)
+			console.log(room.map[i]);
+		})
 	}
+
+
 }
 
 // <-- MANIPULATING ROOM -->
