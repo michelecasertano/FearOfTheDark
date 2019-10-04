@@ -148,6 +148,8 @@ const mapGeneration = {
 		const xCoordEntrance = entranceDoor[1]
 		//update the map to have the entrance door
 		room.map[yCoordEntrance][xCoordEntrance] = room.door;
+		//remove the coordinates from the available index map
+		this.removeUsedIndex(room,yCoordEntrance,xCoordEntrance);
 
 		//find a random spot on  the rightWall to assign a door.
 		const exitDoor = this.rightWallRandom(room)
@@ -155,6 +157,16 @@ const mapGeneration = {
 		const xCoordExit = exitDoor[1]
 		//update the map to have the exit door
 		room.map[yCoordExit][xCoordExit] = room.door;
+	},
+
+	//this function updates the available index map, by removing indexes that were 
+	//already used. It take the room object and the coordinates of the index to remove
+	removeUsedIndex(room,y,x){
+		const row = room.mapAvailable[y]
+		const rowIndex = row.findIndex(function(element){
+			return (element === x)
+		})
+		room.mapAvailable[y].splice(rowIndex, 1)
 	},
 
 	leftWallRandom(room){
