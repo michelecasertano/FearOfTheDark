@@ -76,7 +76,7 @@ const game = {
 
 	start(){
 		mapGeneration.initiateRoom()
-		console.log(this.gameMap);
+		testMapAvailable = this.gameMap[0].mapAvailable
 	},
 
 	printRooms(){
@@ -169,7 +169,24 @@ const mapGeneration = {
 			return (element === x)
 		})
 		room.mapAvailable[y].splice(rowIndex, 1)
+		//if the row has a single index, it means that it's only the string 
+		//with the row number. Therefore remove completely the row. 
+		if (room.mapAvailable[y].length === 1) room.mapAvailable.splice[y]
 	},
+
+	// this method can be used to test that only row with no left correct indexes are removed
+	// removeUsedIndexTest(mapAvailable,y,x){
+	// 	const row = mapAvailable[y]
+	// 	const rowIndex = row.findIndex(function(element){
+	// 		return (element === x)
+	// 	})
+	// 	mapAvailable[y].splice(rowIndex, 1)
+	// 	//if the row has a single index, it means that it's only the string 
+	// 	//with the row number. Therefore remove completely the row. 
+	// 	if (mapAvailable[y].length === 1) {
+	// 		console.log('about to remove a row from mapAvailable')
+	// 		mapAvailable.splice(y,1)}
+	// },
 
 	leftWallRandom(room){
 		const randomSpot = Math.floor(Math.random()*room.height);
@@ -193,7 +210,9 @@ const mapGeneration = {
 }
 
 
-
+// this testMapAvailable can be used with removeUsedIndexTest to check
+// that removeUsedIndex works correctly
+// let testMapAvailable = []
 
 
 
