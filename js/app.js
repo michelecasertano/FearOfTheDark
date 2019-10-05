@@ -168,24 +168,55 @@ const mapGeneration = {
 	},
 
 	generateWalls(room){
+		// for the while loop conditions, I need to make sure that not to much wall is 
+		// on the map. I do this with a variable called wallUsedMap. This variable
+		// is updated within the for loop for each wall.
+		let bricksUsedMap = 0
+
 		const numberOfWallSeeds = Math.floor(Math.random()*
 			(room.maxNumberWalls - room.minNumberWalls + 1)) + room.minNumberWalls
 		console.log(numberOfWallSeeds, ' random number of wall seeds')
 		// for each random wall, build the wall
 		for (i = 0; i < numberOfWallSeeds; i++){
+			// conditions to each for each wall individually
+			let spaceForBrick = true
+			let bricksUsedWall = 0 //each
+			let wallSize = 0
+
+
 			// for each wall, pick a side of the map where to plant the wall seed
 			let wallSide = Math.floor(Math.random()*4)
 			console.log('wallSide ',wallSide)
 			let seedCoordinates = []
 			switch(wallSide){
-				case 0: {seedCoordinates = this.topWallRandom(room); break}
-				case 1: {seedCoordinates = this.rightWallRandom(room); break}
-				case 2: {seedCoordinates = this.bottomWallRandom(room); break}
-				case 3: {seedCoordinates = this.leftWallRandom(room); break}
+				case 0: {brickCoord = this.topWallRandom(room); break}
+				case 1: {brickCoord = this.rightWallRandom(room); break}
+				case 2: {brickCoord = this.bottomWallRandom(room); break}
+				case 3: {brickCoord = this.leftWallRandom(room); break}
 			}
-			console.log('seedCoordinates: ', seedCoordinates)
+			
+			console.log('seedCoordinates: ', brickCoord)
 
 			// insert here code to plant seed and start germinating walls
+			// check if seed is valid input, if it is, plant seed, otherwise, kill seed
+
+			// I can treat the first brick just like the other bricks.
+			// there are three things that need to happen:
+			// 1. each brick needs to be in a space where brick can be placed: spaceForBrick
+			// 2. there must be bricksLeft, meaning that bricks are not covering more than 20% of the 
+			// game space: bricksLeft
+			// 3. the wall is still less than the longest wall specified: smallWall
+			// I check the conditions as soon as I enter the while loop
+
+			// while(spaceForBrick && bricksLeft && smallWall){
+				// do the stuff
+				bricksLeft = this.checkBricksWarehouse(bricksUsedMap, room)
+				console.log(`bricksLeft = ${bricksLeft}`)
+
+
+				// if all the conditions are ok -> place the brick
+				// increase used bricks s
+			// }
 
 
 		}
@@ -248,6 +279,11 @@ const mapGeneration = {
 		const randomColumnIndex = room.mapAvailable[room.height - 1][randomIndex]
 		console.log('value from RandomColumnBottom ',randomColumnIndex)
 		return [room.height - 1, randomColumnIndex]
+	},
+
+	checkBricksWarehouse(bricksUsedMap, room){
+		if (bricksUsedMap < Math.floor(room.width * room.height * room.maxWallCoverage)) return true
+			else return false
 	}
 }
 
