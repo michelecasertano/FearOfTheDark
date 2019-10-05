@@ -196,23 +196,8 @@ const mapGeneration = {
 		room.mapAvailable[y].splice(rowIndex, 1)
 		//if the row has a single index, it means that it's only the string 
 		//with the row number. Therefore remove completely the row. 
-		if (room.mapAvailable[y].length === 1) room.mapAvailable.splice[y]
+		if (room.mapAvailable[y].length === 0) delete room.mapAvailable[y]
 	},
-
-	// this method can be used to test that only row with no left correct indexes are removed
-	// removeUsedIndexTest(mapAvailable,y,x){
-	// 	const row = mapAvailable[y]
-	// 	const rowIndex = row.findIndex(function(element){
-	// 		return (element === x)
-	// 	})
-	// 	mapAvailable[y].splice(rowIndex, 1)
-	// 	//if the row has a single index, it means that it's only the string 
-	// 	//with the row number. Therefore remove completely the row. 
-	// 	if (mapAvailable[y].length === 1) {
-	// 		console.log('about to remove a row from mapAvailable')
-	// 		mapAvailable.splice(y,1)}
-	// },
-
 
 	// select a random spot from the left wall.
 	// the function return the indexes to be used in the room map.
@@ -261,12 +246,6 @@ const mapGeneration = {
 	// 	return [randomRowNumber, room.width - 1]
 	// }
 }
-
-
-// this testMapAvailable can be used with removeUsedIndexTest to check
-// that removeUsedIndex works correctly
-// let testMapAvailable = []
-
 
 
 
