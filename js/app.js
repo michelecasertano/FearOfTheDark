@@ -94,7 +94,7 @@ const game = {
 		this.gameMap.forEach(function(room,i){
 			console.log(`---- ROOM ${i} ----`)
 			for (let j = 0; j < room.height; j++)
-			console.log(`row ${j}: ${room.map[i]}`);
+			console.log(`row ${j}: ${room.map[j]}`);
 			console.log(`---- AVAIABLE SPOTS ROOM ${i} ----`)
 			for (let row in room.mapAvailable){
 				console.log(`row ${row}: ${room.mapAvailable[row]}`)
@@ -151,6 +151,7 @@ const mapGeneration = {
 		const entranceDoor = this.leftWallRandom(room)
 		const yCoordEntrance = entranceDoor[0]
 		const xCoordEntrance = entranceDoor[1]
+		console.log(yCoordEntrance,xCoordEntrance, ' coordinates')
 		//update the map to have the entrance door
 		room.map[yCoordEntrance][xCoordEntrance] = room.door;
 		//remove the entrance coordinates from the available index map
