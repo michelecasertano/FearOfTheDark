@@ -119,7 +119,7 @@ const mapGeneration = {
 		//in this first version, doors are added to left wall and right wall.
 		//in expansion could be randomized.
 		this.addDoors(room)
-		this.generateWalls(room)
+		// this.generateWalls(room)
 
 		game.gameMap.push(room)
 		console.log(game.printRooms())
@@ -152,7 +152,8 @@ const mapGeneration = {
 		const yCoordEntrance = entranceDoor[0]
 		const xCoordEntrance = entranceDoor[1]
 		//update the map to have the entrance door
-		room.map[yCoordEntrance][xCoordEntrance] = room.door;
+		// room.map[yCoordEntrance][xCoordEntrance] = room.door;
+		this.updateMapValue(room, yCoordEntrance, xCoordEntrance, room.door)
 		//remove the entrance coordinates from the available index map
 		this.removeUsedIndex(room,yCoordEntrance,xCoordEntrance);
 
@@ -161,7 +162,8 @@ const mapGeneration = {
 		const yCoordExit = exitDoor[0]
 		const xCoordExit = exitDoor[1]
 		//update the map to have the exit door
-		room.map[yCoordExit][xCoordExit] = room.door;
+		// room.map[yCoordExit][xCoordExit] = room.door;
+		this.updateMapValue(room, yCoordExit, xCoordExit, room.door)
 		//remove the exit coordinates from the available index map
 		this.removeUsedIndex(room,yCoordExit,xCoordExit);
 	},
@@ -212,23 +214,72 @@ const mapGeneration = {
 		// check if I can put the seed somehere else -> or probably kill it as an edge condition
 		spaceForBrick= true // for now I assume this is true, but I know I need to check for the seed.
 		// if there is not space for the seed, don't even start the recursion and pop the seed and assign it a value of -1;
-		const bricksTried = 0
+		const countBricksTried = 0
 		//for the first cycle, the first coordiantes to try are the bricksArray[0].
 		//at the end of each recursion, I add the element to the array. If it does not work,
 		//I pop the element and return the popped array
 		const nextCoord  = bricksArray[bricksArray.length-1]
-		const recursionArray = this.buildWallRecursion(bricksArray,bricksUsedWall, bricksUsedMap,bricksTried,nextCoord)[0]
-		if (recursionArray !== undefined) {
-			bricksArray = []
-			bricksArray.push(recursionArray)
-		}
+		brincksArray = []
+		bricksArray = this.buildWallRecursion(bricksArray,bricksUsedWall, bricksUsedMap,countBricksTried,nextCoord,room)[0]
+		// if (recursionArray !== undefined) {
+		// 	bricksArray = []
+		// 	bricksArray.push(recursionArray)
+		// }
 
 		return bricksArray
 	},
 
-	buildWallRecursion(bricksArray,bricksUsedWall, bricksUsedMap,bricksTried,nextCoord){
+	buildWallRecursion(bricksArray,bricksUsedWall, bricksUsedMap,countBricksTried,nextCoord, room){
+		const yCoord = nextCoord[0]
+		const xCoord = nextCoord[1]
+
+		if(this.alreadyTried(room, yCoord, xCoord) === true) { bricksArray.pop; return bricksArray}
+		if(this.bricksLeftInWarehouse(bricksUsedMap, room) === false) { bricksArray.pop(); return bricksArray}
+		if(this.isWallShort(bricksUsedWall, room) === false) {bricksArray.pop(); return bricksArray}
+		//to keep the algorhitm easier, I can only try an additional brick.
+		//In future dev of this code, I could update it so it tries 4 bricks prior to stopping the wall.
+		//therefore the following condition will never be achieved. 
+		if(countBricksTried >= 4) {bricksArray.pop(); return bricksArray}
+		// when I place a good brick, I need to udpate bircksUsedMap++, countrBricksTried = 0
+
+
+		if(this.isOkBrick(yCoord,xCoord,room)){
+			bricksUsedWall++
+			bricksUsedMap++
+			//select a next random brick
+			nextCoord = []
+			nextCoord = selectNextBrick(xCoord,yCoord,room)
+			if (nextCoord === undefined) {return bricksArray}
+			bricksArray.push(nextCoord)
+			removeUsedIndex(room, yCoord, xCoord)
+			updateMapValue(room, yCoord, xCoord, room.wall)
+			return buildWallRecursion(bricksArray, bricksUsedWall, bricksUsedMap, countBricksTried, nextCoord, room)
+		} else {
+			updateMapValue(room, yCoord, xCoord, rooom.visited)
+			return bricksArray.pop()
+		}
+
 		console.log('in buildWallRecursion')
 		return []
+	},
+
+	//function checks if I have already tried to put a brick there.
+	// returns true if I have. 
+	alreadyTried(){
+
+	},
+
+	// function checks if this spot is ok for brick. Returns ok it brick can be placed
+	isOkBrick(){
+
+	},
+
+	selectNextBrick(){
+
+	},
+
+	updateMapValue(room, yCoord, xCoord, blockValue){
+		room.map[yCoord][xCoord] = blockValue;
 	},
 			// bricksArray.push(brickCoord)
 			// bricksArray.push(brickCoord)
@@ -325,14 +376,14 @@ const mapGeneration = {
 
 	// Function checks if there are bricks left to be placed on the map.
 	// if there are bricks left, returns true. It maxWallCoverage has been reached, returns false
-	checkBricksWarehouse(bricksUsedMap, room){
+	bricksLeftInWarehouse(bricksUsedMap, room){
 		if (bricksUsedMap <= Math.floor(room.width * room.height * room.maxWallCoverage)) return true
 			else return false
 	},
 	
 	// Function checks if wall is shorter than max allowed size for wall. 
 	// If wall is shorter, returns true, otherwise returns false.
-	checkWallSize(bricksUsedWall, room){
+	isWallShort(bricksUsedWall, room){
 		if (bricksUsedWall <= room.maxWallLength) return true
 			else return false
 	},
