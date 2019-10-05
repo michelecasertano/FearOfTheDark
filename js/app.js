@@ -93,6 +93,7 @@ const game = {
 	printRooms(){
 		this.gameMap.forEach(function(room,i){
 			console.log(`---- ROOM ${i} ----`)
+			console.log(`col #: 0,1,2,3,4,5,6,7,8,9`)
 			for (let j = 0; j < room.height; j++)
 			console.log(`row ${j}: ${room.map[j]}`);
 			console.log(`---- AVAIABLE SPOTS ROOM ${i} ----`)
@@ -152,7 +153,6 @@ const mapGeneration = {
 		const yCoordEntrance = entranceDoor[0]
 		const xCoordEntrance = entranceDoor[1]
 		//update the map to have the entrance door
-		// room.map[yCoordEntrance][xCoordEntrance] = room.door;
 		this.updateMapValue(room, yCoordEntrance, xCoordEntrance, room.door)
 		//remove the entrance coordinates from the available index map
 		this.removeUsedIndex(room,yCoordEntrance,xCoordEntrance);
@@ -162,7 +162,6 @@ const mapGeneration = {
 		const yCoordExit = exitDoor[0]
 		const xCoordExit = exitDoor[1]
 		//update the map to have the exit door
-		// room.map[yCoordExit][xCoordExit] = room.door;
 		this.updateMapValue(room, yCoordExit, xCoordExit, room.door)
 		//remove the exit coordinates from the available index map
 		this.removeUsedIndex(room,yCoordExit,xCoordExit);
@@ -265,13 +264,100 @@ const mapGeneration = {
 
 	//function checks if I have already tried to put a brick there.
 	// returns true if I have. 
-	alreadyTried(){
-
+	alreadyTried(room, yCoord, xCoord){
+		if(room.map[yCoord][xCoord] !== 0) return true
+			else return false
 	},
 
 	// function checks if this spot is ok for brick. Returns ok it brick can be placed
-	isOkBrick(){
+	isOkBrick(room, yCoord, xCoord){
+		let bricksAround = 0
+		let brickValue = 0
+		// naming convention for surrounding bricks
+		// where x is the brick that I am checking
+		// |8|1|2| -> yCoord - 1
+		// |7|x|3| -> yCoord
+		// |6|5|4| -> yCoord + 1
+		// -1 0 +1 -> change in xCoord
 
+		// if I am building a brick on the wall, the blockValue returned will be undefined
+		// undefined is set to 1, as if the wall was a brick.
+		// this will allow me to avoid situation as below (x is a block, - and | are walls)
+		// -----------
+		// |X  -> if I didn't count undefined, the value of surrounding 
+		// | x    brick would be 1, making this position ok. BUT this is a closed loop
+		// |xx    which can lead to back mazes 
+		// I could try to solve it to have special edge condition for wall, but simplified
+		// in this version of the maze building
+
+		const brick1yCoord = yCoord - 1
+		const brick1xCoord = xCoord
+		brickValue = this.blockValue(room, brick1yCoord, brick1xCoord)
+		if(brickValue === 1) bricksAround++
+		console.log('brickValue 1: ',brickValue)
+		console.log('bricksAround: ',bricksAround)
+
+		const brick2yCoord = yCoord - 1
+		const brick2xCoord = xCoord + 1
+		brickValue = this.blockValue(room,brick2yCoord, brick2xCoord)
+		if(brickValue === 1) bricksAround++
+		console.log('brickValue 2: ',brickValue)
+		console.log('bricksAround: ',bricksAround)
+			
+		const brick3yCoord = yCoord
+		const brick3xCoord = xCoord + 1
+		brickValue = this.blockValue(room,brick3yCoord, brick3xCoord)
+		if(brickValue === 1) bricksAround++
+		console.log('brickValue 3: ',brickValue)
+		console.log('bricksAround: ',bricksAround)
+
+		const brick4yCoord = yCoord + 1
+		const brick4xCoord = xCoord + 1
+		brickValue = this.blockValue(room,brick4yCoord, brick4xCoord)
+		if(brickValue === 1) bricksAround++
+		console.log('brickValue 4: ',brickValue)
+		console.log('bricksAround: ',bricksAround)
+
+		const brick5yCoord = yCoord + 1
+		const brick5xCoord = xCoord
+		brickValue = this.blockValue(room,brick5yCoord, brick5xCoord)
+		if(brickValue === 1) bricksAround++
+		console.log('brickValue 5: ',brickValue)
+		console.log('bricksAround: ',bricksAround)
+
+		const brick6yCoord = yCoord + 1
+		const brick6xCoord = xCoord - 1
+		brickValue = this.blockValue(room,brick6yCoord, brick6xCoord)
+		if(brickValue === 1) bricksAround++
+		console.log('brickValue 6: ',brickValue)
+		console.log('bricksAround: ',bricksAround)
+
+		const brick7yCoord = yCoord
+		const brick7xCoord = xCoord - 1
+		brickValue = this.blockValue(room,brick7yCoord, brick7xCoord)
+		if(brickValue === 1) bricksAround++
+		console.log('brickValue 7: ',brickValue)
+		console.log('bricksAround: ',bricksAround)
+
+		const brick8yCoord = yCoord - 1
+		const brick8xCoord = xCoord - 1
+		brickValue = this.blockValue(room,brick8yCoord, brick8xCoord)
+		if(brickValue === 1) bricksAround++
+		console.log('brickValue 8: ',brickValue)
+		console.log('bricksAround: ',bricksAround)
+
+		if(bricksAround <= 3) return true
+			else return false
+	},
+
+	blockValue(room, yCoord, xCoord){
+		// the first four statements check if the brick is outisid the matrix
+		// if that is a acase, return 1, as I am at checking outsie the room.
+		if(yCoord < 0) return 1
+		if(xCoord < 0) return 1
+		if(yCoord >= room.height) return 1
+		if(xCoord >= room.width) return 1
+		return room.map[yCoord][xCoord]
 	},
 
 	selectNextBrick(){
@@ -386,12 +472,6 @@ const mapGeneration = {
 	isWallShort(bricksUsedWall, room){
 		if (bricksUsedWall <= room.maxWallLength) return true
 			else return false
-	},
-
-	checkBrickSurroundings(brickCoord, room){
-		console.log('in spaceForBrick')
-		let bricksAround = 0;
-
 	}
 
 }
