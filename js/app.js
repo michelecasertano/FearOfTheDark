@@ -118,12 +118,11 @@ const mapGeneration = {
 
 		//in this first version, doors are added to left wall and right wall.
 		//in expansion could be randomized.
-		// this.addDoors(room)
+		this.addDoors(room)
 		// this.generateWalls(room)
 
 		game.gameMap.push(room)
 		console.log(game.printRooms())
-		// console.log(game.printAvailable())
 	},
 
 	// make the room empty assiging all cells value to zero.
@@ -155,7 +154,7 @@ const mapGeneration = {
 		//update the map to have the entrance door
 		room.map[yCoordEntrance][xCoordEntrance] = room.door;
 		//remove the entrance coordinates from the available index map
-		this.removeUsedIndex(room,yCoordEntrance,xCoordEntrance);
+		// this.removeUsedIndex(room,yCoordEntrance,xCoordEntrance);
 
 		//find a random spot on  the rightWall to assign a door.
 		const exitDoor = this.rightWallRandom(room)
@@ -164,7 +163,7 @@ const mapGeneration = {
 		//update the map to have the exit door
 		room.map[yCoordExit][xCoordExit] = room.door;
 		//remove the exit coordinates from the available index map
-		this.removeUsedIndex(room,yCoordExit,xCoordExit);
+		// this.removeUsedIndex(room,yCoordExit,xCoordExit);
 	},
 
 	// generateWalls(room){
@@ -218,25 +217,24 @@ const mapGeneration = {
 	// the function return the indexes to be used in the room map.
 	// random number only selects rows that are available (i.e., still have cells)
 	leftWallRandom(room){
-		const randomRow = Math.floor(Math.random()*room.mapAvailable.length);
-		const randomRowIndexString = room.mapAvailable[randomRow][0]
-		// because the row index is stored as row #, I need to select the number and convert it to int from string
-		const randomRowNumber = parseInt(randomRowIndexString[randomRowIndexString.length - 1])
-		console.log('value from leftWallRandom -> ', [randomRow,0])
-		return [randomRowNumber,0]
+		const availableRows = Object.keys(room.mapAvailable)
+		const randomRowKeyIndex = Math.floor(Math.random()*availableRows.length)
+		const randomRow = availableRows[randomRowKeyIndex]
+		console.log('randomRow ',randomRow)
+		console.log('value from leftWallRandom -> ', [parseInt(randomRow),0])
+		return [parseInt(randomRow),0]
 	},
 
 	// select a random spot from the left wall.
 	// the function return the indexes to be used in the room map.
 	// random number only selects rows that are available (i.e., still have cells)
 	rightWallRandom(room){
-		const randomRow = Math.floor(Math.random()*room.mapAvailable.length);
-		const randomRowIndexString = room.mapAvailable[randomRow][0]
-		// because the row index is stored as row #, I need to select the number and convert it to int from string
-		const randomRowNumber = parseInt(randomRowIndexString[randomRowIndexString.length - 1])
-		console.log('value from rightWallRandom -> ', [randomRow,room.width - 1])
-		return [randomRowNumber, room.width - 1]
-
+		const availableRows = Object.keys(room.mapAvailable)
+		const randomRowKeyIndex = Math.floor(Math.random()*availableRows.length)
+		const randomRow = availableRows[randomRowKeyIndex]
+		console.log('randomRow ',randomRow)
+		console.log('value from RigthWallRandom -> ', [parseInt(randomRow),room.width - 1])
+		return [parseInt(randomRow),room.width - 1]
 	},
 		// string1,0,1,2,3,4,5,6,7,8,9
 
