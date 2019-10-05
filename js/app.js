@@ -234,6 +234,8 @@ const mapGeneration = {
 		return [0, randomColumnIndex]
 	},
 
+	//select the index of a random column for the top row.
+	//because this will always be the last row, I look at mapAvailable[room.height - 1]
 	bottomWallRandom(room){
 		console.log('bottomRowRandom')
 		const randomIndex = Math.floor(Math.random()*room.height)
@@ -241,14 +243,6 @@ const mapGeneration = {
 		const randomColumnIndex = room.mapAvailable[room.height - 1][randomIndex]
 		console.log('value from RandomColumnTop ',randomColumnIndex)
 		return [room.height - 1, randomColumnIndex]
-
-
-		// const randomRow = Math.floor(Math.random()*room.mapAvailable.length);
-		// const randomRowIndexString = room.mapAvailable[randomRow][0]
-		// // because the row index is stored as row #, I need to select the number and convert it to int from string
-		// const randomRowNumber = parseInt(randomRowIndexString[randomRowIndexString.length - 1])
-		// console.log('value from rightWallRandom -> ', [randomRow,room.width - 1])
-		// return [randomRowNumber, room.width - 1]
 	}
 }
 
