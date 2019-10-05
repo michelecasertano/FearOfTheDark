@@ -151,7 +151,6 @@ const mapGeneration = {
 		const entranceDoor = this.leftWallRandom(room)
 		const yCoordEntrance = entranceDoor[0]
 		const xCoordEntrance = entranceDoor[1]
-		console.log(yCoordEntrance,xCoordEntrance, ' coordinates')
 		//update the map to have the entrance door
 		room.map[yCoordEntrance][xCoordEntrance] = room.door;
 		//remove the entrance coordinates from the available index map
@@ -175,18 +174,18 @@ const mapGeneration = {
 
 		const numberOfWallSeeds = Math.floor(Math.random()*
 			(room.maxNumberWalls - room.minNumberWalls + 1)) + room.minNumberWalls
-		console.log(numberOfWallSeeds, ' random number of wall seeds')
+		// console.log(numberOfWallSeeds, ' random number of wall seeds')
 		// for each random wall, build the wall
 		for (i = 0; i < numberOfWallSeeds; i++){
 			// conditions to each for each wall individually
-			let spaceForBrick = true
-			let bricksUsedWall = 0 //each
-			let bricksArray = []
+			// let spaceForBrick = true
+			// let bricksUsedWall = 0 //each
+			// let bricksArray = []
 
 
 			// for each wall, pick a side of the map where to plant the wall seed
 			let wallSide = Math.floor(Math.random()*4)
-			console.log('wallSide ',wallSide)
+			// console.log('wallSide ',wallSide)
 			let seedCoordinates = []
 			switch(wallSide){
 				case 0: {brickCoord = this.topWallRandom(room); break}
@@ -195,11 +194,46 @@ const mapGeneration = {
 				case 3: {brickCoord = this.leftWallRandom(room); break}
 			}
 			
-			console.log('seedCoordinates: ', brickCoord)
+			let bricksArray = []
 			bricksArray.push(brickCoord)
-			bricksArray.push(brickCoord)
-			console.log(bricksArray)
-			console.log(bricksArray[1][0])
+			const bricksArrayBuildWall = this.buildWall(bricksArray, bricksUsedMap, room)
+			bricksArray = []
+			bricksArray = bricksArrayBuildWall
+
+		}
+	},
+
+	buildWall(bricksArray, bricksUsedMap, room){
+		console.log('in buildWall')
+		// use bircksArray to build the wall on the map
+		// Do I need to check at least the seed? I think so
+
+		const bricksUsedWall = 0 // need to check - this is zero if seed is not ok. I might want to 
+		// check if I can put the seed somehere else -> or probably kill it as an edge condition
+		spaceForBrick= true // for now I assume this is true, but I know I need to check for the seed.
+		// if there is not space for the seed, don't even start the recursion and pop the seed and assign it a value of -1;
+		const bricksTried = 0
+		//for the first cycle, the first coordiantes to try are the bricksArray[0].
+		//at the end of each recursion, I add the element to the array. If it does not work,
+		//I pop the element and return the popped array
+		const nextCoord  = bricksArray[bricksArray.length-1]
+		const recursionArray = this.buildWallRecursion(bricksArray,bricksUsedWall, bricksUsedMap,bricksTried,nextCoord)[0]
+		if (recursionArray !== undefined) {
+			bricksArray = []
+			bricksArray.push(recursionArray)
+		}
+
+		return bricksArray
+	},
+
+	buildWallRecursion(bricksArray,bricksUsedWall, bricksUsedMap,bricksTried,nextCoord){
+		console.log('in buildWallRecursion')
+		return []
+	},
+			// bricksArray.push(brickCoord)
+			// bricksArray.push(brickCoord)
+			// console.log(bricksArray)
+			// console.log(bricksArray[1][0])
 
 
 			// insert here code to plant seed and start germinating walls
@@ -214,12 +248,12 @@ const mapGeneration = {
 			// I check the conditions as soon as I enter the while loop
 
 			// while(spaceForBrick && bricksLeft && smallWall){
-				// do the stuff
-				bricksLeft = this.checkBricksWarehouse(bricksUsedMap, room)
-				smallWall = this.checkWallSize(bricksUsedWall, room)
-				spaceForBrick = this.checkBrickSurroundings(brickCoord, room)
-				console.log(`bricksLeft = ${bricksLeft}`)
-				console.log(`smallWall = ${smallWall}`)
+				// // do the stuff
+				// bricksLeft = this.checkBricksWarehouse(bricksUsedMap, room)
+				// smallWall = this.checkWallSize(bricksUsedWall, room)
+				// spaceForBrick = this.checkBrickSurroundings(brickCoord, room)
+				// console.log(`bricksLeft = ${bricksLeft}`)
+				// console.log(`smallWall = ${smallWall}`)
 
 
 				// if all the conditions are ok -> place the brick
@@ -227,8 +261,8 @@ const mapGeneration = {
 			// }
 
 
-		}
-	},
+		// }
+	// },
 
 	//this function updates the available index map, by removing indexes that were 
 	//already used. It take the room object and the coordinates of the index to remove
@@ -250,8 +284,8 @@ const mapGeneration = {
 		const availableRows = Object.keys(room.mapAvailable)
 		const randomRowKeyIndex = Math.floor(Math.random()*availableRows.length)
 		const randomRow = availableRows[randomRowKeyIndex]
-		console.log('randomRow ',randomRow)
-		console.log('value from leftWallRandom -> ', [parseInt(randomRow),0])
+		// console.log('randomRow ',randomRow)
+		// console.log('value from leftWallRandom -> ', [parseInt(randomRow),0])
 		return [parseInt(randomRow),0]
 	},
 
@@ -262,30 +296,30 @@ const mapGeneration = {
 		const availableRows = Object.keys(room.mapAvailable)
 		const randomRowKeyIndex = Math.floor(Math.random()*availableRows.length)
 		const randomRow = availableRows[randomRowKeyIndex]
-		console.log('randomRow ',randomRow)
-		console.log('value from RigthWallRandom -> ', [parseInt(randomRow),room.width - 1])
+			// console.log('randomRow ',randomRow)
+			// console.log('value from RigthWallRandom -> ', [parseInt(randomRow),room.width - 1])
 		return [parseInt(randomRow),room.width - 1]
 	},
 
 	//select the index of a random column for the top row.
 	//because this will always be the first row, I look at mapAvailable[0]
 	topWallRandom(room){
-		console.log('topWallRandom')
+		// console.log('topWallRandom')
 		const randomIndex = Math.floor(Math.random()*(room.mapAvailable[0].length));
-		console.log('random = ',randomIndex)
+		// console.log('random = ',randomIndex)
 		const randomColumnIndex = room.mapAvailable[0][randomIndex]
-		console.log('value from RandomColumnTop ',randomColumnIndex)
+		// console.log('value from RandomColumnTop ',randomColumnIndex)
 		return [0, randomColumnIndex]
 	},
 
 	//select the index of a random column for the top row.
 	//because this will always be the last row, I look at mapAvailable[room.height - 1]
 	bottomWallRandom(room){
-		console.log('bottomRowRandom')
+		// console.log('bottomRowRandom')
 		const randomIndex = Math.floor(Math.random()*room.height)
-		console.log('random = ',randomIndex)
+		// console.log('random = ',randomIndex)
 		const randomColumnIndex = room.mapAvailable[room.height - 1][randomIndex]
-		console.log('value from RandomColumnBottom ',randomColumnIndex)
+		// console.log('value from RandomColumnBottom ',randomColumnIndex)
 		return [room.height - 1, randomColumnIndex]
 	},
 
