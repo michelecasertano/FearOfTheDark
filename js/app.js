@@ -155,7 +155,7 @@ const mapGeneration = {
 		//update the map to have the entrance door
 		room.map[yCoordEntrance][xCoordEntrance] = room.door;
 		//remove the entrance coordinates from the available index map
-		// this.removeUsedIndex(room,yCoordEntrance,xCoordEntrance);
+		this.removeUsedIndex(room,yCoordEntrance,xCoordEntrance);
 
 		//find a random spot on  the rightWall to assign a door.
 		const exitDoor = this.rightWallRandom(room)
@@ -164,7 +164,7 @@ const mapGeneration = {
 		//update the map to have the exit door
 		room.map[yCoordExit][xCoordExit] = room.door;
 		//remove the exit coordinates from the available index map
-		// this.removeUsedIndex(room,yCoordExit,xCoordExit);
+		this.removeUsedIndex(room,yCoordExit,xCoordExit);
 	},
 
 	// generateWalls(room){
