@@ -167,24 +167,24 @@ const mapGeneration = {
 		this.removeUsedIndex(room,yCoordExit,xCoordExit);
 	},
 
-	// generateWalls(room){
-	// 	const numberOfWallSeeds = Math.floor(Math.random()*
-	// 		(room.maxNumberWalls - room.minNumberWalls + 1)) + room.minNumberWalls
-	// 	console.log(numberOfWallSeeds, ' random number of wall seeds')
-	// 	// for each random wall, build the wall
-	// 	for (i = 0; i < numberOfWallSeeds; i++){
-	// 		// for each wall, pick a side of the map where to plant the wall seed
-	// 		let wallSide = Math.floor(Math.random()*4)
-	// 		let seedCoordinates = []
-	// 		switch(wallSide){
-	// 			case 0: {seedCoordinates = this.topWallRandom(room); break}
-	// 			case 1: {seedCoordinates = this.rightWallRandom(room); break}
-	// 			// case 2: {seedCoordinates = bottomWallRandom(room); break}
-	// 			case 3: {seedCoordinates = this.leftWallRandom(room); break}
-	// 		}
-	// 		console.log(seedCoordinates)
-	// 	}
-	// },
+	generateWalls(room){
+		const numberOfWallSeeds = Math.floor(Math.random()*
+			(room.maxNumberWalls - room.minNumberWalls + 1)) + room.minNumberWalls
+		console.log(numberOfWallSeeds, ' random number of wall seeds')
+		// for each random wall, build the wall
+		for (i = 0; i < numberOfWallSeeds; i++){
+			// for each wall, pick a side of the map where to plant the wall seed
+			let wallSide = Math.floor(Math.random()*4)
+			let seedCoordinates = []
+			switch(wallSide){
+				case 0: {seedCoordinates = this.topWallRandom(room); break}
+				case 1: {seedCoordinates = this.rightWallRandom(room); break}
+				case 2: {seedCoordinates = bottomWallRandom(room); break}
+				case 3: {seedCoordinates = this.leftWallRandom(room); break}
+			}
+			console.log(seedCoordinates)
+		}
+	},
 
 	//this function updates the available index map, by removing indexes that were 
 	//already used. It take the room object and the coordinates of the index to remove
@@ -222,20 +222,17 @@ const mapGeneration = {
 		console.log('value from RigthWallRandom -> ', [parseInt(randomRow),room.width - 1])
 		return [parseInt(randomRow),room.width - 1]
 	},
-		// string1,0,1,2,3,4,5,6,7,8,9
 
 	//select the index of a random column for the top row.
 	//because this will always be the first row, I look at mapAvailable[0]
-	// topWallRandom(room){
-	// 	// I need to correct to exclude the first item in the array in the size counting.
-	// 	console.log('topWallRandom')
-	// 	const randomValue = Math.floor(Math.random()*(room.mapAvailable[0].width - 1));
-	// 	console.log('randomValue = ',randomValue)
-	// 	const randomColumnIndex = room.mapAvailable[0][randomValue + 1]
-	// 		console.log('value from RandomColumnTop ',randomColumnIndex)
-	// 	// because the row index is stored as row #, I need to select the number and convert it to int from string
-	// 	return [0, randomColumnIndex]
-	// },
+	topWallRandom(room){
+		console.log('topWallRandom')
+		const randomIndex = Math.floor(Math.random()*(room.mapAvailable[0].length));
+		console.log('random = ',randomIndex)
+		const randomColumnIndex = room.mapAvailable[0][randomIndex]
+		console.log('value from RandomColumnTop ',randomColumnIndex)
+		return [0, randomColumnIndex]
+	}
 
 	// bottomWallRandom(room){
 	// 	const randomRow = Math.floor(Math.random()*room.mapAvailable.length);
