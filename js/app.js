@@ -185,9 +185,9 @@ const mapGeneration = {
 
 
 			// for each wall, pick a side of the map where to plant the wall seed
-			let wallSide = Math.floor(Math.random()*4)
+			const wallSide = Math.floor(Math.random()*4)
 			// console.log('wallSide ',wallSide)
-			let seedCoordinates = []
+			const seedCoordinates = []
 			switch(wallSide){
 				case 0: {brickCoord = this.topWallRandom(room); break}
 				case 1: {brickCoord = this.rightWallRandom(room); break}
@@ -195,71 +195,56 @@ const mapGeneration = {
 				case 3: {brickCoord = this.leftWallRandom(room); break}
 			}
 			
-			let bricksArray = []
-			bricksArray.push(brickCoord)
-			const bricksArrayBuildWall = this.buildWall(bricksArray, bricksUsedMap, room)
-			bricksArray = []
-			bricksArray = bricksArrayBuildWall
+			this.buildWall(brickCoord, bricksUsedMap, room)
 
 		}
 	},
 
-	buildWall(bricksArray, bricksUsedMap, room){
-		console.log('in buildWall')
-		// use bircksArray to build the wall on the map
+	buildWall(brickCoord, bricksUsedMap, room){
+		// use bricksArray to build the wall on the map
 		// Do I need to check at least the seed? I think so
 
 		const bricksUsedWall = 0 // need to check - this is zero if seed is not ok. I might want to 
-		// check if I can put the seed somehere else -> or probably kill it as an edge condition
-		spaceForBrick= true // for now I assume this is true, but I know I need to check for the seed.
-		// if there is not space for the seed, don't even start the recursion and pop the seed and assign it a value of -1;
-		const countBricksTried = 0
 		//for the first cycle, the first coordiantes to try are the bricksArray[0].
 		//at the end of each recursion, I add the element to the array. If it does not work,
 		//I pop the element and return the popped array
-		const nextCoord  = bricksArray[bricksArray.length-1]
-		brincksArray = []
-		bricksArray = this.buildWallRecursion(bricksArray,bricksUsedWall, bricksUsedMap,countBricksTried,nextCoord,room)[0]
-		// if (recursionArray !== undefined) {
-		// 	bricksArray = []
-		// 	bricksArray.push(recursionArray)
-		// }
+		const nextCoord  = brickCoord
+		this.buildWallRecursion(bricksUsedWall, bricksUsedMap,nextCoord,room)[0]
 
-		return bricksArray
+
 	},
 
-	buildWallRecursion(bricksArray,bricksUsedWall, bricksUsedMap,countBricksTried,nextCoord, room){
+	buildWallRecursion(bricksUsedWall, bricksUsedMap,nextCoord, room){
 		const yCoord = nextCoord[0]
 		const xCoord = nextCoord[1]
 
-		if(this.alreadyTried(room, yCoord, xCoord) === true) { bricksArray.pop; return bricksArray}
-		if(this.bricksLeftInWarehouse(bricksUsedMap, room) === false) { bricksArray.pop(); return bricksArray}
-		if(this.isWallShort(bricksUsedWall, room) === false) {bricksArray.pop(); return bricksArray}
-		//to keep the algorhitm easier, I can only try an additional brick.
-		//In future dev of this code, I could update it so it tries 4 bricks prior to stopping the wall.
-		//therefore the following condition will never be achieved. 
-		if(countBricksTried >= 4) {bricksArray.pop(); return bricksArray}
+		if(this.outsideMap(room,yCoord,xCoord)) {return false}
+		if(this.alreadyTried(room, yCoord, xCoord) === true) { return false}
+		if(this.bricksLeftInWarehouse(bricksUsedMap, room) === false) { return false}
+		if(this.isWallShort(bricksUsedWall, room) === false) { return false}
+		//to keep the algorhitm easier, I can only try one additional brick.
 		// when I place a good brick, I need to udpate bircksUsedMap++, countrBricksTried = 0
-
+		//In future dev of this code, I could update it so it tries 4 bricks prior to stopping the wall.
 
 		if(this.isOkBrick(yCoord,xCoord,room)){
 			bricksUsedWall++
 			bricksUsedMap++
-			//select a next random brick
+			this.updateMapValue(yCoord,xCoord,room.wall)
+			this.removeUsedIndex(room, yCoord, xCoord)
 			nextCoord = []
 			nextCoord = selectNextBrick(xCoord,yCoord,room)
-			if (nextCoord === undefined) {return bricksArray}
-			bricksArray.push(nextCoord)
-			removeUsedIndex(room, yCoord, xCoord)
-			updateMapValue(room, yCoord, xCoord, room.wall)
-			return buildWallRecursion(bricksArray, bricksUsedWall, bricksUsedMap, countBricksTried, nextCoord, room)
+			return buildWallRecursion(bricksUsedWall, bricksUsedMap, nextCoord, room)
 		} else {
-			updateMapValue(room, yCoord, xCoord, rooom.visited)
-			return bricksArray.pop()
+			updateMapValue(room, yCoord, xCoord, room.visited)
+			return false
 		}
+	},
 
-		console.log('in buildWallRecursion')
-		return []
+	outsideMap(room,yCoord,xCoord){
+		if(yCoord < 0) return true
+		if(xCoord < 0) return true
+		if(yCoord >= room.height) return true
+		if(xCoord >= room.width) return true
 	},
 
 	//function checks if I have already tried to put a brick there.
@@ -353,10 +338,7 @@ const mapGeneration = {
 	blockValue(room, yCoord, xCoord){
 		// the first four statements check if the brick is outisid the matrix
 		// if that is a acase, return 1, as I am at checking outsie the room.
-		if(yCoord < 0) return 1
-		if(xCoord < 0) return 1
-		if(yCoord >= room.height) return 1
-		if(xCoord >= room.width) return 1
+		if(this.outsideMap(room, yCoord, xCoord)) return 1
 		return room.map[yCoord][xCoord]
 	},
 
@@ -367,39 +349,6 @@ const mapGeneration = {
 	updateMapValue(room, yCoord, xCoord, blockValue){
 		room.map[yCoord][xCoord] = blockValue;
 	},
-			// bricksArray.push(brickCoord)
-			// bricksArray.push(brickCoord)
-			// console.log(bricksArray)
-			// console.log(bricksArray[1][0])
-
-
-			// insert here code to plant seed and start germinating walls
-			// check if seed is valid input, if it is, plant seed, otherwise, kill seed
-
-			// I can treat the first brick just like the other bricks.
-			// there are three things that need to happen:
-			// 1. each brick needs to be in a space where brick can be placed: spaceForBrick
-			// 2. there must be bricksLeft, meaning that bricks are not covering more than 20% of the 
-			// game space: bricksLeft
-			// 3. the wall is still less than the longest wall specified: smallWall
-			// I check the conditions as soon as I enter the while loop
-
-			// while(spaceForBrick && bricksLeft && smallWall){
-				// // do the stuff
-				// bricksLeft = this.checkBricksWarehouse(bricksUsedMap, room)
-				// smallWall = this.checkWallSize(bricksUsedWall, room)
-				// spaceForBrick = this.checkBrickSurroundings(brickCoord, room)
-				// console.log(`bricksLeft = ${bricksLeft}`)
-				// console.log(`smallWall = ${smallWall}`)
-
-
-				// if all the conditions are ok -> place the brick
-				// increase used bricks s
-			// }
-
-
-		// }
-	// },
 
 	//this function updates the available index map, by removing indexes that were 
 	//already used. It take the room object and the coordinates of the index to remove
