@@ -181,7 +181,7 @@ const mapGeneration = {
 			// conditions to each for each wall individually
 			let spaceForBrick = true
 			let bricksUsedWall = 0 //each
-			let wallSize = 0
+			let bricksArray = []
 
 
 			// for each wall, pick a side of the map where to plant the wall seed
@@ -196,6 +196,11 @@ const mapGeneration = {
 			}
 			
 			console.log('seedCoordinates: ', brickCoord)
+			bricksArray.push(brickCoord)
+			bricksArray.push(brickCoord)
+			console.log(bricksArray)
+			console.log(bricksArray[1][0])
+
 
 			// insert here code to plant seed and start germinating walls
 			// check if seed is valid input, if it is, plant seed, otherwise, kill seed
@@ -211,7 +216,10 @@ const mapGeneration = {
 			// while(spaceForBrick && bricksLeft && smallWall){
 				// do the stuff
 				bricksLeft = this.checkBricksWarehouse(bricksUsedMap, room)
+				smallWall = this.checkWallSize(bricksUsedWall, room)
+				spaceForBrick = this.checkBrickSurroundings(brickCoord, room)
 				console.log(`bricksLeft = ${bricksLeft}`)
+				console.log(`smallWall = ${smallWall}`)
 
 
 				// if all the conditions are ok -> place the brick
@@ -281,10 +289,26 @@ const mapGeneration = {
 		return [room.height - 1, randomColumnIndex]
 	},
 
+	// Function checks if there are bricks left to be placed on the map.
+	// if there are bricks left, returns true. It maxWallCoverage has been reached, returns false
 	checkBricksWarehouse(bricksUsedMap, room){
-		if (bricksUsedMap < Math.floor(room.width * room.height * room.maxWallCoverage)) return true
+		if (bricksUsedMap <= Math.floor(room.width * room.height * room.maxWallCoverage)) return true
 			else return false
+	},
+	
+	// Function checks if wall is shorter than max allowed size for wall. 
+	// If wall is shorter, returns true, otherwise returns false.
+	checkWallSize(bricksUsedWall, room){
+		if (bricksUsedWall <= room.maxWallLength) return true
+			else return false
+	},
+
+	checkBrickSurroundings(brickCoord, room){
+		console.log('in spaceForBrick')
+		let bricksAround = 0;
+
 	}
+
 }
 
 
