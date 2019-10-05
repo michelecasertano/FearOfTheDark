@@ -119,7 +119,7 @@ const mapGeneration = {
 		//in this first version, doors are added to left wall and right wall.
 		//in expansion could be randomized.
 		this.addDoors(room)
-		// this.generateWalls(room)
+		this.generateWalls(room)
 
 		game.gameMap.push(room)
 		console.log(game.printRooms())
@@ -175,14 +175,19 @@ const mapGeneration = {
 		for (i = 0; i < numberOfWallSeeds; i++){
 			// for each wall, pick a side of the map where to plant the wall seed
 			let wallSide = Math.floor(Math.random()*4)
+			console.log('wallSide ',wallSide)
 			let seedCoordinates = []
 			switch(wallSide){
 				case 0: {seedCoordinates = this.topWallRandom(room); break}
 				case 1: {seedCoordinates = this.rightWallRandom(room); break}
-				case 2: {seedCoordinates = bottomWallRandom(room); break}
+				case 2: {seedCoordinates = this.bottomWallRandom(room); break}
 				case 3: {seedCoordinates = this.leftWallRandom(room); break}
 			}
-			console.log(seedCoordinates)
+			console.log('seedCoordinates: ', seedCoordinates)
+
+			// insert here code to plant seed and start germinating walls
+
+
 		}
 	},
 
@@ -241,7 +246,7 @@ const mapGeneration = {
 		const randomIndex = Math.floor(Math.random()*room.height)
 		console.log('random = ',randomIndex)
 		const randomColumnIndex = room.mapAvailable[room.height - 1][randomIndex]
-		console.log('value from RandomColumnTop ',randomColumnIndex)
+		console.log('value from RandomColumnBottom ',randomColumnIndex)
 		return [room.height - 1, randomColumnIndex]
 	}
 }
