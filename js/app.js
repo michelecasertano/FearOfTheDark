@@ -39,10 +39,10 @@ class Room {
 		this.map = [];
 		//map available is a map of all the available indexes.
 		//it allows me to reduce computational need, by only focusing on a 
-		//subset of available cells. Dimension of the matrix will change if a position is
-		//removed from the array. the first element of the array is a string with 
-		//the row number in it. This allows me to remove complete rows if necessary.
-		this.mapAvailable = [];
+		//subset of available cells. Dimension of the arrays will change if a position is
+		//removed from the array. The key of the object is the row number.
+		// This allows me to remove complete rows if necessary.
+		this.mapAvailable = {};
 		this.wallCoord = [];
 		this.trapCoord = [];
 		this.enemyCoord = [];
@@ -98,13 +98,13 @@ const game = {
 		})
 	},
 
-	printAvailable(){
-		this.gameMap.forEach(function(room,i){
-			console.log(`---- AVAILABLE SPACE IN ROOM ${i} ----`)
-			for (let i = 0; i < room.height; i++)
-			console.log(room.mapAvailable[i]);
-		})	
-	}
+	// printAvailable(){
+	// 	this.gameMap.forEach(function(room,i){
+	// 		console.log(`---- AVAILABLE SPACE IN ROOM ${i} ----`)
+	// 		for (let i = 0; i < room.height; i++)
+	// 		console.log(room.mapAvailable[i]);
+	// 	})	
+	// }
 
 
 }
@@ -123,7 +123,7 @@ const mapGeneration = {
 
 		//in this first version, doors are added to left wall and right wall.
 		//in expansion could be randomized.
-		this.addDoors(room)
+		// this.addDoors(room)
 		// this.generateWalls(room)
 
 		game.gameMap.push(room)
@@ -142,9 +142,7 @@ const mapGeneration = {
 				mapAvailableRow[j] = j
 			}
 			room.map.push(mapRow);
-			//adding the row index to the mapAvailableRow
-			mapAvailableRow.unshift('row ' + i)
-			room.mapAvailable.push(mapAvailableRow)
+			room.mapAvailable[i] = mapAvailableRow
 		}
 	},
 
