@@ -93,20 +93,15 @@ const game = {
 	printRooms(){
 		this.gameMap.forEach(function(room,i){
 			console.log(`---- ROOM ${i} ----`)
-			for (let i = 0; i < room.height; i++)
-			console.log(room.map[i]);
+			for (let j = 0; j < room.height; j++)
+			console.log(`row ${j}: ${room.map[i]}`);
+			console.log(`---- AVAIABLE SPOTS ROOM ${i} ----`)
+			for (let row in room.mapAvailable){
+				console.log(`row ${row}: ${room.mapAvailable[row]}`)
+			}
+
 		})
-	},
-
-	// printAvailable(){
-	// 	this.gameMap.forEach(function(room,i){
-	// 		console.log(`---- AVAILABLE SPACE IN ROOM ${i} ----`)
-	// 		for (let i = 0; i < room.height; i++)
-	// 		console.log(room.mapAvailable[i]);
-	// 	})	
-	// }
-
-
+	}
 }
 
 // <-- MANIPULATING ROOM -->
@@ -128,7 +123,7 @@ const mapGeneration = {
 
 		game.gameMap.push(room)
 		console.log(game.printRooms())
-		console.log(game.printAvailable())
+		// console.log(game.printAvailable())
 	},
 
 	// make the room empty assiging all cells value to zero.
