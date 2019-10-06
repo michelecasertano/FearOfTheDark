@@ -43,26 +43,26 @@ class Room {
 		//removed from the array. The key of the object is the row number.
 		// This allows me to remove complete rows if necessary.
 		this.mapAvailable = {};
-		this.wallCoord = [];
-		this.trapCoord = [];
-		this.enemyCoord = [];
-		this.doorCoord = [];
-		this.visited = -1;
+		// this.wallCoord = [];
+		// this.trapCoord = [];
+		// this.enemyCoord = [];
+		// this.doorCoord = [];
+		
 
 		// dictionary of values for the map
-		this.unvisited = 0;
+		this.unvisited = '-';
 		this.wall = 1;
 		this.trap = 2;
 		this.enemy = 3;
 		this.door = 4;
 		this.hero = 5;
+		this.visited = 9;
 
 		// restrictions on the map elements
-		this.maxNumberWalls = 4;
-		this.minNumberWalls = 2;
+		this.maxNumberWalls = 5;
+		this.minNumberWalls = 4;
 
-		this.maxWallLength = 15;
-		this.minWallLength = 5;
+		this.maxWallLength = 20;
 
 		this.maxWallCoverage = 0.2;
 
@@ -133,7 +133,7 @@ const mapGeneration = {
 			const mapRow = []
 			const mapAvailableRow = []
 			for (let j = 0; j < room.width; j++){
-				mapRow[j]=0
+				mapRow[j]= '-'
 				mapAvailableRow[j] = j
 			}
 			room.map.push(mapRow);
@@ -201,6 +201,7 @@ const mapGeneration = {
 		// use bricksArray to build the wall on the map
 		// Do I need to check at least the seed? I think so
 
+		console.log('in buildWall')
 		let bricksUsedWall = 0 // need to check - this is zero if seed is not ok. I might want to 
 		//for the first cycle, the first coordiantes to try are the bricksArray[0].
 		//at the end of each recursion, I add the element to the array. If it does not work,
@@ -212,8 +213,11 @@ const mapGeneration = {
 	},
 
 	buildWallRecursion(bricksUsedWall, bricksUsedMap,nextCoord, room){
+		console.log('in buildWallRecursion')
 		const yCoord = nextCoord[0]
 		const xCoord = nextCoord[1]
+		console.log('yCoord: ', yCoord)
+		console.log('xCoord: ', xCoord)
 
 		if(this.outsideMap(room,yCoord,xCoord)) {return false}
 		if(this.alreadyTried(room, yCoord, xCoord) === true) { return false}
@@ -229,9 +233,9 @@ const mapGeneration = {
 			this.updateMapValue(room, yCoord,xCoord,room.wall)
 			this.removeUsedIndex(room, yCoord, xCoord)
 			nextCoord = []
-			nextCoord = this.selectNextBrick(xCoord,yCoord,room)
-			return // allows to test putting seed in
-			// return buildWallRecursion(bricksUsedWall, bricksUsedMap, nextCoord, room)
+			nextCoord = this.selectNextBrick(room, yCoord, xCoord)
+			// return // allows to test putting seed in
+			return this.buildWallRecursion(bricksUsedWall, bricksUsedMap, nextCoord, room)
 		} else {
 			this.updateMapValue(room, yCoord, xCoord, room.visited)
 			return false
@@ -239,6 +243,7 @@ const mapGeneration = {
 	},
 
 	outsideMap(room,yCoord,xCoord){
+		// console.log('in outsideMap')
 		if(yCoord < 0) return true
 		if(xCoord < 0) return true
 		if(yCoord >= room.height) return true
@@ -248,12 +253,14 @@ const mapGeneration = {
 	//function checks if I have already tried to put a brick there.
 	// returns true if I have. 
 	alreadyTried(room, yCoord, xCoord){
-		if(room.map[yCoord][xCoord] !== 0) return true
+		console.log('in alreadyTried')
+		if(room.map[yCoord][xCoord] !== '-' ) return true
 			else return false
 	},
 
 	// function checks if this spot is ok for brick. Returns ok it brick can be placed
 	isOkBrick(room, yCoord, xCoord){
+		console.log('in isOkBrick')
 		let bricksAround = 0
 		let brickValue = 0
 		// naming convention for surrounding bricks
@@ -277,71 +284,183 @@ const mapGeneration = {
 		const brick1xCoord = xCoord
 		brickValue = this.blockValue(room, brick1yCoord, brick1xCoord)
 		if(brickValue === 1) bricksAround++
-		console.log('brickValue 1: ',brickValue)
-		console.log('bricksAround: ',bricksAround)
+		// console.log('brickValue 1: ',brickValue)
+		// console.log('bricksAround: ',bricksAround)
 
 		const brick2yCoord = yCoord - 1
 		const brick2xCoord = xCoord + 1
 		brickValue = this.blockValue(room,brick2yCoord, brick2xCoord)
 		if(brickValue === 1) bricksAround++
-		console.log('brickValue 2: ',brickValue)
-		console.log('bricksAround: ',bricksAround)
+		// console.log('brickValue 2: ',brickValue)
+		// console.log('bricksAround: ',bricksAround)
 			
 		const brick3yCoord = yCoord
 		const brick3xCoord = xCoord + 1
 		brickValue = this.blockValue(room,brick3yCoord, brick3xCoord)
 		if(brickValue === 1) bricksAround++
-		console.log('brickValue 3: ',brickValue)
-		console.log('bricksAround: ',bricksAround)
+		// console.log('brickValue 3: ',brickValue)
+		// console.log('bricksAround: ',bricksAround)
 
 		const brick4yCoord = yCoord + 1
 		const brick4xCoord = xCoord + 1
 		brickValue = this.blockValue(room,brick4yCoord, brick4xCoord)
 		if(brickValue === 1) bricksAround++
-		console.log('brickValue 4: ',brickValue)
-		console.log('bricksAround: ',bricksAround)
+		// console.log('brickValue 4: ',brickValue)
+		// console.log('bricksAround: ',bricksAround)
 
 		const brick5yCoord = yCoord + 1
 		const brick5xCoord = xCoord
 		brickValue = this.blockValue(room,brick5yCoord, brick5xCoord)
 		if(brickValue === 1) bricksAround++
-		console.log('brickValue 5: ',brickValue)
-		console.log('bricksAround: ',bricksAround)
+		// console.log('brickValue 5: ',brickValue)
+		// console.log('bricksAround: ',bricksAround)
 
 		const brick6yCoord = yCoord + 1
 		const brick6xCoord = xCoord - 1
 		brickValue = this.blockValue(room,brick6yCoord, brick6xCoord)
 		if(brickValue === 1) bricksAround++
-		console.log('brickValue 6: ',brickValue)
-		console.log('bricksAround: ',bricksAround)
+		// console.log('brickValue 6: ',brickValue)
+		// console.log('bricksAround: ',bricksAround)
 
 		const brick7yCoord = yCoord
 		const brick7xCoord = xCoord - 1
 		brickValue = this.blockValue(room,brick7yCoord, brick7xCoord)
 		if(brickValue === 1) bricksAround++
-		console.log('brickValue 7: ',brickValue)
-		console.log('bricksAround: ',bricksAround)
+		// console.log('brickValue 7: ',brickValue)
+		// console.log('bricksAround: ',bricksAround)
 
 		const brick8yCoord = yCoord - 1
 		const brick8xCoord = xCoord - 1
 		brickValue = this.blockValue(room,brick8yCoord, brick8xCoord)
 		if(brickValue === 1) bricksAround++
-		console.log('brickValue 8: ',brickValue)
-		console.log('bricksAround: ',bricksAround)
+		// console.log('brickValue 8: ',brickValue)
+		// console.log('bricksAround: ',bricksAround)
 
 		if(bricksAround <= 3) return true
 			else return false
 	},
 
 	blockValue(room, yCoord, xCoord){
-		// the first four statements check if the brick is outisid the matrix
+		// console.log('in blockValue')
+		// the first four statements check if the brick is outiside the matrix
 		// if that is a acase, return 1, as I am at checking outsie the room.
 		if(this.outsideMap(room, yCoord, xCoord)) return 1
+		if(room.map[yCoord][xCoord] === '-') return 0
 		return room.map[yCoord][xCoord]
 	},
 
-	selectNextBrick(){
+	selectNextBrick(room, yCoord, xCoord){
+		console.log('in selectNextBrick')
+		// Depending where the previous brick is, I need to limit the 
+	    // possibilities for the next brick
+		// Next brick coded as per below
+		//   |1|   -> y - 1
+		//  4|x|2 
+		//   |3|   -> y + 1
+		// -1   +1 -> x
 
+		//Position naming convention
+		//       topLeft(0)  topWall(1) topRight(2)
+		//             ---------------------
+		//             |X|2   4|x|2     4|x|
+		//             |3|     |3|       |3|
+		//             |      center(4)    |
+		//             |1|     |1|       |1|  
+		// leftWall(3) |x|2   4|x|2     4|X|  rightWall(5)    
+		//             |3|     |3|       |3| 
+		//             |                   |
+		//             |1|     |1|       |1|
+		//             |X|2   4|X|2     4|X|
+		//             --------------------- 
+		//     bottomLeft(6) bottomWall(7)  bottomRight (8)
+		
+
+		const currentPosition = this.brickPositionString(room, yCoord, xCoord)
+		console.log('currentPosition: ',currentPosition,' ',typeof(currentPosition))
+		let availablePositions = 0
+		const positionsArray = []
+		switch (currentPosition){
+			case 0 : { availablePositions = 2 ; positionsArray.push(2,3);     break; }
+			case 1 : { availablePositions = 3 ; positionsArray.push(2,3,4);   break; }
+			case 2 : { availablePositions = 2 ; positionsArray.push(3,4);     break; }
+			case 3 : { availablePositions = 3 ; positionsArray.push(1,2,3);   break; }
+			case 4 : { availablePositions = 4 ; positionsArray.push(1,2,3,4); break; }
+			case 5 : { availablePositions = 3 ; positionsArray.push(1,3,4);   break; }
+			case 6 : { availablePositions = 2 ; positionsArray.push(1,2);     break; }
+			case 7 : { availablePositions = 3 ; positionsArray.push(1,2,4);   break; }
+			case 8 : { availablePositions = 2 ; positionsArray.push(1,4);     break; }
+			default: console.log('ERROR in switch currentBrickPosition')
+		}
+
+		console.log(availablePositions, ' availablePositions')
+		console.log(positionsArray, ' positionsArray')
+		const positionsArrayIndex = Math.floor(Math.random()*availablePositions)
+		console.log('positionsArrayIndex ',positionsArrayIndex)
+		const nextBrickIndex = positionsArray[positionsArrayIndex]
+		console.log(nextBrickIndex, ' nextBrickIndex')
+		const nextCoord = []
+
+		switch (nextBrickIndex){
+			case 1: {nextCoord.push(yCoord - 1, xCoord); break;}
+			case 2: {nextCoord.push(yCoord, xCoord + 1); break;}
+			case 3: {nextCoord.push(yCoord + 1, xCoord); break;}
+			case 4: {nextCoord.push(yCoord, xCoord -1 ); break;}
+			default: console.log('ERROR in nextBrickIndex')
+		}
+
+		console.log('in selectNextBrick ',nextCoord)
+		return nextCoord
+
+	},
+
+	brickPositionString(room, yCoord,xCoord){
+	console.log('in brickPositionString')
+	console.log('yCoord: ',yCoord)
+	console.log('xCoord: ',xCoord)
+	console.log('room.height: ',room.height)
+	console.log('room.width', room.width)
+	//Position naming convention
+	//       topLeft(0)  topWall(1) topRight(2)
+	//             ---------------------
+	//             |X|2   4|x|2     4|x|
+	//             |3|     |3|       |3|
+	//             |      center(4)    |
+	//             |1|     |1|       |1|  
+	// leftWall(3) |x|2   4|x|2     4|X|  rightWall(5)    
+	//             |3|     |3|       |3| 
+	//             |                   |
+	//             |1|     |1|       |1|
+	//             |X|2   4|X|2     4|X|
+	//             --------------------- 
+	//     bottomLeft(6) bottomWall(7)  bottomRight (8)
+
+	// Coordinates cheatsheet
+	// topLeft:     0,0
+	// topWall:     0, 0 < x < widht - 1
+	// topRight:    0, widht - 1
+
+	// leftWall:    0 < y <= height - 1, 0
+	// center:      0 < y <= height - 1, 0 < x < width - 1
+	// rightWall:   0 < y <= height - 1, width - 1
+
+	// bottomLeft:  height - 1, 0
+	// bottomWall:  height - 1, 0 < x < width - 1
+	// bottomRight: height - 1, width - 1  
+
+		if (yCoord === 0 && xCoord === 0) return 0
+		if (yCoord === 0 && xCoord > 0 && xCoord < room.width - 1) return 1
+		if (yCoord === 0 && xCoord === room.width - 1) return 2
+
+		if (yCoord > 0 && yCoord < room.height - 1 && xCoord === 0 ) return 3
+		if (yCoord > 0 && yCoord < room.height - 1 && xCoord > 0 && xCoord < room.width - 1) return 4
+		if (yCoord > 0 && yCoord < room.height - 1 && xCoord === room.width - 1) return 5
+
+		if (yCoord === room.height - 1 && xCoord === 0) return 6
+		if (yCoord === room.height - 1 && xCoord > 0 && xCoord < room.width - 1) return 7
+		if (yCoord === room.height - 1 && xCoord === room.width - 1) return 8
+
+		console.log('ERROR in brickPositionString')
+		return false
 	},
 
 	updateMapValue(room, yCoord, xCoord, blockValue){
