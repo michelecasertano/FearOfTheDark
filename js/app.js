@@ -120,7 +120,7 @@ const mapGeneration = {
 		//in this first version, doors are added to left wall and right wall.
 		//in expansion could be randomized.
 		this.addDoors(room)
-		// this.generateWalls(room)
+		this.generateWalls(room)
 
 		game.gameMap.push(room)
 		console.log(game.printRooms())
@@ -178,11 +178,6 @@ const mapGeneration = {
 		// console.log(numberOfWallSeeds, ' random number of wall seeds')
 		// for each random wall, build the wall
 		for (i = 0; i < numberOfWallSeeds; i++){
-			// conditions to each for each wall individually
-			// let spaceForBrick = true
-			// let bricksUsedWall = 0 //each
-			// let bricksArray = []
-
 
 			// for each wall, pick a side of the map where to plant the wall seed
 			const wallSide = Math.floor(Math.random()*4)
@@ -195,6 +190,8 @@ const mapGeneration = {
 				case 3: {brickCoord = this.leftWallRandom(room); break}
 			}
 			
+			console.log('wallSide :',wallSide)
+			console.log('seedCoord: ',brickCoord)
 			this.buildWall(brickCoord, bricksUsedMap, room)
 
 		}
@@ -204,12 +201,12 @@ const mapGeneration = {
 		// use bricksArray to build the wall on the map
 		// Do I need to check at least the seed? I think so
 
-		const bricksUsedWall = 0 // need to check - this is zero if seed is not ok. I might want to 
+		let bricksUsedWall = 0 // need to check - this is zero if seed is not ok. I might want to 
 		//for the first cycle, the first coordiantes to try are the bricksArray[0].
 		//at the end of each recursion, I add the element to the array. If it does not work,
 		//I pop the element and return the popped array
 		const nextCoord  = brickCoord
-		this.buildWallRecursion(bricksUsedWall, bricksUsedMap,nextCoord,room)[0]
+		this.buildWallRecursion(bricksUsedWall, bricksUsedMap,nextCoord,room)
 
 
 	},
@@ -226,16 +223,17 @@ const mapGeneration = {
 		// when I place a good brick, I need to udpate bircksUsedMap++, countrBricksTried = 0
 		//In future dev of this code, I could update it so it tries 4 bricks prior to stopping the wall.
 
-		if(this.isOkBrick(yCoord,xCoord,room)){
+		if(this.isOkBrick(room, yCoord,xCoord)){
 			bricksUsedWall++
 			bricksUsedMap++
-			this.updateMapValue(yCoord,xCoord,room.wall)
+			this.updateMapValue(room, yCoord,xCoord,room.wall)
 			this.removeUsedIndex(room, yCoord, xCoord)
 			nextCoord = []
-			nextCoord = selectNextBrick(xCoord,yCoord,room)
-			return buildWallRecursion(bricksUsedWall, bricksUsedMap, nextCoord, room)
+			nextCoord = this.selectNextBrick(xCoord,yCoord,room)
+			return // allows to test putting seed in
+			// return buildWallRecursion(bricksUsedWall, bricksUsedMap, nextCoord, room)
 		} else {
-			updateMapValue(room, yCoord, xCoord, room.visited)
+			this.updateMapValue(room, yCoord, xCoord, room.visited)
 			return false
 		}
 	},
