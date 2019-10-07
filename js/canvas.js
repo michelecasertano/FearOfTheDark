@@ -7,6 +7,7 @@ console.log(ctx); // cool, our rendering context is set up
 
 //try to make the following work on the first row
 function drawMap(){
+	ctx.clearRect(0,0,canvas.width,canvas.height)
 	const room = game.gameMap[game.gameMap.length - 1]
 	const map = room.map
 	console.log(map, 'map')

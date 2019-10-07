@@ -133,6 +133,7 @@ const mapGeneration = {
 		this.addDoors(room)
 		this.generateWalls(room)
 		this.addEnemies(room)
+		drawMap()
 
 		// game.gameMap.push(room)
 		console.log(game.printRooms())
