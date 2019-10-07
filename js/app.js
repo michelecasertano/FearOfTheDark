@@ -47,7 +47,6 @@ class Room {
 		// this.trapCoord = [];
 		// this.enemyCoord = [];
 		this.doorCoord = [];
-		this.heroCoord = [];
 		
 
 		// dictionary and values for the map
@@ -105,9 +104,57 @@ const game = {
 	doorsArray: [],
 	gameMap:[],
 	heroCoord:[],
+	currentRoom: 0,
+	movesInRoom: 0,
 
 	start(){
 		mapGeneration.initiateRoom()
+	},
+
+	moveHero(char){
+		
+		const room = this.gameMap[this.currentRoom]
+		let yHero = null
+		let xHero = null
+
+		switch(char){
+			case 'A': {
+				yHero = this.heroCoord[0]
+				xHero = this.heroCoord[1]--
+				break;
+			}
+			case 'W': {
+				yHero = this.heroCoord[0]--
+				xHero = this.heroCoord[1]
+				break;
+			}
+			case 'D': {
+				yHero = this.heroCoord[0]
+				xHero = this.heroCoord[1]++
+				break;
+			}
+			case 'S': {
+				yHero = this.heroCoord[0]++
+				xHero = this.heroCoord[1]
+				break;
+			}
+		}
+			
+		if(mapGeneration.outsideMap(room,yHero,xHero) === false){
+			this.heroCoord = [yHero,xHero]
+			console.log('heroCoord updated ', this.heroCoord)
+			heroObj.gridCoord = this.heroCoord
+			mapGeneration.updateMapValue(room,yHero, xHero, room.hero)	
+			this.printRooms()
+			drawMap()
+		} else {
+			console.log('#################')
+			console.log('heroCoord ',this.heroCoord)
+			console.log('move not allowed')
+			console.log('#################')
+			// this.printRooms()
+		}
+
 	},
 
 	printRooms(){
@@ -178,12 +225,10 @@ const mapGeneration = {
 		let xCoordEntrance = null 
 
 		if(game.doorsArray.length > 0){
-			console.log('doorsArray longer than zero')
-			yCoordEntrance = game.doorsArray[game.doorsArray.length - 1].exit[0]
+			yCoordEntrance = game.doorsArray[game.doorsArray.length - 1].entrance[0]
 			
 			//game now has entrances left and right wall. 
 			// logic for continuity in doors need to change if doors can be on any side.
-			// xCoordEntrance = game.doorsArray[game.doorsArray.length - 1].exit[1]
 			xCoordEntrance = 0
 			console.log('yCoordEntrance: ', yCoordEntrance)
 			console.log('xCoordEntrance: ', xCoordEntrance)
@@ -213,7 +258,7 @@ const mapGeneration = {
 
 		const doorCoord = {
 			roomNumber: game.gameMap.length,
-			entrance: [yCoordEntrance, xCoordExit],
+			entrance: [yCoordEntrance, xCoordEntrance],
 			exit:     [yCoordExit,xCoordExit]
 		}
 

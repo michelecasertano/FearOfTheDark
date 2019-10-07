@@ -27,6 +27,7 @@ exitObj = {
 
 heroObj = {
 	value: 6,
+	life: 5,
 	color: 'midnightBlue',
 	radius: 0,
 
@@ -35,7 +36,18 @@ heroObj = {
 	y: 0,
 
 	// gridCoordinates
-	
+	gridCoord: []
 
-	life: 5,
+	// move(char){
+	// 	// if (char === 'A') {
+	// 	// 	console.log('hero left')
+	// 	// 	gridCoord[0]-1
+
+	// 	// }
+	// 	if (char === 'W') {console.log('hero up')}
+	// 	if (char === 'D') {console.log('hero right')}
+	// 	if (char === 'S') {console.log('hero down')}
+	// }
+
+
 }
