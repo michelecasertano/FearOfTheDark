@@ -216,14 +216,21 @@ const mapGeneration = {
 			const availableRows = Object.keys(room.mapAvailable)
 			const randomRowKeyIndex = Math.floor(Math.random()*availableRows.length)
 			const randomRow = availableRows[randomRowKeyIndex]
-			const xCoordEnemy = parseInt(randomRow)
+			const yCoordEnemy = parseInt(randomRow)
 
 			//select random column to place enemy
 			const availableSpotsInRow = room.mapAvailable[randomRow]
+			const randomColumnIndex = Math.floor(Math.random()*availableSpotsInRow.length)
+			const xCoordEnemy = availableSpotsInRow[randomColumnIndex]
 
 			console.log('randomRow: ', randomRow)
 			console.log('availableSpotsInRow: ', availableSpotsInRow)
-			// this.removeUsedIndex(room,yCoordEnemy,xCoordEnemy);		
+			console.log('xCoordEnemy: ',xCoordEnemy)
+			console.log('yCoordEnemy: ',yCoordEnemy)
+			console.log('room.Enemy: ',room.Enemy)
+
+			this.updateMapValue(room, yCoordEnemy, xCoordEnemy, room.enemy)
+			this.removeUsedIndex(room,yCoordEnemy,xCoordEnemy);		
 		}
 	},
 
