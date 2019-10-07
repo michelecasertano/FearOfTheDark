@@ -52,20 +52,24 @@ class Room {
 
 		// dictionary and values for the map
 		this.unvisited = ' ';
-		this.wall = brick.value;
-		brick.height = canvas.height / this.height
-		brick.width = canvas.width / this.width
+		this.wall = brickObj.value;
+		brickObj.height = canvas.height / this.height
+		brickObj.width = canvas.width / this.width
 
 		this.trap = 2;
 
-		this.enemy = 3;
-		enemy.radius = 0.6*(canvas.height / this.height)/2 
+		this.enemy = enemyObj.value;
+		enemyObj.radius = 0.6*(canvas.height / this.height)/2 
 
-		this.door = 4;
-		door.height = canvas.height / this.height
-		door.width = canvas.width / this.width
+		this.door = entranceObj.value;
+		entranceObj.height = canvas.height / this.height
+		entranceObj.width = canvas.width / this.width
 
-		this.hero = 5;
+		// this.exit = exitObj.value
+		// exitObj.height = canvas.height / this.height
+		// exitObj.width = canvas.width / this.width
+
+		this.hero = 6;
 		this.visited = 9;
 
 		// restrictions on the map elements
@@ -310,6 +314,7 @@ const mapGeneration = {
 		// console.log('in buildWallRecursion')
 		
 		if(coordArray.length === 0){return false} // this condition should never happen.
+		
 		const coord = coordArray.shift()
 		const yCoord = coord[0]
 		const xCoord = coord[1]

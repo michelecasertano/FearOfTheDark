@@ -11,6 +11,8 @@ function drawMap(){
 	const room = game.gameMap[game.gameMap.length - 1]
 	const map = room.map
 	console.log(map, 'map')
+	const gridHeight = brickObj.height
+	const gridWidth = brickObj.width
 	//iterate on all rows
 	const y = 0
 	for (let row in map){
@@ -26,8 +28,6 @@ function drawMap(){
 			let elementType = ''
 
 			//a square in the grid is as big as a brick
-			const gridHeight = brick.height
-			const gridWidth = brick.width
 
 			// because of how this is coded, I would have to manually update each time I have
 			// a new element. if I had an object with elementName, value, objectName, I could make
@@ -35,9 +35,9 @@ function drawMap(){
 
 			
 			switch (elementValue){
-				case 1	: {height = brick.height; width = brick.width; color = brick.color; elementType='block'; break;}
-				case 3	: {radius = enemy.radius; color = enemy.color; elementType = 'circle'; break;}
-				case 4	: {height = door.height; width = door.width; color = door.color; elementType = 'block'; break;}
+				case 1	: {height = brickObj.height; width = brickObj.width; color = brickObj.color; elementType='block'; break;}
+				case 3	: {radius = enemyObj.radius; color = enemyObj.color; elementType = 'circle'; break;}
+				case 4	: {height = entranceObj.height; width = entranceObj.width; color = entranceObj.color; elementType = 'block'; break;}
 				case 9	:
 				default	: {height = 0; width = 0; break;}
 			}
@@ -62,18 +62,21 @@ function drawMap(){
 }
 
 function makeGrid() {
+		const gridHeight = brickObj.height
+		const gridWidth = brickObj.width
+  
   ctx.strokeStyle = "black";
   ctx.lineWidth = 1
 
   // draw vertical lines
-  for(let i = 0; i <= canvas.width; i += brick.width) {
+  for(let i = 0; i <= canvas.width; i += gridWidth) {
       ctx.beginPath();
       ctx.moveTo(i, 0);
       ctx.lineTo(i, canvas.height);
       ctx.stroke();
   }
   // draw horizontal lines
-  for(let i = 0; i <= canvas.height; i += brick.height) {
+  for(let i = 0; i <= canvas.height; i += gridHeight) {
       ctx.beginPath();
       ctx.moveTo(0, i);
       ctx.lineTo(canvas.width, i);
