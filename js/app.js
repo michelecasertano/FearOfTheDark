@@ -50,9 +50,13 @@ class Room {
 		this.heroCoord = [];
 		
 
-		// dictionary of values for the map
+		// dictionary and values for the map
 		this.unvisited = ' ';
-		this.wall = 1;
+		this.wall = brick.value;
+		brick.height = canvas.height / this.height
+		brick.width = canvas.width / this.width
+
+
 		this.trap = 2;
 		this.enemy = 3;
 		this.door = 4;
