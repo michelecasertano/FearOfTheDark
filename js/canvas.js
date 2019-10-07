@@ -29,8 +29,8 @@ function drawMap(){
 
 			switch (elementValue){
 				case 1	: {height = brick.height; width = brick.width; color = brick.color; break;}
-				case 3	:
-				case 4	:
+				case 3	: {break;}
+				case 4	: {height = door.height; width = door.width; color = door.color; break;}
 				case 9	:
 				default	: {height = 0; width = 0; break;}
 			}
@@ -41,7 +41,29 @@ function drawMap(){
 			ctx.fill()
 
 		}
+		makeGrid()
 	}
+}
+
+function makeGrid() {
+  ctx.strokeStyle = "black";
+  ctx.lineWidth = 1
+
+  // draw vertical lines
+  for(let i = 0; i <= canvas.width; i += brick.width) {
+      ctx.beginPath();
+      ctx.moveTo(i, 0);
+      ctx.lineTo(i, canvas.height);
+      ctx.stroke();
+  }
+  // draw horizontal lines
+  for(let i = 0; i <= canvas.height; i += brick.height) {
+      ctx.beginPath();
+      ctx.moveTo(0, i);
+      ctx.lineTo(canvas.width, i);
+      ctx.stroke();
+  }
+
 }
 
 

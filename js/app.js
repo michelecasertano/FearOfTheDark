@@ -59,7 +59,11 @@ class Room {
 
 		this.trap = 2;
 		this.enemy = 3;
+
 		this.door = 4;
+		door.height = canvas.height / this.height
+		door.width = canvas.width / this.width
+
 		this.hero = 5;
 		this.visited = 9;
 
