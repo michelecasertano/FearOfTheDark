@@ -69,7 +69,10 @@ class Room {
 		exitObj.height = canvas.height / this.height
 		exitObj.width = canvas.width / this.width
 
-		this.hero = 6;
+		this.hero = heroObj.value;
+		heroObj.radius = 0.5*(canvas.height / this.height)/2 		
+
+
 		this.visited = 9;
 
 		// restrictions on the map elements
@@ -101,6 +104,7 @@ const game = {
 	// map: [[{},0,0]]
 	doorsArray: [],
 	gameMap:[],
+	heroCoord:[],
 
 	start(){
 		mapGeneration.initiateRoom()
@@ -142,6 +146,7 @@ const mapGeneration = {
 		this.addDoors(room)
 		this.generateWalls(room)
 		this.addEnemies(room)
+		this.addHero(room)
 		drawMap()
 
 		// game.gameMap.push(room)
@@ -237,15 +242,21 @@ const mapGeneration = {
 			const randomColumnIndex = Math.floor(Math.random()*availableSpotsInRow.length)
 			const xCoordEnemy = availableSpotsInRow[randomColumnIndex]
 
-			console.log('randomRow: ', randomRow)
-			console.log('availableSpotsInRow: ', availableSpotsInRow)
-			console.log('xCoordEnemy: ',xCoordEnemy)
-			console.log('yCoordEnemy: ',yCoordEnemy)
-			console.log('room.Enemy: ',room.Enemy)
+			// console.log('randomRow: ', randomRow)
+			// console.log('availableSpotsInRow: ', availableSpotsInRow)
+			// console.log('xCoordEnemy: ',xCoordEnemy)
+			// console.log('yCoordEnemy: ',yCoordEnemy)
+			// console.log('room.Enemy: ',room.enemy)
 
 			this.updateMapValue(room, yCoordEnemy, xCoordEnemy, room.enemy)
 			this.removeUsedIndex(room,yCoordEnemy,xCoordEnemy);		
 		}
+	},
+
+	addHero(room){
+		game.heroCoord = game.doorsArray[game.doorsArray.length - 1].entrance
+		heroObj.gridCoord = game.heroCoord
+		console.log(game.heroCoord," game.heroCoord")
 	},
 
 	generateWalls(room){
@@ -383,7 +394,6 @@ const mapGeneration = {
 		// |7|x|3| -> yCoord
 		// |6|5|4| -> yCoord + 1
 		// -1 0 +1 -> change in xCoord
-
 
 		const yCoord1 = yCoord - 1 
 		const xCoord1 = xCoord
@@ -624,11 +634,11 @@ const mapGeneration = {
 	// Implementation as suggested per stackOverflow thread: https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
 
 	shuffleArray(array){
-    for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
-    }
-	return array
+	    for (let i = array.length - 1; i > 0; i--) {
+	        const j = Math.floor(Math.random() * (i + 1));
+	        [array[i], array[j]] = [array[j], array[i]];
+	    }
+		return array
 	},
 
 	brickPositionString(room, yCoord,xCoord){

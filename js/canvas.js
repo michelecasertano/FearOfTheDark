@@ -16,13 +16,15 @@ function drawMap(){
 	//iterate on all rows
 	const y = 0
 	for (let row in map){
-		console.log("row# ",row)
+		// console.log("row# ",row)
 		const x = 0
 		for (let column = 0; column < map[row].length; column++){
 			const elementValue = map[row][column]
-			console.log(elementValue," elementValue")
+			// console.log(elementValue," elementValue")
 			let width = 0
 			let height = 0
+			let x = 0
+			let y = 0
 			let radius = 0
 			let color = ''
 			let elementType = ''
@@ -36,8 +38,25 @@ function drawMap(){
 			
 			switch (elementValue){
 				case 1	: {height = brickObj.height; width = brickObj.width; color = brickObj.color; elementType='block'; break;}
-				case 3	: {radius = enemyObj.radius; color = enemyObj.color; elementType = 'circle'; break;}
-				case 4	: {height = entranceObj.height; width = entranceObj.width; color = entranceObj.color; elementType = 'block'; break;}
+				case 3	: {
+					radius = enemyObj.radius;
+				    color = enemyObj.color;
+				    enemyObj.x = parseInt(column)*gridWidth + gridWidth/2
+				    x = enemyObj.x
+				    enemyObj.y = row*gridHeight + gridHeight/2
+					y = enemyObj.y
+				    elementType = 'circle';
+				    break;}
+				case 4	: {height = entranceObj.height; width = entranceObj.width; color = entranceObj.color; elementType = 'block';}
+				case 6  : {
+					radius = heroObj.radius;
+					color = heroObj.color;
+					elementType = 'circle';
+					heroObj.x = parseInt(column)*gridWidth + gridWidth/2
+					x = heroObj.x
+					heroObj.y = row*gridHeight + gridHeight/2
+					y = heroObj.y
+					break;}
 				case 5	: {height = exitObj.height; width = exitObj.width; color = exitObj.color; elementType = 'block'; break;}
 				case 9	:
 				default	: {height = 0; width = 0; break;}
@@ -52,7 +71,7 @@ function drawMap(){
 
 			if (elementType === 'circle'){
 				ctx.beginPath()
-				ctx.arc(parseInt(column)*gridWidth + gridWidth/2, row*gridHeight + gridHeight/2, radius, 0, Math.PI*2)
+				ctx.arc(x,y, radius, 0, Math.PI*2)
 				ctx.fillStyle = color
 				ctx.fill()
 			}

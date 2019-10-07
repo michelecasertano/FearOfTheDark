@@ -24,3 +24,18 @@ exitObj = {
 	height: 0,
 	width: 0,
 }
+
+heroObj = {
+	value: 6,
+	color: 'midnightBlue',
+	radius: 0,
+
+	//canvas coordinates
+	x: 0,
+	y: 0,
+
+	// gridCoordinates
+	
+
+	life: 5,
+}
