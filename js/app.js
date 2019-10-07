@@ -65,9 +65,9 @@ class Room {
 		entranceObj.height = canvas.height / this.height
 		entranceObj.width = canvas.width / this.width
 
-		// this.exit = exitObj.value
-		// exitObj.height = canvas.height / this.height
-		// exitObj.width = canvas.width / this.width
+		this.exit = exitObj.value
+		exitObj.height = canvas.height / this.height
+		exitObj.width = canvas.width / this.width
 
 		this.hero = 6;
 		this.visited = 9;
@@ -80,8 +80,8 @@ class Room {
 		this.maxNumberBricks = Math.floor(this.width * this.height * this.maxWallCoverage)
 
 		//restrictions on enemy 
-		this.maxNumberOfEnemies = 6
-		this.minNumberOfEnemies = 2
+		this.maxNumberOfEnemies = 12
+		this.minNumberOfEnemies = 8
 
 	}
 }
@@ -217,13 +217,13 @@ const mapGeneration = {
 		game.doorsArray.push(doorCoord)
 
 		//update the map to have the exit door
-		this.updateMapValue(room, yCoordExit, xCoordExit, room.door)
+		this.updateMapValue(room, yCoordExit, xCoordExit, room.exit)
 		//remove the exit coordinates from the available index map
 		this.removeUsedIndex(room,yCoordExit,xCoordExit);
 	},
 
 	addEnemies(room){
-		const numberOfEnemies = Math.floor(Math.random()*(room.maxNumberOfEnemies - room.minNumberOfEnemies)) + 1
+		const numberOfEnemies = Math.floor(Math.random()*(room.maxNumberOfEnemies - room.minNumberOfEnemies)) + room.minNumberOfEnemies
 		console.log('numberOfEnemies: ', numberOfEnemies)
 		for (let i = 0; i < numberOfEnemies; i++){
 			//select a random row to place an enemy
@@ -300,6 +300,9 @@ const mapGeneration = {
 		if(room.map[seedYcoord][seedXcoord] === 4){
 			return false			
 		}
+		if(room.map[seedYcoord][seedXcoord] === 5){
+			return false			
+		}
 
 		if (this.isSoloSeed(room,seedYcoord,seedXcoord)){
 			// console.log('it is a solo seed')
@@ -323,6 +326,10 @@ const mapGeneration = {
 
 		// check if the block is on the entrance door 
 		if(room.map[yCoord][xCoord] === 4){
+			if (coordArray.length > 0) return this.buildWallRecursion(bricksUsedWall, bricksUsedMap, coordArray, room)
+			return false			
+		}
+		if(room.map[yCoord][xCoord] === 5){
 			if (coordArray.length > 0) return this.buildWallRecursion(bricksUsedWall, bricksUsedMap, coordArray, room)
 			return false			
 		}
@@ -535,7 +542,8 @@ const mapGeneration = {
 		if(this.outsideMap(room, yCoord, xCoord)) return 0
 		// if(this.outsideMap(room, yCoord, xCoord)) return 0	
 		if(room.map[yCoord][xCoord] === 9  ) return 0
-		if(room.map[yCoord][xCoord] === 4  ) return 0 // I might have to change it to 1
+		if(room.map[yCoord][xCoord] === 4  ) return 0 //doors are checked with different logic
+		if(room.map[yCoord][xCoord] === 5  ) return 0 //doors are checked with different logic
 		if(room.map[yCoord][xCoord] !== ' ') return 1
 		if(room.map[yCoord][xCoord] === ' ') return 0
 			

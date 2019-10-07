@@ -38,6 +38,7 @@ function drawMap(){
 				case 1	: {height = brickObj.height; width = brickObj.width; color = brickObj.color; elementType='block'; break;}
 				case 3	: {radius = enemyObj.radius; color = enemyObj.color; elementType = 'circle'; break;}
 				case 4	: {height = entranceObj.height; width = entranceObj.width; color = entranceObj.color; elementType = 'block'; break;}
+				case 5	: {height = exitObj.height; width = exitObj.width; color = exitObj.color; elementType = 'block'; break;}
 				case 9	:
 				default	: {height = 0; width = 0; break;}
 			}

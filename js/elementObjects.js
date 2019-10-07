@@ -18,3 +18,9 @@ entranceObj = {
 	width: 0,
 }
 
+exitObj = {
+	value: 5,
+	color: 'purple',
+	height: 0,
+	width: 0,
+}
