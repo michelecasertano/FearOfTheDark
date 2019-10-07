@@ -1,6 +1,6 @@
 brick = {
 	value: 1,
-	color: 'maroon',
+	color: 'coral',
 	height: 0,
 	width: 0,
 }
