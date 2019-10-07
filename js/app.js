@@ -46,7 +46,8 @@ class Room {
 		// this.wallCoord = [];
 		// this.trapCoord = [];
 		// this.enemyCoord = [];
-		// this.doorCoord = [];
+		this.doorCoord = [];
+		this.heroCoord = [];
 		
 
 		// dictionary of values for the map
@@ -65,7 +66,9 @@ class Room {
 		this.maxWallCoverage = 0.8;
 		this.maxNumberBricks = Math.floor(this.width * this.height * this.maxWallCoverage)
 
-
+		//restrictions on enemy 
+		this.maxNumberOfEnemies = 6
+		this.minNumberOfEnemies = 2
 
 	}
 }
@@ -83,7 +86,8 @@ const game = {
 	// Because in the initial version I am only using a straght line of room,
 	// I simplified it to be an array of objects.
 	// map: [[{},0,0]]
-	gameMap: [],
+	doorsArray: [],
+	gameMap:[],
 
 	start(){
 		mapGeneration.initiateRoom()
@@ -117,12 +121,14 @@ const mapGeneration = {
 		// initiate a room object and call it room.
 		const room = new Room(10,10)
 		game.gameMap.push(room)
+		console.log('game.gameMap: ',game.gameMap)
 		this.createEmptyRoom(room)
 
 		//in this first version, doors are added to left wall and right wall.
 		//in expansion could be randomized.
 		this.addDoors(room)
 		this.generateWalls(room)
+		this.addEnemies(room)
 
 		// game.gameMap.push(room)
 		console.log(game.printRooms())
@@ -149,9 +155,28 @@ const mapGeneration = {
 	addDoors(room){
 
 		//find a random spot on the leftWall to assign a door.
-		const entranceDoor = this.leftWallRandom(room)
-		const yCoordEntrance = entranceDoor[0]
-		const xCoordEntrance = entranceDoor[1]
+		let yCoordEntrance = null
+		let xCoordEntrance = null 
+
+		if(game.doorsArray.length > 0){
+			console.log('doorsArray longer than zero')
+			yCoordEntrance = game.doorsArray[game.doorsArray.length - 1].exit[0]
+			
+			//game now has entrances left and right wall. 
+			// logic for continuity in doors need to change if doors can be on any side.
+			// xCoordEntrance = game.doorsArray[game.doorsArray.length - 1].exit[1]
+			xCoordEntrance = 0
+			console.log('yCoordEntrance: ', yCoordEntrance)
+			console.log('xCoordEntrance: ', xCoordEntrance)
+		} else {
+			console.log('doorsArray is zero')
+			entranceDoor = this.leftWallRandom(room)
+			yCoordEntrance = entranceDoor[0]
+			xCoordEntrance = entranceDoor[1]
+			console.log('yCoordEntrance: ', yCoordEntrance)
+			console.log('xCoordEntrance: ', xCoordEntrance)
+		}
+		
 		//update the map to have the entrance door
 		this.updateMapValue(room, yCoordEntrance, xCoordEntrance, room.door)
 		//remove the entrance coordinates from the available index map
@@ -166,10 +191,40 @@ const mapGeneration = {
 
 		console.log('exit coord: ',yCoordExit," ",xCoordExit)
 
+
+		const doorCoord = {
+			roomNumber: game.gameMap.length,
+			entrance: [yCoordEntrance, xCoordExit],
+			exit:     [yCoordExit,xCoordExit]
+		}
+
+		console.log('doorCoord:', this.doorCoord)
+
+		game.doorsArray.push(doorCoord)
+
 		//update the map to have the exit door
 		this.updateMapValue(room, yCoordExit, xCoordExit, room.door)
 		//remove the exit coordinates from the available index map
 		this.removeUsedIndex(room,yCoordExit,xCoordExit);
+	},
+
+	addEnemies(room){
+		const numberOfEnemies = Math.floor(Math.random()*(room.maxNumberOfEnemies - room.minNumberOfEnemies)) + 1
+		console.log('numberOfEnemies: ', numberOfEnemies)
+		for (let i = 0; i < numberOfEnemies; i++){
+			//select a random row to place an enemy
+			const availableRows = Object.keys(room.mapAvailable)
+			const randomRowKeyIndex = Math.floor(Math.random()*availableRows.length)
+			const randomRow = availableRows[randomRowKeyIndex]
+			const xCoordEnemy = parseInt(randomRow)
+
+			//select random column to place enemy
+			const availableSpotsInRow = room.mapAvailable[randomRow]
+
+			console.log('randomRow: ', randomRow)
+			console.log('availableSpotsInRow: ', availableSpotsInRow)
+			// this.removeUsedIndex(room,yCoordEnemy,xCoordEnemy);		
+		}
 	},
 
 	generateWalls(room){
@@ -182,14 +237,14 @@ const mapGeneration = {
 			(room.maxNumberWalls - room.minNumberWalls + 1)) + room.minNumberWalls
 		// console.log(numberOfWallSeeds, ' random number of wall seeds')
 		// for each random wall, build the wall
-		console.log('numberOfWallSeeds: ',numberOfWallSeeds)
+		// console.log('numberOfWallSeeds: ',numberOfWallSeeds)
 
 		for (let i = 0; i < numberOfWallSeeds; i++){
 
-			console.log('in the loop in generateWalls #',i)
+			// console.log('in the loop in generateWalls #',i)
 			// for each wall, pick a side of the map where to plant the wall seed
 			const wallSide = Math.floor(Math.random()*4)
-			console.log('wallSide :',wallSide)
+			// console.log('wallSide :',wallSide)
 			switch(wallSide){
 				case 0: {brickCoord = this.topWallRandom(room); break}
 				case 1: {brickCoord = this.rightWallRandom(room); break}
@@ -204,7 +259,7 @@ const mapGeneration = {
 
 	buildWall(brickCoord, bricksUsedMap, room){
 		
-		console.log('in buildWall')
+		// console.log('in buildWall')
 		// checks to make sure that not too many bricks are used in a single wall
 		// each recursion is a single wall, so no need to re-assign it to zero 
 		// during the recursion
@@ -226,7 +281,7 @@ const mapGeneration = {
 		}
 
 		if (this.isSoloSeed(room,seedYcoord,seedXcoord)){
-			console.log('it is a solo seed')
+			// console.log('it is a solo seed')
 			this.buildWallRecursion(bricksUsedWall, bricksUsedMap,nextCoordArray,room)
 		} else {
 			this.updateMapValue(room, seedYcoord, seedXcoord, room.visited)
@@ -235,14 +290,14 @@ const mapGeneration = {
 	},
 
 	buildWallRecursion(bricksUsedWall, bricksUsedMap,coordArray, room){
-		console.log('in buildWallRecursion')
+		// console.log('in buildWallRecursion')
 		
 		if(coordArray.length === 0){return false} // this condition should never happen.
 		const coord = coordArray.shift()
 		const yCoord = coord[0]
 		const xCoord = coord[1]
-		console.log('yCoord: ', yCoord)
-		console.log('xCoord: ', xCoord)
+		// console.log('yCoord: ', yCoord)
+		// console.log('xCoord: ', xCoord)
 
 		// check if the block is on the entrance door 
 		if(room.map[yCoord][xCoord] === 4){
@@ -304,49 +359,49 @@ const mapGeneration = {
 		const yCoord1 = yCoord - 1 
 		const xCoord1 = xCoord
 		const block1Value = this.blockValue(room,yCoord1,xCoord1)
-		console.log('block1Value: ',block1Value)
+		// console.log('block1Value: ',block1Value)
 		if (block1Value !== 0) return false
 
 		const yCoord2 = yCoord - 1 
 		const xCoord2 = xCoord + 1
 		const block2Value = this.blockValue(room,yCoord2,xCoord2)
-		console.log('block2Value: ',block2Value)
+		// console.log('block2Value: ',block2Value)
 		if (block2Value !== 0) return false
 
 		const yCoord3 = yCoord 
 		const xCoord3 = xCoord + 1
 		const block3Value = this.blockValue(room,yCoord3,xCoord3)
-		console.log('block3Value: ',block3Value)
+		// console.log('block3Value: ',block3Value)
 		if (block3Value !== 0) return false
 
 		const yCoord4 = yCoord + 1 
 		const xCoord4 = xCoord + 1
 		const block4Value = this.blockValue(room,yCoord4,xCoord4)
-		console.log('block4Value: ',block4Value)
+		// console.log('block4Value: ',block4Value)
 		if (block4Value !== 0) return false
 
 		const yCoord5 = yCoord + 1
 		const xCoord5 = xCoord
 		const block5Value = this.blockValue(room,yCoord5,xCoord5)
-		console.log('block5Value: ',block5Value)
+		// console.log('block5Value: ',block5Value)
 		if (block5Value !== 0) return false
 
 		const yCoord6 = yCoord + 1
 		const xCoord6 = xCoord - 1
 		const block6Value = this.blockValue(room,yCoord6,xCoord6)
-		console.log('block6Value: ',block6Value)
+		// console.log('block6Value: ',block6Value)
 		if (block6Value !== 0) return false
 
 		const yCoord7 = yCoord 
 		const xCoord7 = xCoord - 1
 		const block7Value = this.blockValue(room,yCoord7,xCoord7)
-		console.log('block7Value: ',block7Value)
+		// console.log('block7Value: ',block7Value)
 		if (block7Value !== 0) return false
 
 		const yCoord8 = yCoord - 1 
 		const xCoord8 = xCoord - 1
 		const block8Value = this.blockValue(room,yCoord8,xCoord8)
-		console.log('block8Value: ',block8Value)
+		// console.log('block8Value: ',block8Value)
 		if (block8Value !== 0) return false
 
 		return true
@@ -466,7 +521,7 @@ const mapGeneration = {
 	},
 
 	selectNextBrick(room, yCoord, xCoord){
-		console.log('in selectNextBrick')
+		// console.log('in selectNextBrick')
 		// Depending where the previous brick is, I need to limit the 
 	    // possibilities for the next brick
 		// Next brick coded as per below
@@ -490,9 +545,8 @@ const mapGeneration = {
 		//             --------------------- 
 		//     bottomLeft(6) bottomWall(7)  bottomRight (8)
 		
-
 		const currentPosition = this.brickPositionString(room, yCoord, xCoord)
-		console.log('currentPosition: ',currentPosition,' ',typeof(currentPosition))
+		// console.log('currentPosition: ',currentPosition,' ',typeof(currentPosition))
 		let availablePositions = 0
 		const positionsArray = []
 		switch (currentPosition){
@@ -508,8 +562,8 @@ const mapGeneration = {
 			default: console.log('ERROR in switch currentBrickPosition')
 		}
 
-		console.log(availablePositions, ' availablePositions')
-		console.log(positionsArray, ' positionsArray')
+		// console.log(availablePositions, ' availablePositions')
+		// console.log(positionsArray, ' positionsArray')
 
 
 		const potentialPositions = this.shuffleArray(positionsArray)
@@ -527,10 +581,10 @@ const mapGeneration = {
 			nextCoordArray.push(nextCoord)
 		}
 
-		console.log('---selectNextBrick---')
-		for (i = 0 ; i < nextCoordArray.length; i++){
-			console.log(nextCoordArray[i])
-		}
+		// console.log('---selectNextBrick---')
+		// for (i = 0 ; i < nextCoordArray.length; i++){
+		// 	console.log(nextCoordArray[i])
+		// }
 		return nextCoordArray
 
 	},
@@ -646,10 +700,10 @@ const mapGeneration = {
 		if(room.mapAvailable.hasOwnProperty(0) === false) return false
 
 		const randomIndex = Math.floor(Math.random()*(room.mapAvailable[0].length));
-		console.log('random = ',randomIndex)
+		// console.log('random = ',randomIndex)
 		const randomColumnIndex = room.mapAvailable[0][randomIndex]
-		console.log('value from RandomColumnTop ',randomColumnIndex)
-		console.log('topWallAvailable: ',room.mapAvailable[0])
+		// console.log('value from RandomColumnTop ',randomColumnIndex)
+		// console.log('topWallAvailable: ',room.mapAvailable[0])
 		return [0, randomColumnIndex]
 	},
 
@@ -660,9 +714,9 @@ const mapGeneration = {
 		if(room.mapAvailable.hasOwnProperty(room.height - 1) === false) return false
 		const availableRows = Object.keys(room.mapAvailable)
 		const randomIndex = Math.floor(Math.random()*(room.mapAvailable[room.height - 1].length))
-		console.log('random = ',randomIndex)
+		// console.log('random = ',randomIndex)
 		const randomColumnIndex = room.mapAvailable[room.height - 1][randomIndex]
-		console.log('value from RandomColumnBottom ',randomColumnIndex)
+		// console.log('value from RandomColumnBottom ',randomColumnIndex)
 		return [room.height - 1, randomColumnIndex]
 	},
 
