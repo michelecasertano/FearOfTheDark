@@ -59,12 +59,11 @@ class Room {
 		this.visited = 9;
 
 		// restrictions on the map elements
-		this.maxNumberWalls = 1;
-		this.minNumberWalls = 1;
-
-		this.maxWallLength = 25;
-
+		this.maxNumberWalls = 20;
+		this.minNumberWalls = 20;
+		this.maxWallLength = 15;
 		this.maxWallCoverage = 0.8;
+		this.maxNumberBricks = Math.floor(this.width * this.height * this.maxWallCoverage)
 
 
 
@@ -115,6 +114,7 @@ const mapGeneration = {
 	initiateRoom(){
 		// initiate a room object and call it room.
 		const room = new Room(10,10)
+		game.gameMap.push(room)
 		this.createEmptyRoom(room)
 
 		//in this first version, doors are added to left wall and right wall.
@@ -122,12 +122,11 @@ const mapGeneration = {
 		this.addDoors(room)
 		this.generateWalls(room)
 
-		game.gameMap.push(room)
+		// game.gameMap.push(room)
 		console.log(game.printRooms())
 	},
 
-	// make the room empty assiging all cells value to zero.
-	// Have the dimension of the room fix to 10 and 10
+	// make the room empty assiging all cells value to -
 	createEmptyRoom(room){
 		for (let i = 0; i < room.height; i++){
 			const mapRow = []
@@ -144,7 +143,6 @@ const mapGeneration = {
 	// This function adds the entrance and the exit door to the room.
 	// Currently the function will add the entrance room on the left wall, and the 
 	// exit door in the right door. This could be expanded to be on any room.
-	// Not clear if doors could be on same wall. 
 
 	addDoors(room){
 
@@ -177,12 +175,14 @@ const mapGeneration = {
 			(room.maxNumberWalls - room.minNumberWalls + 1)) + room.minNumberWalls
 		// console.log(numberOfWallSeeds, ' random number of wall seeds')
 		// for each random wall, build the wall
-		for (i = 0; i < numberOfWallSeeds; i++){
+		console.log('numberOfWallSeeds: ',numberOfWallSeeds)
 
+		for (let i = 0; i < numberOfWallSeeds; i++){
+
+			console.log('in the loop in generateWalls #',i)
 			// for each wall, pick a side of the map where to plant the wall seed
 			const wallSide = Math.floor(Math.random()*4)
-			// console.log('wallSide ',wallSide)
-			const seedCoordinates = []
+			console.log('wallSide :',wallSide)
 			switch(wallSide){
 				case 0: {brickCoord = this.topWallRandom(room); break}
 				case 1: {brickCoord = this.rightWallRandom(room); break}
@@ -190,8 +190,6 @@ const mapGeneration = {
 				case 3: {brickCoord = this.leftWallRandom(room); break}
 			}
 			
-			console.log('wallSide :',wallSide)
-			console.log('seedCoord: ',brickCoord)
 			this.buildWall(brickCoord, bricksUsedMap, room)
 
 		}
@@ -209,7 +207,6 @@ const mapGeneration = {
 
 		//I can try to place four bricks prior to saying this is not an ok brick.
 		this.buildWallRecursion(bricksUsedWall, bricksUsedMap,nextCoordArray,room)
-
 
 	},
 
@@ -342,6 +339,10 @@ const mapGeneration = {
 		if(brickValue3 === 1 && brickValue7 === 1) return false 
 
 		//ensuring that the wall is not reconnecting to the border
+		if(this.outsideMap(room,brick1yCoord,brick1xCoord) && brickValue5 === 1) return false
+		if(this.outsideMap(room,brick7yCoord,brick7xCoord) && brickValue3 === 1) return false
+		if(this.outsideMap(room,brick5yCoord,brick5xCoord) && brickValue1 === 1) return false
+		if(this.outsideMap(room,brick3yCoord,brick3xCoord) && brickValue7 === 1) return false 
 
 		if(bricksAround < 3) return true
 			else return false
@@ -535,28 +536,34 @@ const mapGeneration = {
 	//because this will always be the first row, I look at mapAvailable[0]
 	topWallRandom(room){
 		// console.log('topWallRandom')
+		const availableRows = Object.keys(room.mapAvailable)
+		if(room.mapAvailable.hasOwnProperty(0) === false) return false
+
 		const randomIndex = Math.floor(Math.random()*(room.mapAvailable[0].length));
-		// console.log('random = ',randomIndex)
+		console.log('random = ',randomIndex)
 		const randomColumnIndex = room.mapAvailable[0][randomIndex]
-		// console.log('value from RandomColumnTop ',randomColumnIndex)
+		console.log('value from RandomColumnTop ',randomColumnIndex)
+		console.log('topWallAvailable: ',room.mapAvailable[0])
 		return [0, randomColumnIndex]
 	},
 
 	//select the index of a random column for the top row.
 	//because this will always be the last row, I look at mapAvailable[room.height - 1]
 	bottomWallRandom(room){
-		// console.log('bottomRowRandom')
-		const randomIndex = Math.floor(Math.random()*room.height)
-		// console.log('random = ',randomIndex)
+		console.log('in bottomRowRandom')
+		if(room.mapAvailable.hasOwnProperty(room.height - 1) === false) return false
+		const availableRows = Object.keys(room.mapAvailable)
+		const randomIndex = Math.floor(Math.random()*(room.mapAvailable[room.height - 1].length))
+		console.log('random = ',randomIndex)
 		const randomColumnIndex = room.mapAvailable[room.height - 1][randomIndex]
-		// console.log('value from RandomColumnBottom ',randomColumnIndex)
+		console.log('value from RandomColumnBottom ',randomColumnIndex)
 		return [room.height - 1, randomColumnIndex]
 	},
 
 	// Function checks if there are bricks left to be placed on the map.
 	// if there are bricks left, returns true. It maxWallCoverage has been reached, returns false
 	bricksLeftInWarehouse(bricksUsedMap, room){
-		if (bricksUsedMap <= Math.floor(room.width * room.height * room.maxWallCoverage)) return true
+		if (bricksUsedMap <= room.maxNumberBricks) return true
 			else return false
 	},
 	
