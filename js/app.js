@@ -50,7 +50,7 @@ class Room {
 		
 
 		// dictionary of values for the map
-		this.unvisited = '-';
+		this.unvisited = ' ';
 		this.wall = 1;
 		this.trap = 2;
 		this.enemy = 3;
@@ -59,9 +59,9 @@ class Room {
 		this.visited = 9;
 
 		// restrictions on the map elements
-		this.maxNumberWalls = 20;
-		this.minNumberWalls = 20;
-		this.maxWallLength = 15;
+		this.maxNumberWalls = 12;
+		this.minNumberWalls = 8;
+		this.maxWallLength = 20;
 		this.maxWallCoverage = 0.8;
 		this.maxNumberBricks = Math.floor(this.width * this.height * this.maxWallCoverage)
 
@@ -92,12 +92,14 @@ const game = {
 	printRooms(){
 		this.gameMap.forEach(function(room,i){
 			console.log(`---- ROOM ${i} ----`)
-			console.log(`col #: 0,1,2,3,4,5,6,7,8,9`)
+			console.log(`col #:  0,1,2,3,4,5,6,7,8,9`)
+			console.log('       --------------------')
 			for (let j = 0; j < room.height; j++)
-			console.log(`row ${j}: ${room.map[j]}`);
+			console.log(`row ${j}: |${room.map[j]}|`);
+			console.log(`col #:  0,1,2,3,4,5,6,7,8,9`)
 			console.log(`---- AVAIABLE SPOTS ROOM ${i} ----`)
 			for (let row in room.mapAvailable){
-				console.log(`row ${row}: ${room.mapAvailable[row]}`)
+				console.log(`row ${row}: |${room.mapAvailable[row]}|`)
 			}
 
 		})
@@ -132,7 +134,7 @@ const mapGeneration = {
 			const mapRow = []
 			const mapAvailableRow = []
 			for (let j = 0; j < room.width; j++){
-				mapRow[j]= '-'
+				mapRow[j]= ' '
 				mapAvailableRow[j] = j
 			}
 			room.map.push(mapRow);
@@ -155,10 +157,15 @@ const mapGeneration = {
 		//remove the entrance coordinates from the available index map
 		this.removeUsedIndex(room,yCoordEntrance,xCoordEntrance);
 
+		console.log('entrance coord: ',yCoordEntrance," ",xCoordEntrance)
+
 		//find a random spot on  the rightWall to assign a door.
 		const exitDoor = this.rightWallRandom(room)
 		const yCoordExit = exitDoor[0]
 		const xCoordExit = exitDoor[1]
+
+		console.log('exit coord: ',yCoordExit," ",xCoordExit)
+
 		//update the map to have the exit door
 		this.updateMapValue(room, yCoordExit, xCoordExit, room.door)
 		//remove the exit coordinates from the available index map
@@ -205,9 +212,26 @@ const mapGeneration = {
 		const nextCoordArray  = []
 		nextCoordArray.push(brickCoord)
 
-		//I can try to place four bricks prior to saying this is not an ok brick.
-		this.buildWallRecursion(bricksUsedWall, bricksUsedMap,nextCoordArray,room)
+		//the first item that is passed to this function is a wallSeed.
+		//this allows me to check that the seed is not placed next to other seeds.
+		//this allows fringe situations that could make the maze unsolvable.
 
+		const seedYcoord = brickCoord[0]
+		const seedXcoord = brickCoord[1]
+
+
+		//make sure that the seed is not on the door
+		if(room.map[seedYcoord][seedXcoord] === 4){
+			return false			
+		}
+
+		if (this.isSoloSeed(room,seedYcoord,seedXcoord)){
+			console.log('it is a solo seed')
+			this.buildWallRecursion(bricksUsedWall, bricksUsedMap,nextCoordArray,room)
+		} else {
+			this.updateMapValue(room, seedYcoord, seedXcoord, room.visited)
+			return false
+		}
 	},
 
 	buildWallRecursion(bricksUsedWall, bricksUsedMap,coordArray, room){
@@ -220,20 +244,32 @@ const mapGeneration = {
 		console.log('yCoord: ', yCoord)
 		console.log('xCoord: ', xCoord)
 
+		// check if the block is on the entrance door 
+		if(room.map[yCoord][xCoord] === 4){
+			if (coordArray.length > 0) return this.buildWallRecursion(bricksUsedWall, bricksUsedMap, coordArray, room)
+			return false			
+		}
+
+		// check if the block is outside the map
 		if(this.outsideMap(room,yCoord,xCoord)) {
 			if (coordArray.length > 0) return this.buildWallRecursion(bricksUsedWall, bricksUsedMap, coordArray, room)
 			return false
 		}
+
+		// check if I already tried to place a brick
 		if(this.alreadyTried(room, yCoord, xCoord) === true) {
 			this.buildWallRecursion(bricksUsedWall, bricksUsedMap, coordArray, room)
 			return false
 		}
+
+		// check if there is still space for bricks, or bricks in general
 		if(this.bricksLeftInWarehouse(bricksUsedMap, room) === false) { return false}
 		if(this.isWallShort(bricksUsedWall, room) === false) { return false}
-		//to keep the algorhitm easier, I can only try one additional brick.
-		// when I place a good brick, I need to udpate bircksUsedMap++, countrBricksTried = 0
-		//In future dev of this code, I could update it so it tries 4 bricks prior to stopping the wall.
-
+		
+		
+		
+		// check if it is a valid brick, if it: update used bricks and maps,
+		// run following recursion
 		if(this.isOkBrick(room, yCoord,xCoord)){
 			bricksUsedWall++
 			bricksUsedMap++
@@ -241,6 +277,10 @@ const mapGeneration = {
 			this.removeUsedIndex(room, yCoord, xCoord)
 			const nextCoordArray = this.selectNextBrick(room, yCoord, xCoord)
 			return this.buildWallRecursion(bricksUsedWall, bricksUsedMap, nextCoordArray, room)
+		// if brick is not ok, update the map and
+		// check if there are other positions to try.
+		// If there are, re-run recursion.
+		// If all positions tried, update map and exit recursion
 		} else if (coordArray.length > 0) {
 			this.updateMapValue(room, yCoord, xCoord, room.visited)
 			return this.buildWallRecursion(bricksUsedWall, bricksUsedMap, coordArray, room)
@@ -250,6 +290,70 @@ const mapGeneration = {
 		}
 	},
 
+	// check if the wall seed is solo or surrounded by other walls.
+	// not checking this condition could lead to an unsolvable maze
+	isSoloSeed(room, yCoord, xCoord){
+		// naming convention for surrounding bricks
+		// where x is the brick that I am checking
+		// |8|1|2| -> yCoord - 1
+		// |7|x|3| -> yCoord
+		// |6|5|4| -> yCoord + 1
+		// -1 0 +1 -> change in xCoord
+
+
+		const yCoord1 = yCoord - 1 
+		const xCoord1 = xCoord
+		const block1Value = this.blockValue(room,yCoord1,xCoord1)
+		console.log('block1Value: ',block1Value)
+		if (block1Value !== 0) return false
+
+		const yCoord2 = yCoord - 1 
+		const xCoord2 = xCoord + 1
+		const block2Value = this.blockValue(room,yCoord2,xCoord2)
+		console.log('block2Value: ',block2Value)
+		if (block2Value !== 0) return false
+
+		const yCoord3 = yCoord 
+		const xCoord3 = xCoord + 1
+		const block3Value = this.blockValue(room,yCoord3,xCoord3)
+		console.log('block3Value: ',block3Value)
+		if (block3Value !== 0) return false
+
+		const yCoord4 = yCoord + 1 
+		const xCoord4 = xCoord + 1
+		const block4Value = this.blockValue(room,yCoord4,xCoord4)
+		console.log('block4Value: ',block4Value)
+		if (block4Value !== 0) return false
+
+		const yCoord5 = yCoord + 1
+		const xCoord5 = xCoord
+		const block5Value = this.blockValue(room,yCoord5,xCoord5)
+		console.log('block5Value: ',block5Value)
+		if (block5Value !== 0) return false
+
+		const yCoord6 = yCoord + 1
+		const xCoord6 = xCoord - 1
+		const block6Value = this.blockValue(room,yCoord6,xCoord6)
+		console.log('block6Value: ',block6Value)
+		if (block6Value !== 0) return false
+
+		const yCoord7 = yCoord 
+		const xCoord7 = xCoord - 1
+		const block7Value = this.blockValue(room,yCoord7,xCoord7)
+		console.log('block7Value: ',block7Value)
+		if (block7Value !== 0) return false
+
+		const yCoord8 = yCoord - 1 
+		const xCoord8 = xCoord - 1
+		const block8Value = this.blockValue(room,yCoord8,xCoord8)
+		console.log('block8Value: ',block8Value)
+		if (block8Value !== 0) return false
+
+		return true
+
+	},
+
+	// check if block is inside the map
 	outsideMap(room,yCoord,xCoord){
 		// console.log('in outsideMap')
 		if(yCoord < 0) return true
@@ -261,8 +365,7 @@ const mapGeneration = {
 	//function checks if I have already tried to put a brick there.
 	// returns true if I have. 
 	alreadyTried(room, yCoord, xCoord){
-		console.log('in alreadyTried')
-		if(room.map[yCoord][xCoord] !== '-' ) return true
+		if(room.map[yCoord][xCoord] !== ' ' ) return true
 			else return false
 	},
 
@@ -354,9 +457,12 @@ const mapGeneration = {
 		// if that is a acase, return 1, as I am at checking outsie the room.
 		if(this.outsideMap(room, yCoord, xCoord)) return 0
 		// if(this.outsideMap(room, yCoord, xCoord)) return 0	
-		if(room.map[yCoord][xCoord] === '-') return 0
-		if(room.map[yCoord][xCoord] ===  4 ) return 0
-		return room.map[yCoord][xCoord]
+		if(room.map[yCoord][xCoord] === 9  ) return 0
+		if(room.map[yCoord][xCoord] === 4  ) return 0 // I might have to change it to 1
+		if(room.map[yCoord][xCoord] !== ' ') return 1
+		if(room.map[yCoord][xCoord] === ' ') return 0
+			
+		return (console.log('ERROR in blockValue'))
 	},
 
 	selectNextBrick(room, yCoord, xCoord){
@@ -442,11 +548,11 @@ const mapGeneration = {
 	},
 
 	brickPositionString(room, yCoord,xCoord){
-	console.log('in brickPositionString')
-	console.log('yCoord: ',yCoord)
-	console.log('xCoord: ',xCoord)
-	console.log('room.height: ',room.height)
-	console.log('room.width', room.width)
+	// console.log('in brickPositionString')
+	// console.log('yCoord: ',yCoord)
+	// console.log('xCoord: ',xCoord)
+	// console.log('room.height: ',room.height)
+	// console.log('room.width', room.width)
 	//Position naming convention
 	//       topLeft(0)  topWall(1) topRight(2)
 	//             ---------------------
