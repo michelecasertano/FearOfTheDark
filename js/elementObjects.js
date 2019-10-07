@@ -5,6 +5,12 @@ brick = {
 	width: 0,
 }
 
+enemy = {
+	value: 3,
+	color: 'red',
+	radius: 0
+}
+
 door = {
 	value: 4,
 	color: 'goldenRod',

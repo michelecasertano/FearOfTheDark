@@ -21,24 +21,40 @@ function drawMap(){
 			console.log(elementValue," elementValue")
 			let width = 0
 			let height = 0
+			let radius = 0
 			let color = ''
+			let elementType = ''
+
+			//a square in the grid is as big as a brick
+			const gridHeight = brick.height
+			const gridWidth = brick.width
 
 			// because of how this is coded, I would have to manually update each time I have
 			// a new element. if I had an object with elementName, value, objectName, I could make
 			// this flexible. For sake of semplicity I removed this complexity 
 
+			
 			switch (elementValue){
-				case 1	: {height = brick.height; width = brick.width; color = brick.color; break;}
-				case 3	: {break;}
-				case 4	: {height = door.height; width = door.width; color = door.color; break;}
+				case 1	: {height = brick.height; width = brick.width; color = brick.color; elementType='block'; break;}
+				case 3	: {radius = enemy.radius; color = enemy.color; elementType = 'circle'; break;}
+				case 4	: {height = door.height; width = door.width; color = door.color; elementType = 'block'; break;}
 				case 9	:
 				default	: {height = 0; width = 0; break;}
 			}
 
-			ctx.beginPath()
-			ctx.rect(parseInt(column)*height,row*width,height,width)
-			ctx.fillStyle = color
-			ctx.fill()
+			if (elementType === 'block'){
+				ctx.beginPath()
+				ctx.rect(parseInt(column)*gridWidth,row*gridHeight,width, height)
+				ctx.fillStyle = color
+				ctx.fill()
+			}
+
+			if (elementType === 'circle'){
+				ctx.beginPath()
+				ctx.arc(parseInt(column)*gridWidth + gridWidth/2, row*gridHeight + gridHeight/2, radius, 0, Math.PI*2)
+				ctx.fillStyle = color
+				ctx.fill()
+			}
 
 		}
 		makeGrid()

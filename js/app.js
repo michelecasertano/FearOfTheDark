@@ -56,9 +56,10 @@ class Room {
 		brick.height = canvas.height / this.height
 		brick.width = canvas.width / this.width
 
-
 		this.trap = 2;
+
 		this.enemy = 3;
+		enemy.radius = 0.6*(canvas.height / this.height)/2 
 
 		this.door = 4;
 		door.height = canvas.height / this.height
