@@ -85,6 +85,10 @@ class Room {
 		this.maxNumberOfEnemies = 12
 		this.minNumberOfEnemies = 8
 
+		//total number of Enemies
+		this.totalEnemies = 0
+		this.killedEnemies = 0
+
 	}
 }
 
@@ -105,7 +109,6 @@ const game = {
 	gameMap:[],
 	heroCoord:[],
 	currentRoom: -1,
-	movesInRoom: 0,
 
 	start(){
 		this.currentRoom++
@@ -144,14 +147,24 @@ const game = {
 				break;
 			}
 		}
-
-		console.log('old ',yHeroOld,xHeroOld)
-		console.log('new ',yHero, xHero)
 			
 		if(mapGeneration.outsideMap(room, yHero, xHero) === false &&
 			room.map[yHero][xHero] !== 1	){
 			this.heroCoord = [yHero, xHero]
+
+			if(this.isEnemy(room, yHero, xHero)){
+				room.killedEnemies++
+				mapGeneration.updateMapValue(room, yHero, xHero, " ")
+			}			
+			
+			if(this.isExit(room, yHero, xHero) && this.noMoreEnemies(room)){
+				game.start()
+			}
+
 			drawMap()
+
+
+
 		} else {
 			console.log('#################')
 			console.log('heroCoord ',this.heroCoord)
@@ -159,6 +172,21 @@ const game = {
 			console.log('#################')
 		}
 
+	},
+
+	isEnemy(room, y , x){
+		if (room.map[y][x] === enemyObj.value) return true
+		return false 
+	},
+
+	isExit(room, y , x){
+		if (room.map[y][x] === exitObj.value) return true
+		return false 
+	},
+
+	noMoreEnemies(room){
+		if (room.totalEnemies === room.killedEnemies) return true
+		return false
 	},
 
 	printRooms(){
@@ -278,7 +306,7 @@ const mapGeneration = {
 
 	addEnemies(room){
 		const numberOfEnemies = Math.floor(Math.random()*(room.maxNumberOfEnemies - room.minNumberOfEnemies)) + room.minNumberOfEnemies
-		console.log('numberOfEnemies: ', numberOfEnemies)
+		room.totalEnemies = numberOfEnemies
 		for (let i = 0; i < numberOfEnemies; i++){
 			//select a random row to place an enemy
 			const availableRows = Object.keys(room.mapAvailable)
