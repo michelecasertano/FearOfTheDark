@@ -27,27 +27,13 @@ exitObj = {
 
 heroObj = {
 	value: 6,
-	life: 5,
 	color: 'midnightBlue',
-	radius: 0,
+	radius: 0
+}
 
-	//canvas coordinates
-	x: 0,
-	y: 0,
-
-	// gridCoordinates
-	gridCoord: []
-
-	// move(char){
-	// 	// if (char === 'A') {
-	// 	// 	console.log('hero left')
-	// 	// 	gridCoord[0]-1
-
-	// 	// }
-	// 	if (char === 'W') {console.log('hero up')}
-	// 	if (char === 'D') {console.log('hero right')}
-	// 	if (char === 'S') {console.log('hero down')}
-	// }
-
-
+nightObj = {
+	value: 7,
+	color: 'black',
+	height: 0,
+	width: 0
 }
