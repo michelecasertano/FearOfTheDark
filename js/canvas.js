@@ -31,28 +31,28 @@ function drawMap(){
 
 			
 			switch (elementValue){
-				case 1	: {height = brickObj.height;
+				case brickObj.value	: {height = brickObj.height;
 					width = brickObj.width;
 					color = brickObj.color;
 					elementType='block'; break;}
-				case 3	: {
+				case enemyObj.value	: {
 					radius = enemyObj.radius;
 				    color = enemyObj.color;		
 				    x = parseInt(column)*gridWidth + gridWidth/2
 					y = row*gridHeight + gridHeight/2
 				    elementType = 'circle';
 				    break;}
-				case 4	: {
+				case entranceObj.value	: {
 					height = entranceObj.height;
 					width = entranceObj.width; color = entranceObj.color;
 					elementType = 'block';
 					break;}
-				case 5	: {
+				case exitObj.value	: {
 					height = exitObj.height;
 					width = exitObj.width;
 					color = exitObj.color;
 					elementType = 'block'; break;}
-				case 9	:
+				case triedForBrickObj.value	: console.log('ERRROR in map - should not be a 9')
 				default	: {height = 0; width = 0; break;}
 			}
 
