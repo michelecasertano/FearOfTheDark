@@ -1,8 +1,8 @@
 $(document).on('keydown',(e) => {
-	const char = String.fromCharCode(e.which)
+	const char = e.which
 	game.moveHero(char)
 
-	console.log(String.fromCharCode(e.which))
+	console.log(e.which)
 
 })
 

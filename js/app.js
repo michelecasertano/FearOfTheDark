@@ -128,21 +128,25 @@ const game = {
 		let xHeroOld = this.heroCoord[1]
 
 		switch(char){
-			case 'A': {
+			case 37: 
+			case 65: {
 				xHero--
 				break;
 			}
-			case 'W': {
+			case 38:
+			case 87: {
 				yHero--
 				console.log('yHero ',yHero)
 				console.log('xHero ', xHero)
 				break;
 			}
-			case 'D': {
+			case 39:
+			case 68: {
 				xHero++
 				break;
 			}
-			case 'S': {
+			case 40:
+			case 83: {
 				yHero++
 				break;
 			}
