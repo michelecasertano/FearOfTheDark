@@ -146,11 +146,7 @@ const game = {
 			
 		if(mapGeneration.outsideMap(room, yHero, xHero) === false &&
 			room.map[yHero][xHero] !== 1	){
-			if(room.map[yHeroOld][xHeroOld] !== 4 && room.map[yHeroOld][xHeroOld] !== 5 ){
-				mapGeneration.updateMapValue(room, yHeroOld, xHeroOld,' ')	
-			}
 			this.heroCoord = [yHero, xHero]
-			mapGeneration.updateMapValue(room,yHero, xHero, room.hero)	
 			drawMap()
 		} else {
 			console.log('#################')
