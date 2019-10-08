@@ -38,7 +38,7 @@ heroObj = {
 
 nightObj = {
 	value: 7,
-	color: 'black',
+	color: 'rgb(48,48,48)',
 	height: 0,
 	width: 0,
 	elementType: 'block'

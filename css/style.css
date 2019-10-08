@@ -1,4 +1,30 @@
+#gameScreen {
+	display: flex;
+	align-items: center;
+	justify-content: center
+}
+
+#gameTargets {
+	border: 3px solid black;
+	height: 600px;
+	width: 200px;
+	display: flex;
+	align-items: stretch;
+	flex-direction: row;
+	justify-content: space-between;
+}
+
+#scoreBoards {
+	border: 3px solid black;
+	height: 600px;
+	width: 200px;
+	display: flex;
+	align-items: stretch;
+	flex-direction: row;
+	justify-content: space-between;
+}
+
 canvas {
 	border: 3px solid black;
-	background-color: rgb(220, 220, 220);
+	background-color: rgb(72,72,72);
 }

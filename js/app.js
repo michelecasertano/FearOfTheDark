@@ -105,15 +105,37 @@ const game = {
 	gameMap:[],
 	heroCoord:[],
 	currentRoom: -1,
+	timeLeft: 60,
+
+	startTime(){
+		const intervalId = setInterval(() => {
+			console.log('timeLeft: ',this.timeLeft)
+			if(this.isTimeOver()) {
+				clearInterval(intervalId)
+				//launchGameOver
+				console.log('gameOver')
+				return false 
+			} else this.timeLeft --
+		},1000)
+	},
+
+	isTimeOver(){
+		if(this.timeLeft <= 0) return true
+		return false 
+	},
 
 	start(){
+		this.timeLeft = 60
 		this.currentRoom++
 		this.heroCoord = []
+		this.startTime()
 		mapGeneration.initiateRoom()
 	},
 
 	moveHero(char){
 		
+		if(this.isTimeOver()) return false
+
 		const room = this.gameMap[this.currentRoom]
 		let yHero = this.heroCoord[0]
 		let xHero = this.heroCoord[1]
@@ -160,13 +182,12 @@ const game = {
 
 
 
-		} else {
-			console.log('#################')
-			console.log('heroCoord ',this.heroCoord)
-			console.log('move not allowed')
-			console.log('#################')
 		}
+	},
 
+	isVisible(y , x){
+		if (Math.abs(y - this.heroCoord[0]) < 2 && Math.abs(x - this.heroCoord[1]) < 2) return true
+		return false
 	},
 
 	isHero(room, y, x){
@@ -230,7 +251,7 @@ const mapGeneration = {
 		drawMap()
 
 		// game.gameMap.push(room)
-		console.log(game.printRooms())
+		// console.log(game.printRooms())
 	},
 
 	// make the room empty assiging all cells value to -
@@ -859,7 +880,6 @@ const mapGeneration = {
 		if (bricksUsedWall <= room.maxWallLength) return true
 			else return false
 	}
-
 }
 
 

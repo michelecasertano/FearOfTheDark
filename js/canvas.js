@@ -14,6 +14,7 @@ function drawMap(){
 		const x = 0
 		for (let column = 0; column < map[row].length; column++){
 
+			const isBlockVisible = game.isVisible(parseInt(row), column)
 			const elementValue = map[row][column]
 			let width = 0
 			let height = 0
@@ -24,29 +25,28 @@ function drawMap(){
 			let elementType = ''
 
 			//a square in the grid is as big as a brick
-			game.isVisible = false
 			
-			if(game.isVisible){
+			if(isBlockVisible){
 				switch (elementValue){
-					case brickObj.value	: {
+					case brickObj.value: {
 						height = brickObj.height
 						width = brickObj.width
 						color = brickObj.color
 						elementType=brickObj.elementType
 						break}
-					case enemyObj.value	: {
+					case enemyObj.value: {
 						radius = enemyObj.radius
 					    color = enemyObj.color;	
 					    x = parseInt(column)*gridWidth + gridWidth/2
 						y = row*gridHeight + gridHeight/2
 					    elementType = enemyObj.elementType
 					    break}
-					case entranceObj.value	: {
+					case entranceObj.value: {
 						height = entranceObj.height
 						width = entranceObj.width; color = entranceObj.color
 						elementType = entranceObj.elementType
 						break}
-					case exitObj.value	: {
+					case exitObj.value: {
 						height = exitObj.height
 						width = exitObj.width
 						color = exitObj.color
@@ -63,7 +63,27 @@ function drawMap(){
 
 			}
 
-
+			switch (elementValue){
+					case enemyObj.value: {
+						radius = enemyObj.radius
+					    color = enemyObj.color;	
+					    x = parseInt(column)*gridWidth + gridWidth/2
+						y = row*gridHeight + gridHeight/2
+					    elementType = enemyObj.elementType
+					    break}
+					case entranceObj.value: {
+						height = entranceObj.height
+						width = entranceObj.width; color = entranceObj.color
+						elementType = entranceObj.elementType
+						break}
+					case exitObj.value: {
+						height = exitObj.height
+						width = exitObj.width
+						color = exitObj.color
+						elementType = exitObj.elementType
+						break}
+					case triedForBrickObj.value	: console.log('ERRROR in map - should not be a 9')
+				}
 
 			// if (game.heroCoord[0] === parseInt(row) && game.heroCoord[1] === column){
 			if (game.isHero(room,parseInt(row),column)){
@@ -90,7 +110,7 @@ function drawMap(){
 			}
 
 		}
-		makeGrid()
+		// makeGrid()
 	}
 }
 
