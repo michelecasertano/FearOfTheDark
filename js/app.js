@@ -117,6 +117,8 @@ const game = {
 		console.log(room, 'room')
 		let yHero = this.heroCoord[0]
 		let xHero = this.heroCoord[1]
+		let yHeroOld = this.heroCoord[0]
+		let xHeroOld = this.heroCoord[1]
 
 		switch(char){
 			case 'A': {
@@ -138,20 +140,23 @@ const game = {
 				break;
 			}
 		}
+
+		console.log('old ',yHeroOld,xHeroOld)
+		console.log('new ',yHero, xHero)
 			
 		if(mapGeneration.outsideMap(room, yHero, xHero) === false &&
 			room.map[yHero][xHero] !== 1	){
-			this.heroCoord = [yHero,xHero]
-			console.log('heroCoord updated ', this.heroCoord)
+			if(room.map[yHeroOld][xHeroOld] !== 4 && room.map[yHeroOld][xHeroOld] !== 5 ){
+				mapGeneration.updateMapValue(room, yHeroOld, xHeroOld,' ')	
+			}
+			this.heroCoord = [yHero, xHero]
 			mapGeneration.updateMapValue(room,yHero, xHero, room.hero)	
-			// this.printRooms()
 			drawMap()
 		} else {
 			console.log('#################')
 			console.log('heroCoord ',this.heroCoord)
 			console.log('move not allowed')
 			console.log('#################')
-			// this.printRooms()
 		}
 
 	},
