@@ -84,7 +84,6 @@ class Room {
 		//total number of Enemies
 		this.totalEnemies = 0
 		this.killedEnemies = 0
-
 	}
 }
 
@@ -106,10 +105,12 @@ const game = {
 	heroCoord:[],
 	currentRoom: -1,
 	timeLeft: 60,
+	score: 0,
 
 	startTime(){
 		const intervalId = setInterval(() => {
-			console.log('timeLeft: ',this.timeLeft)
+			$('#time').text(`Time: ${this.timeLeft}`)
+			this.updateStats()
 			if(this.isTimeOver()) {
 				clearInterval(intervalId)
 				//launchGameOver
@@ -125,11 +126,19 @@ const game = {
 	},
 
 	start(){
-		this.timeLeft = 60
+		this.timeLeft = 45
 		this.currentRoom++
 		this.heroCoord = []
 		this.startTime()
 		mapGeneration.initiateRoom()
+	},
+
+	updateStats(){
+		const room = this.gameMap[this.currentRoom]
+		const enemiesLeft = room.totalEnemies - room.killedEnemies
+		$('#coinsLeft').text(`Coins left: ${enemiesLeft}`)
+		$('#score').text(`Score: ${this.score}`)
+		$('#roomNum').text(`Room#: ${this.currentRoom + 1}`)
 	},
 
 	moveHero(char){
@@ -171,6 +180,7 @@ const game = {
 
 			if(this.isEnemy(room, yHero, xHero)){
 				room.killedEnemies++
+				this.score+= enemyObj.points
 				mapGeneration.updateMapValue(room, yHero, xHero, " ")
 			}			
 			
@@ -179,6 +189,7 @@ const game = {
 			}
 
 			drawMap()
+			this.updateStats()
 
 
 
@@ -364,8 +375,6 @@ const mapGeneration = {
 
 	addHero(room){
 		game.heroCoord = game.doorsArray[game.doorsArray.length - 1].entrance
-		// heroObj.gridCoord = game.heroCoord
-		console.log(game.heroCoord," game.heroCoord")
 	},
 
 	generateWalls(room){
@@ -881,7 +890,3 @@ const mapGeneration = {
 			else return false
 	}
 }
-
-
-
-

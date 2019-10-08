@@ -10,7 +10,8 @@ enemyObj = {
 	value: 3,
 	color: 'red',
 	radius: 0,
-	elementType: 'circle'
+	elementType: 'circle',
+	points: 10
 }
 
 entranceObj = {
