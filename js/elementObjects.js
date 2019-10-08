@@ -37,3 +37,15 @@ nightObj = {
 	height: 0,
 	width: 0
 }
+
+canSeeSpotObj = {
+	value: 8
+}
+
+triedForBrickObj = {
+	value: 9
+}
+
+emptySpotObj = {
+	value: " "
+}

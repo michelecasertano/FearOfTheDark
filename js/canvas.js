@@ -1,29 +1,20 @@
 const canvas = document.getElementById('my-canvas');
-console.log(canvas) // cool now we have the canvas
-
-// the "context" is what you actually draw on -- you basically always need it
 const ctx = canvas.getContext('2d');
-console.log(ctx); // cool, our rendering context is set up
 
-//try to make the following work on the first row
 function drawMap(){
 	ctx.clearRect(0, 0, canvas.width, canvas.height)
 	const room = game.gameMap[game.gameMap.length - 1]
 	const map = room.map
-	console.log(map, 'map')
 	const gridHeight = brickObj.height
 	const gridWidth = brickObj.width
 	//iterate on all rows
 	const y = 0
 
 	for (let row in map){
-		// console.log("row# ",row)
 		const x = 0
 		for (let column = 0; column < map[row].length; column++){
-			// console.log('column ', column, ' row ', parseInt(row))
-			// console.log('hero coord prior switch: ', game.heroCoord[0], game.heroCoord[1])
+
 			const elementValue = map[row][column]
-			// console.log(elementValue," elementValue")
 			let width = 0
 			let height = 0
 			let x = 0
@@ -46,11 +37,8 @@ function drawMap(){
 					elementType='block'; break;}
 				case 3	: {
 					radius = enemyObj.radius;
-				    color = enemyObj.color;
-				    // enemyObj.x = parseInt(column)*gridWidth + gridWidth/2
+				    color = enemyObj.color;		
 				    x = parseInt(column)*gridWidth + gridWidth/2
-				    // x = enemyObj.x
-				    // enemyObj.y = row*gridHeight + gridHeight/2
 					y = row*gridHeight + gridHeight/2
 				    elementType = 'circle';
 				    break;}
@@ -59,15 +47,6 @@ function drawMap(){
 					width = entranceObj.width; color = entranceObj.color;
 					elementType = 'block';
 					break;}
-				// case 6  : {
-				// 	radius = heroObj.radius;
-				// 	color = heroObj.color;
-				// 	elementType = 'circle';
-				// 	// heroObj.x = parseInt(column)*gridWidth + gridWidth/2
-				// 	x = parseInt(column)*gridWidth + gridWidth/2
-				// 	// heroObj.y = row*gridHeight + gridHeight/2
-				// 	y = row*gridHeight + gridHeight/2
-				// 	break;}
 				case 5	: {
 					height = exitObj.height;
 					width = exitObj.width;
@@ -76,19 +55,15 @@ function drawMap(){
 				case 9	:
 				default	: {height = 0; width = 0; break;}
 			}
-			// console.log('game.HeroCoord[0] ',game.heroCoord[0])
-			// console.log('game.HeroCoord[1] ',game.heroCoord[1])
-			// console.log('row ', row)
-			// console.log('column ', column)
-			// console.log('condition ',game.heroCoord[0] === parseInt(row) && game.heroCoord[1] === column)
-			if (game.heroCoord[0] === parseInt(row) && game.heroCoord[1] === column){
-				// console.log('hero is here ', row, column)
+
+
+			// if (game.heroCoord[0] === parseInt(row) && game.heroCoord[1] === column){
+			if (game.isHero(room,parseInt(row),column)){
 				radius = heroObj.radius;
 				color = heroObj.color;
 				elementType = 'circle';
-				// heroObj.x = parseInt(column)*gridWidth + gridWidth/2
+
 				x = parseInt(column)*gridWidth + gridWidth/2
-				// heroObj.y = row*gridHeight + gridHeight/2
 				y = row*gridHeight + gridHeight/2
 			}
 

@@ -112,16 +112,13 @@ const game = {
 
 	start(){
 		this.currentRoom++
-		console.log(this.heroCoord)
 		this.heroCoord = []
-		console.log(this.heroCoord)
 		mapGeneration.initiateRoom()
 	},
 
 	moveHero(char){
 		
 		const room = this.gameMap[this.currentRoom]
-		console.log(room, 'room')
 		let yHero = this.heroCoord[0]
 		let xHero = this.heroCoord[1]
 		let yHeroOld = this.heroCoord[0]
@@ -136,8 +133,6 @@ const game = {
 			case 38:
 			case 87: {
 				yHero--
-				console.log('yHero ',yHero)
-				console.log('xHero ', xHero)
 				break;
 			}
 			case 39:
@@ -176,6 +171,11 @@ const game = {
 			console.log('#################')
 		}
 
+	},
+
+	isHero(room, y, x){
+		if (this.heroCoord[0] === y && this.heroCoord[1] === x) return true
+		return false
 	},
 
 	isEnemy(room, y , x){
@@ -230,6 +230,7 @@ const mapGeneration = {
 		this.generateWalls(room)
 		this.addEnemies(room)
 		this.addHero(room)
+		this.cleanRoom(room)
 		drawMap()
 
 		// game.gameMap.push(room)
@@ -247,6 +248,16 @@ const mapGeneration = {
 			}
 			room.map.push(mapRow);
 			room.mapAvailable[i] = mapAvailableRow
+		}
+	},
+
+	cleanRoom(room){
+		for (let i = 0; i < room.height; i++){
+			for (let j = 0; j < room.width; j++){
+				if(room.map[i][j] === triedForBrickObj.value){
+					this.updateMapValue(room,i,j,emptySpotObj.value)
+				}
+			}
 		}
 	},
 
@@ -354,10 +365,8 @@ const mapGeneration = {
 
 		for (let i = 0; i < numberOfWallSeeds; i++){
 
-			// console.log('in the loop in generateWalls #',i)
 			// for each wall, pick a side of the map where to plant the wall seed
 			const wallSide = Math.floor(Math.random()*4)
-			// console.log('wallSide :',wallSide)
 			switch(wallSide){
 				case 0: {brickCoord = this.topWallRandom(room); break}
 				case 1: {brickCoord = this.rightWallRandom(room); break}
@@ -372,7 +381,6 @@ const mapGeneration = {
 
 	buildWall(brickCoord, bricksUsedMap, room){
 		
-		// console.log('in buildWall')
 		// checks to make sure that not too many bricks are used in a single wall
 		// each recursion is a single wall, so no need to re-assign it to zero 
 		// during the recursion
@@ -386,7 +394,6 @@ const mapGeneration = {
 
 		const seedYcoord = brickCoord[0]
 		const seedXcoord = brickCoord[1]
-
 
 		//make sure that the seed is not on the door
 		if(room.map[seedYcoord][seedXcoord] === 4){
