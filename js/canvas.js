@@ -41,23 +41,31 @@ function drawMap(){
 				case 3	: {
 					radius = enemyObj.radius;
 				    color = enemyObj.color;
-				    enemyObj.x = parseInt(column)*gridWidth + gridWidth/2
-				    x = enemyObj.x
-				    enemyObj.y = row*gridHeight + gridHeight/2
-					y = enemyObj.y
+				    // enemyObj.x = parseInt(column)*gridWidth + gridWidth/2
+				    x = parseInt(column)*gridWidth + gridWidth/2
+				    // x = enemyObj.x
+				    // enemyObj.y = row*gridHeight + gridHeight/2
+					y = row*gridHeight + gridHeight/2
 				    elementType = 'circle';
 				    break;}
-				case 4	: {height = entranceObj.height; width = entranceObj.width; color = entranceObj.color; elementType = 'block';}
+				case 4	: {
+					height = entranceObj.height;
+					width = entranceObj.width; color = entranceObj.color;
+					elementType = 'block';}
 				case 6  : {
 					radius = heroObj.radius;
 					color = heroObj.color;
 					elementType = 'circle';
-					heroObj.x = parseInt(column)*gridWidth + gridWidth/2
-					x = heroObj.x
-					heroObj.y = row*gridHeight + gridHeight/2
-					y = heroObj.y
+					// heroObj.x = parseInt(column)*gridWidth + gridWidth/2
+					x = parseInt(column)*gridWidth + gridWidth/2
+					// heroObj.y = row*gridHeight + gridHeight/2
+					y = row*gridHeight + gridHeight/2
 					break;}
-				case 5	: {height = exitObj.height; width = exitObj.width; color = exitObj.color; elementType = 'block'; break;}
+				case 5	: {
+					height = exitObj.height;
+					width = exitObj.width;
+					color = exitObj.color;
+					elementType = 'block'; break;}
 				case 9	:
 				default	: {height = 0; width = 0; break;}
 			}

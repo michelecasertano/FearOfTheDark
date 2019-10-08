@@ -114,38 +114,37 @@ const game = {
 	moveHero(char){
 		
 		const room = this.gameMap[this.currentRoom]
-		let yHero = null
-		let xHero = null
+		console.log(room, 'room')
+		let yHero = this.heroCoord[0]
+		let xHero = this.heroCoord[1]
 
 		switch(char){
 			case 'A': {
-				yHero = this.heroCoord[0]
-				xHero = this.heroCoord[1]--
+				xHero--
 				break;
 			}
 			case 'W': {
-				yHero = this.heroCoord[0]--
-				xHero = this.heroCoord[1]
+				yHero--
+				console.log('yHero ',yHero)
+				console.log('xHero ', xHero)
 				break;
 			}
 			case 'D': {
-				yHero = this.heroCoord[0]
-				xHero = this.heroCoord[1]++
+				xHero++
 				break;
 			}
 			case 'S': {
-				yHero = this.heroCoord[0]++
-				xHero = this.heroCoord[1]
+				yHero++
 				break;
 			}
 		}
 			
-		if(mapGeneration.outsideMap(room,yHero,xHero) === false){
+		if(mapGeneration.outsideMap(room, yHero, xHero) === false &&
+			room.map[yHero][xHero] !== 1	){
 			this.heroCoord = [yHero,xHero]
 			console.log('heroCoord updated ', this.heroCoord)
-			heroObj.gridCoord = this.heroCoord
 			mapGeneration.updateMapValue(room,yHero, xHero, room.hero)	
-			this.printRooms()
+			// this.printRooms()
 			drawMap()
 		} else {
 			console.log('#################')
@@ -300,7 +299,7 @@ const mapGeneration = {
 
 	addHero(room){
 		game.heroCoord = game.doorsArray[game.doorsArray.length - 1].entrance
-		heroObj.gridCoord = game.heroCoord
+		// heroObj.gridCoord = game.heroCoord
 		console.log(game.heroCoord," game.heroCoord")
 	},
 
@@ -499,6 +498,8 @@ const mapGeneration = {
 		if(xCoord < 0) return true
 		if(yCoord >= room.height) return true
 		if(xCoord >= room.width) return true
+
+		return false
 	},
 
 	//function checks if I have already tried to put a brick there.
