@@ -104,10 +104,14 @@ const game = {
 	doorsArray: [],
 	gameMap:[],
 	heroCoord:[],
-	currentRoom: 0,
+	currentRoom: -1,
 	movesInRoom: 0,
 
 	start(){
+		this.currentRoom++
+		console.log(this.heroCoord)
+		this.heroCoord = []
+		console.log(this.heroCoord)
 		mapGeneration.initiateRoom()
 	},
 
