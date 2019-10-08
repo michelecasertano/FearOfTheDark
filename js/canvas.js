@@ -24,37 +24,45 @@ function drawMap(){
 			let elementType = ''
 
 			//a square in the grid is as big as a brick
-
-			// because of how this is coded, I would have to manually update each time I have
-			// a new element. if I had an object with elementName, value, objectName, I could make
-			// this flexible. For sake of semplicity I removed this complexity 
-
+			game.isVisible = false
 			
-			switch (elementValue){
-				case brickObj.value	: {height = brickObj.height;
-					width = brickObj.width;
-					color = brickObj.color;
-					elementType='block'; break;}
-				case enemyObj.value	: {
-					radius = enemyObj.radius;
-				    color = enemyObj.color;		
-				    x = parseInt(column)*gridWidth + gridWidth/2
-					y = row*gridHeight + gridHeight/2
-				    elementType = 'circle';
-				    break;}
-				case entranceObj.value	: {
-					height = entranceObj.height;
-					width = entranceObj.width; color = entranceObj.color;
-					elementType = 'block';
-					break;}
-				case exitObj.value	: {
-					height = exitObj.height;
-					width = exitObj.width;
-					color = exitObj.color;
-					elementType = 'block'; break;}
-				case triedForBrickObj.value	: console.log('ERRROR in map - should not be a 9')
-				default	: {height = 0; width = 0; break;}
+			if(game.isVisible){
+				switch (elementValue){
+					case brickObj.value	: {
+						height = brickObj.height
+						width = brickObj.width
+						color = brickObj.color
+						elementType=brickObj.elementType
+						break}
+					case enemyObj.value	: {
+						radius = enemyObj.radius
+					    color = enemyObj.color;	
+					    x = parseInt(column)*gridWidth + gridWidth/2
+						y = row*gridHeight + gridHeight/2
+					    elementType = enemyObj.elementType
+					    break}
+					case entranceObj.value	: {
+						height = entranceObj.height
+						width = entranceObj.width; color = entranceObj.color
+						elementType = entranceObj.elementType
+						break}
+					case exitObj.value	: {
+						height = exitObj.height
+						width = exitObj.width
+						color = exitObj.color
+						elementType = exitObj.elementType
+						break}
+					case triedForBrickObj.value	: console.log('ERRROR in map - should not be a 9')
+					default	: {height = 0; width = 0; break;}
+				}
+			} else {
+				height = gridHeight
+				width = gridWidth
+				color = nightObj.color
+				elementType = nightObj.elementType
+
 			}
+
 
 
 			// if (game.heroCoord[0] === parseInt(row) && game.heroCoord[1] === column){

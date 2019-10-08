@@ -21,16 +21,16 @@ class Room {
 		//array in which the map is stored. 
 		// An empty map looks like this
 		// [
-		// [-,-,-,-,-,-,-,-,-,-],
-		// [-,-,-,-,-,-,-,-,-,-],
-		// [-,-,-,-,-,-,-,-,-,-],
-		// [-,-,-,-,-,-,-,-,-,-],
-		// [-,-,-,-,-,-,-,-,-,-],
-		// [-,-,-,-,-,-,-,-,-,-],
-		// [-,-,-,-,-,-,-,-,-,-],
-		// [-,-,-,-,-,-,-,-,-,-],
-		// [-,-,-,-,-,-,-,-,-,-],
-		// [-,-,-,-,-,-,-,-,-,-]
+		// [ , , , , , , , , , ],
+		// [ , , , , , , , , , ],
+		// [ , , , , , , , , , ],
+		// [ , , , , , , , , , ],
+		// [ , , , , , , , , , ],
+		// [ , , , , , , , , , ],
+		// [ , , , , , , , , , ],
+		// [ , , , , , , , , , ],
+		// [ , , , , , , , , , ],
+		// [ , , , , , , , , , ],
 		// ]
 		// when walls, obstacles, enemies are added using a code as specified in dictionatry below
 		// each element is also stored in separete array -> I might not need this.
@@ -43,14 +43,10 @@ class Room {
 		//removed from the array. The key of the object is the row number.
 		// This allows me to remove complete rows if necessary.
 		this.mapAvailable = {};
-		// this.wallCoord = [];
-		// this.trapCoord = [];
-		// this.enemyCoord = [];
 		this.doorCoord = [];
 		
 
 		// dictionary and values for the map
-		this.unvisited = ' ';
 		this.wall = brickObj.value;
 		brickObj.height = canvas.height / this.height
 		brickObj.width = canvas.width / this.width
