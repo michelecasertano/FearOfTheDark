@@ -3,8 +3,9 @@ const ctx = canvas.getContext('2d');
 
 const chest = new Image()
 chest.src = 'sprites/chest_full_open_anim_f0.png'
-// chest.width = 140
-// chest.height = 140
+
+const exit = new Image()
+exit.src = 'sprites/doors_leaf_closed.png'
 
 function drawMap(){
 	ctx.clearRect(0, 0, canvas.width, canvas.height)
@@ -83,7 +84,6 @@ function drawMap(){
 					case exitObj.value: {
 						height = exitObj.height
 						width = exitObj.width
-						color = exitObj.color
 						elementType = exitObj.elementType
 						break}
 					case triedForBrickObj.value	: console.log('ERRROR in map - should not be a 9')
@@ -118,6 +118,12 @@ function drawMap(){
 				ctx.arc(x,y, radius, 0, Math.PI*2)
 				ctx.fillStyle = color
 				ctx.fill()
+			}
+
+			if (elementType === 'exit'){
+				const x = column*gridWidth + (gridWidth - exitObj.width)/2
+				const y = row*gridHeight + (gridHeight - exitObj.width)/2
+				ctx.drawImage(exit, x, y , exitObj.width, exitObj.height)
 			}
 
 		}

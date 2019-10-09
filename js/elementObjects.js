@@ -29,7 +29,7 @@ exitObj = {
 	color: 'purple',
 	height: 0,
 	width: 0,
-	elementType: 'block'
+	elementType: 'exit'
 }
 
 heroObj = {
