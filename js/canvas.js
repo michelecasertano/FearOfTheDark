@@ -51,10 +51,6 @@ function drawMap(){
 						break}
 				}
 
-			if (game.isHero(room,parseInt(row),column)){
-				ctx.drawImage(hero, x, y, heroObj.width, heroObj.height)
-			}
-
 			if (isBlockVisible === false){
 				color = nightObj.color
 				ctx.beginPath()
@@ -77,6 +73,9 @@ function drawMap(){
 				ctx.drawImage(chest, xChest , yChest, enemyObj.width, enemyObj.height)
 			}
 
+			if (game.isHero(room,parseInt(row),column)){
+				ctx.drawImage(hero, x, y, heroObj.width, heroObj.height)
+			}
 		}
 
 		// makeGrid()

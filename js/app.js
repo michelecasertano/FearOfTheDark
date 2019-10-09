@@ -111,6 +111,7 @@ const game = {
 	currentRoom: -1,
 	timeLeft: 600,
 	score: 0,
+	enemiesLeft: 0,
 
 	startTime(){
 		const intervalId = setInterval(() => {
@@ -134,17 +135,19 @@ const game = {
 	},
 
 	start(){
+		exit.src = 'sprites/doors_leaf_closed.png'
 		this.timeLeft = 600
 		this.currentRoom++
 		this.heroCoord = []
-		this.startTime()
+		if(this.currentRoom === 0) this.startTime()
 		mapGeneration.initiateRoom()
 	},
 
 	updateStats(){
 		const room = this.gameMap[this.currentRoom]
-		const enemiesLeft = room.totalEnemies - room.killedEnemies
-		$('#coinsLeft').text(`${enemiesLeft}`)
+		this.enemiesLeft = room.totalEnemies - room.killedEnemies
+		if (this.enemiesLeft <= 0) exit.src = 'sprites/doors_leaf_open.png'
+		$('#coinsLeft').text(`${this.enemiesLeft}`)
 		$('#score').text(`${this.score}`)
 		$('#roomNum').text(`${this.currentRoom + 1}`)
 	},
