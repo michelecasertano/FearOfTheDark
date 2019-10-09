@@ -13,6 +13,9 @@ brick.src = brickObj.src
 const pavement = new Image()
 pavement.src = pavementObj.src
 
+const hero = new Image()
+hero.src = heroObj.src
+
 function drawMap(){
 	ctx.clearRect(0, 0, canvas.width, canvas.height)
 	const room = game.gameMap[game.gameMap.length - 1]
@@ -52,12 +55,12 @@ function drawMap(){
 						y = row*gridHeight + gridHeight/2
 					    elementType = enemyObj.elementType
 					    break}
-					case entranceObj.value: {
-						height = entranceObj.height
-						width = entranceObj.width
-						color = entranceObj.color
-						elementType = entranceObj.elementType
-						break}
+					// case entranceObj.value: {
+					// 	height = entranceObj.height
+					// 	width = entranceObj.width
+					// 	color = entranceObj.color
+					// 	elementType = entranceObj.elementType
+					// 	break}
 					case exitObj.value: {
 						height = exitObj.height
 						width = exitObj.width
@@ -77,17 +80,17 @@ function drawMap(){
 
 			switch (elementValue){
 					case enemyObj.value: {
-						height = entranceObj.height
-						width = entranceObj.width;
+						height = enemyObj.height
+						width = enemyObj.width;
 						color = enemyObj.color
 						elementType = enemyObj.elementType
 					    elementType = enemyObj.elementType
 					    break}
-					case entranceObj.value: {
-						height = entranceObj.height
-						width = entranceObj.width; color = entranceObj.color
-						elementType = entranceObj.elementType
-						break}
+					// case entranceObj.value: {
+					// 	height = entranceObj.height
+					// 	width = entranceObj.width; color = entranceObj.color
+					// 	elementType = entranceObj.elementType
+					// 	break}
 					case exitObj.value: {
 						height = exitObj.height
 						width = exitObj.width
@@ -97,14 +100,6 @@ function drawMap(){
 				}
 
 			// if (game.heroCoord[0] === parseInt(row) && game.heroCoord[1] === column){
-			if (game.isHero(room,parseInt(row),column)){
-				radius = heroObj.radius;
-				color = heroObj.color;
-				elementType = 'circle';
-
-				x = x + gridWidth/2
-				y = row*gridHeight + gridHeight/2
-			}
 
 			if (elementType === 'brick'){
 				const y = row*gridHeight
@@ -137,6 +132,12 @@ function drawMap(){
 				const x = column*gridWidth + (gridWidth - exitObj.width)/2
 				const y = row*gridHeight + (gridHeight - exitObj.width)/2
 				ctx.drawImage(exit, x, y , exitObj.width, exitObj.height)
+			}
+
+			if (game.isHero(room,parseInt(row),column)){
+				x = x
+				y = row*gridHeight
+				ctx.drawImage(hero, x, y, heroObj.width, heroObj.height)
 			}
 
 		}

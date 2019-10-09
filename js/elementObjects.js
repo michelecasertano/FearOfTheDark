@@ -37,9 +37,10 @@ exitObj = {
 
 heroObj = {
 	value: 6,
-	color: 'midnightBlue',
-	radius: 0,
-	elementType: 'circle'
+	height: 0,
+	width: 0,
+	elementType: 'hero',
+	src: 'sprites/knight_f_run_anim_f1.png'
 }
 
 nightObj = {

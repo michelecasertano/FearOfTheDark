@@ -66,7 +66,8 @@ class Room {
 		exitObj.width = 0.8 * canvas.width / this.width
 
 		this.hero = heroObj.value;
-		heroObj.radius = 0.5*(canvas.height / this.height)/2 	
+		heroObj.height = 0.8 * canvas.height / this.height
+		heroObj.width = 0.8 * canvas.width / this.width
 
 		pavementObj.height = canvas.height / this.height
 		pavementObj.width = canvas.width / this.width
