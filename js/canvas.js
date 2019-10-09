@@ -53,22 +53,9 @@ function drawMap(){
 				}
 
 			if (elementType === 'brick'){
-				const y = row*gridHeight
 				ctx.drawImage(brick, x , y, brickObj.width, brickObj.height)
 			}
 
-			if (elementType === 'chest'){
-				x = parseInt(column)*gridWidth + (gridWidth - enemyObj.width)/2
-				const y = row*gridHeight + (gridHeight - enemyObj.width)/2
-				ctx.drawImage(chest, x , y, enemyObj.width, enemyObj.height)
-
-			}
-
-			if (elementType === 'exit'){
-				const x = column*gridWidth + (gridWidth - exitObj.width)/2
-				const y = row*gridHeight + (gridHeight - exitObj.width)/2
-				ctx.drawImage(exit, x, y , exitObj.width, exitObj.height)
-			}
 
 			if (game.isHero(room,parseInt(row),column)){
 				x = x
@@ -82,6 +69,20 @@ function drawMap(){
 				ctx.rect( column*gridWidth , row*gridHeight, gridWidth, gridHeight)
 				ctx.fillStyle = color
 				ctx.fill()
+			}
+
+			if (elementType === 'exit'){
+				const x = column*gridWidth + (gridWidth - exitObj.width)/2
+				const y = row*gridHeight + (gridHeight - exitObj.width)/2
+				ctx.drawImage(pavement, parseInt(column)*gridWidth , row*gridHeight , pavementObj.width, pavementObj.height)
+				ctx.drawImage(exit, x, y , exitObj.width, exitObj.height)
+			}
+
+			if (elementType === 'chest'){
+				x = parseInt(column)*gridWidth + (gridWidth - enemyObj.width)/2
+				const y = row*gridHeight + (gridHeight - enemyObj.width)/2
+				ctx.drawImage(pavement, parseInt(column)*gridWidth , row*gridHeight , pavementObj.width, pavementObj.height)
+				ctx.drawImage(chest, x , y, enemyObj.width, enemyObj.height)
 			}
 
 		}
