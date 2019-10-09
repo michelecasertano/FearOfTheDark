@@ -18,6 +18,7 @@ hero.src = heroObj.src
 
 function drawMap(){
 	ctx.clearRect(0, 0, canvas.width, canvas.height)
+
 	const room = game.gameMap[game.gameMap.length - 1]
 	const map = room.map
 	const gridHeight = brickObj.height
@@ -39,72 +40,21 @@ function drawMap(){
 
 			ctx.drawImage(pavement, x , y, pavementObj.width, pavementObj.height)
 
-			//a square in the grid is as big as a brick
-			if(isBlockVisible){
-				switch (elementValue){
-					case brickObj.value: {
-						height = brickObj.height
-						width = brickObj.width
-						color = brickObj.color
-						elementType=brickObj.elementType
-						break}
-					case enemyObj.value: {
-						radius = enemyObj.radius
-					    color = enemyObj.color;	
-					    x = x + gridWidth/2
-						y = row*gridHeight + gridHeight/2
-					    elementType = enemyObj.elementType
-					    break}
-					// case entranceObj.value: {
-					// 	height = entranceObj.height
-					// 	width = entranceObj.width
-					// 	color = entranceObj.color
-					// 	elementType = entranceObj.elementType
-					// 	break}
-					case exitObj.value: {
-						height = exitObj.height
-						width = exitObj.width
-						color = exitObj.color
-						elementType = exitObj.elementType
-						break}
-					case triedForBrickObj.value	: console.log('ERRROR in map - should not be a 9')
-					default	: {height = 0; width = 0; break;}
-				}
-			} else {
-				height = gridHeight
-				width = gridWidth
-				color = nightObj.color
-				elementType = nightObj.elementType
-
-			}
-
 			switch (elementValue){
+					case brickObj.value: {
+						elementType = brickObj.elementType
+						break}
 					case enemyObj.value: {
-						height = enemyObj.height
-						width = enemyObj.width;
-						color = enemyObj.color
-						elementType = enemyObj.elementType
 					    elementType = enemyObj.elementType
 					    break}
-					// case entranceObj.value: {
-					// 	height = entranceObj.height
-					// 	width = entranceObj.width; color = entranceObj.color
-					// 	elementType = entranceObj.elementType
-					// 	break}
 					case exitObj.value: {
-						height = exitObj.height
-						width = exitObj.width
 						elementType = exitObj.elementType
 						break}
-					case triedForBrickObj.value	: console.log('ERRROR in map - should not be a 9')
 				}
-
-			// if (game.heroCoord[0] === parseInt(row) && game.heroCoord[1] === column){
 
 			if (elementType === 'brick'){
 				const y = row*gridHeight
 				ctx.drawImage(brick, x , y, brickObj.width, brickObj.height)
-
 			}
 
 			if (elementType === 'chest'){
@@ -112,20 +62,6 @@ function drawMap(){
 				const y = row*gridHeight + (gridHeight - enemyObj.width)/2
 				ctx.drawImage(chest, x , y, enemyObj.width, enemyObj.height)
 
-			}
-
-			if (elementType === 'block'){
-				ctx.beginPath()
-				ctx.rect(parseInt(column)*gridWidth,row*gridHeight,width, height)
-				ctx.fillStyle = color
-				ctx.fill()
-			}
-
-			if (elementType === 'circle'){
-				ctx.beginPath()
-				ctx.arc(x,y, radius, 0, Math.PI*2)
-				ctx.fillStyle = color
-				ctx.fill()
 			}
 
 			if (elementType === 'exit'){
@@ -138,6 +74,14 @@ function drawMap(){
 				x = x
 				y = row*gridHeight
 				ctx.drawImage(hero, x, y, heroObj.width, heroObj.height)
+			}
+
+			if (isBlockVisible === false){
+				color = nightObj.color
+				ctx.beginPath()
+				ctx.rect( column*gridWidth , row*gridHeight, gridWidth, gridHeight)
+				ctx.fillStyle = color
+				ctx.fill()
 			}
 
 		}

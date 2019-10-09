@@ -45,10 +45,10 @@ heroObj = {
 
 nightObj = {
 	value: 7,
-	color: 'rgb(48,48,48)',
+	color: 'rgba(48,48,48,0.9)',
 	height: 0,
 	width: 0,
-	elementType: 'block'
+	elementType: 'night'
 }
 
 triedForBrickObj = {
