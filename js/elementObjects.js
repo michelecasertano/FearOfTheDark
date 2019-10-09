@@ -61,5 +61,5 @@ emptySpotObj = {
 pavementObj = {
 	height: 0,
 	width: 0,
-	src: 'floor_1.png'
+	src: 'sprites/floor_1.png'
 }

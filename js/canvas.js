@@ -19,22 +19,22 @@ function drawMap(){
 	const map = room.map
 	const gridHeight = brickObj.height
 	const gridWidth = brickObj.width
+	
 	//iterate on all rows
-	const y = 0
-
 	for (let row in map){
-		const x = 0
 		for (let column = 0; column < map[row].length; column++){
 
 			const isBlockVisible = game.isVisible(parseInt(row), column)
 			const elementValue = map[row][column]
 			let width = 0
 			let height = 0
-			let x = 0
-			let y = 0
+			let x = parseInt(column)*gridWidth
+			let y = row * gridHeight
 			let radius = 0
 			let color = ''
 			let elementType = ''
+
+			ctx.drawImage(pavement, x , y, pavementObj.width, pavementObj.height)
 
 			//a square in the grid is as big as a brick
 			if(isBlockVisible){
@@ -48,7 +48,7 @@ function drawMap(){
 					case enemyObj.value: {
 						radius = enemyObj.radius
 					    color = enemyObj.color;	
-					    x = parseInt(column)*gridWidth + gridWidth/2
+					    x = x + gridWidth/2
 						y = row*gridHeight + gridHeight/2
 					    elementType = enemyObj.elementType
 					    break}
@@ -78,7 +78,8 @@ function drawMap(){
 			switch (elementValue){
 					case enemyObj.value: {
 						height = entranceObj.height
-						width = entranceObj.width; color = enemyObj.color
+						width = entranceObj.width;
+						color = enemyObj.color
 						elementType = enemyObj.elementType
 					    elementType = enemyObj.elementType
 					    break}
@@ -101,19 +102,18 @@ function drawMap(){
 				color = heroObj.color;
 				elementType = 'circle';
 
-				x = parseInt(column)*gridWidth + gridWidth/2
+				x = x + gridWidth/2
 				y = row*gridHeight + gridHeight/2
 			}
 
 			if (elementType === 'brick'){
-				const x = parseInt(column)*gridWidth
 				const y = row*gridHeight
 				ctx.drawImage(brick, x , y, brickObj.width, brickObj.height)
 
 			}
 
 			if (elementType === 'chest'){
-				const x = parseInt(column)*gridWidth + (gridWidth - enemyObj.width)/2
+				x = parseInt(column)*gridWidth + (gridWidth - enemyObj.width)/2
 				const y = row*gridHeight + (gridHeight - enemyObj.width)/2
 				ctx.drawImage(chest, x , y, enemyObj.width, enemyObj.height)
 
