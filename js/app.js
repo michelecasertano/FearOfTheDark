@@ -104,12 +104,15 @@ const game = {
 	gameMap:[],
 	heroCoord:[],
 	currentRoom: -1,
-	timeLeft: 60,
+	timeLeft: 600,
 	score: 0,
 
 	startTime(){
 		const intervalId = setInterval(() => {
-			$('#time').text(`${this.timeLeft}`)
+			const integers = Math.floor(this.timeLeft/10)
+			$('#time').text(`${integers}`)
+			const decimals = this.timeLeft - integers*10
+			$('#timeDecimals').text(`.${decimals}`)
 			this.updateStats()
 			if(this.isTimeOver()) {
 				clearInterval(intervalId)
@@ -117,7 +120,7 @@ const game = {
 				console.log('gameOver')
 				return false 
 			} else this.timeLeft --
-		},1000)
+		},100)
 	},
 
 	isTimeOver(){
@@ -126,7 +129,7 @@ const game = {
 	},
 
 	start(){
-		this.timeLeft = 60
+		this.timeLeft = 600
 		this.currentRoom++
 		this.heroCoord = []
 		this.startTime()
