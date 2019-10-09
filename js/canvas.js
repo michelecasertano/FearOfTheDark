@@ -25,7 +25,6 @@ function drawMap(){
 			let elementType = ''
 
 			//a square in the grid is as big as a brick
-			
 			if(isBlockVisible){
 				switch (elementValue){
 					case brickObj.value: {

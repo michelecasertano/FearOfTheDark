@@ -14,14 +14,31 @@
 	justify-content: space-between;
 }
 
-#scoreBoards {
+.scoreBoards {
 	border: 3px solid black;
 	height: 600px;
 	width: 200px;
 	display: flex;
-	align-items: stretch;
-	flex-direction: row;
-	justify-content: space-between;
+	flex-direction: column;
+	align-items: center;
+	justify-content: space-evenly;
+	text-align: center;
+}
+
+#timeDisplay {
+	display: inline
+}
+
+#timeDecimals {
+	font-size: 40px;
+}
+
+.scoreData {
+	font-size: 90px;
+}
+
+.scoreText {
+	font-size: 25px;
 }
 
 canvas {

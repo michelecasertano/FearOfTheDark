@@ -109,7 +109,7 @@ const game = {
 
 	startTime(){
 		const intervalId = setInterval(() => {
-			$('#time').text(`Time: ${this.timeLeft}`)
+			$('#time').text(`${this.timeLeft}`)
 			this.updateStats()
 			if(this.isTimeOver()) {
 				clearInterval(intervalId)
@@ -126,7 +126,7 @@ const game = {
 	},
 
 	start(){
-		this.timeLeft = 45
+		this.timeLeft = 60
 		this.currentRoom++
 		this.heroCoord = []
 		this.startTime()
@@ -136,9 +136,9 @@ const game = {
 	updateStats(){
 		const room = this.gameMap[this.currentRoom]
 		const enemiesLeft = room.totalEnemies - room.killedEnemies
-		$('#coinsLeft').text(`Coins left: ${enemiesLeft}`)
-		$('#score').text(`Score: ${this.score}`)
-		$('#roomNum').text(`Room#: ${this.currentRoom + 1}`)
+		$('#coinsLeft').text(`${enemiesLeft}`)
+		$('#score').text(`${this.score}`)
+		$('#roomNum').text(`${this.currentRoom + 1}`)
 	},
 
 	moveHero(char){
