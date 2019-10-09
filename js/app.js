@@ -54,7 +54,8 @@ class Room {
 		this.trap = 2;
 
 		this.enemy = enemyObj.value;
-		enemyObj.radius = 0.6*(canvas.height / this.height)/2 
+		enemyObj.width = 0.6*(canvas.height / this.height) 
+		enemyObj.height = 0.6*(canvas.width / this.width)
 
 		this.door = entranceObj.value;
 		entranceObj.height = canvas.height / this.height

@@ -1,11 +1,12 @@
 const canvas = document.getElementById('my-canvas');
 const ctx = canvas.getContext('2d');
 
-// const chest = newImage()
-// chest.src = 'sprites/chest_full_open_anim_f0.png'
+const chest = new Image()
+chest.src = 'sprites/chest_full_open_anim_f0.png'
+// chest.width = 140
+// chest.height = 140
 
 function drawMap(){
-	// ctx.drawImage
 	ctx.clearRect(0, 0, canvas.width, canvas.height)
 	const room = game.gameMap[game.gameMap.length - 1]
 	const map = room.map
@@ -46,7 +47,8 @@ function drawMap(){
 					    break}
 					case entranceObj.value: {
 						height = entranceObj.height
-						width = entranceObj.width; color = entranceObj.color
+						width = entranceObj.width
+						color = entranceObj.color
 						elementType = entranceObj.elementType
 						break}
 					case exitObj.value: {
@@ -68,10 +70,9 @@ function drawMap(){
 
 			switch (elementValue){
 					case enemyObj.value: {
-						radius = enemyObj.radius
-					    color = enemyObj.color;	
-					    x = parseInt(column)*gridWidth + gridWidth/2
-						y = row*gridHeight + gridHeight/2
+						height = entranceObj.height
+						width = entranceObj.width; color = enemyObj.color
+						elementType = enemyObj.elementType
 					    elementType = enemyObj.elementType
 					    break}
 					case entranceObj.value: {
@@ -98,6 +99,13 @@ function drawMap(){
 				y = row*gridHeight + gridHeight/2
 			}
 
+			if (elementType === 'chest'){
+				const x = parseInt(column)*gridWidth + (gridWidth - enemyObj.width)/2
+				const y = row*gridHeight + (gridHeight - enemyObj.width)/2
+				ctx.drawImage(chest, x , y, enemyObj.width, enemyObj.height)
+
+			}
+
 			if (elementType === 'block'){
 				ctx.beginPath()
 				ctx.rect(parseInt(column)*gridWidth,row*gridHeight,width, height)
@@ -113,6 +121,7 @@ function drawMap(){
 			}
 
 		}
+
 		// makeGrid()
 	}
 }

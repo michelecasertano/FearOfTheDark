@@ -1,3 +1,4 @@
+
 brickObj = {
 	value: 1,
 	color: 'coral',
@@ -9,8 +10,9 @@ brickObj = {
 enemyObj = {
 	value: 3,
 	color: 'red',
-	radius: 0,
-	elementType: 'circle',
+	height: 0,
+	width: 0,
+	elementType: 'chest',
 	points: 10
 }
 
