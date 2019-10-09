@@ -1,3 +1,8 @@
+body {
+	font-family: 'VT323', monospace;
+	color: rgb(86,86,86);
+}
+
 #gameScreen {
 	display: flex;
 	align-items: center;
@@ -15,6 +20,7 @@
 }
 
 .scoreBoards {
+	background-color: rgb(230,211,173);
 	border: 3px solid black;
 	height: 600px;
 	width: 200px;
@@ -34,11 +40,11 @@
 }
 
 .scoreData {
-	font-size: 90px;
+	font-size: 120px;
 }
 
 .scoreText {
-	font-size: 25px;
+	font-size: 35px;
 }
 
 canvas {

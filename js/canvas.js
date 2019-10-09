@@ -1,7 +1,11 @@
 const canvas = document.getElementById('my-canvas');
 const ctx = canvas.getContext('2d');
 
+// const chest = newImage()
+// chest.src = 'sprites/chest_full_open_anim_f0.png'
+
 function drawMap(){
+	// ctx.drawImage
 	ctx.clearRect(0, 0, canvas.width, canvas.height)
 	const room = game.gameMap[game.gameMap.length - 1]
 	const map = room.map
