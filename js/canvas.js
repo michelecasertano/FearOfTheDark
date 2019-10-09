@@ -34,7 +34,6 @@ function drawMap(){
 			let height = 0
 			let x = parseInt(column)*gridWidth
 			let y = row * gridHeight
-			let radius = 0
 			let color = ''
 			let elementType = ''
 
@@ -42,7 +41,7 @@ function drawMap(){
 
 			switch (elementValue){
 					case brickObj.value: {
-						elementType = brickObj.elementType
+						ctx.drawImage(brick, x , y, brickObj.width, brickObj.height)
 						break}
 					case enemyObj.value: {
 					    elementType = enemyObj.elementType
@@ -52,37 +51,30 @@ function drawMap(){
 						break}
 				}
 
-			if (elementType === 'brick'){
-				ctx.drawImage(brick, x , y, brickObj.width, brickObj.height)
-			}
-
-
 			if (game.isHero(room,parseInt(row),column)){
-				x = x
-				y = row*gridHeight
 				ctx.drawImage(hero, x, y, heroObj.width, heroObj.height)
 			}
 
 			if (isBlockVisible === false){
 				color = nightObj.color
 				ctx.beginPath()
-				ctx.rect( column*gridWidth , row*gridHeight, gridWidth, gridHeight)
+				ctx.rect(x , y, gridWidth, gridHeight)
 				ctx.fillStyle = color
 				ctx.fill()
 			}
 
 			if (elementType === 'exit'){
-				const x = column*gridWidth + (gridWidth - exitObj.width)/2
-				const y = row*gridHeight + (gridHeight - exitObj.width)/2
-				ctx.drawImage(pavement, parseInt(column)*gridWidth , row*gridHeight , pavementObj.width, pavementObj.height)
-				ctx.drawImage(exit, x, y , exitObj.width, exitObj.height)
+				const xExit = x + (gridWidth - exitObj.width)/2
+				const yExit = y + (gridHeight - exitObj.width)/2
+				ctx.drawImage(pavement, x , y , pavementObj.width, pavementObj.height)
+				ctx.drawImage(exit, xExit, yExit , exitObj.width, exitObj.height)
 			}
 
 			if (elementType === 'chest'){
-				x = parseInt(column)*gridWidth + (gridWidth - enemyObj.width)/2
-				const y = row*gridHeight + (gridHeight - enemyObj.width)/2
-				ctx.drawImage(pavement, parseInt(column)*gridWidth , row*gridHeight , pavementObj.width, pavementObj.height)
-				ctx.drawImage(chest, x , y, enemyObj.width, enemyObj.height)
+				const xChest = x + (gridWidth - enemyObj.width)/2
+				const yChest = y + (gridHeight - enemyObj.width)/2
+				ctx.drawImage(pavement, x , y , pavementObj.width, pavementObj.height)
+				ctx.drawImage(chest, xChest , yChest, enemyObj.width, enemyObj.height)
 			}
 
 		}
