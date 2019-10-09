@@ -4,7 +4,8 @@ brickObj = {
 	color: 'coral',
 	height: 0,
 	width: 0,
-	elementType: 'block'
+	elementType: 'brick',
+	src: 'sprites/wall_corner_front_left.png'
 }
 
 enemyObj = {
@@ -13,7 +14,8 @@ enemyObj = {
 	height: 0,
 	width: 0,
 	elementType: 'chest',
-	points: 10
+	points: 10,
+	src: 'sprites/chest_full_open_anim_f0.png'
 }
 
 entranceObj = {
@@ -29,7 +31,8 @@ exitObj = {
 	color: 'purple',
 	height: 0,
 	width: 0,
-	elementType: 'exit'
+	elementType: 'exit',
+	src: 'sprites/doors_leaf_closed.png'
 }
 
 heroObj = {
@@ -53,4 +56,10 @@ triedForBrickObj = {
 
 emptySpotObj = {
 	value: " "
+}
+
+pavementObj = {
+	height: 0,
+	width: 0,
+	src: 'floor_1.png'
 }

@@ -2,10 +2,16 @@ const canvas = document.getElementById('my-canvas');
 const ctx = canvas.getContext('2d');
 
 const chest = new Image()
-chest.src = 'sprites/chest_full_open_anim_f0.png'
+chest.src = enemyObj.src
 
 const exit = new Image()
-exit.src = 'sprites/doors_leaf_closed.png'
+exit.src = exitObj.src
+
+const brick = new Image()
+brick.src = brickObj.src
+
+const pavement = new Image()
+pavement.src = pavementObj.src
 
 function drawMap(){
 	ctx.clearRect(0, 0, canvas.width, canvas.height)
@@ -97,6 +103,13 @@ function drawMap(){
 
 				x = parseInt(column)*gridWidth + gridWidth/2
 				y = row*gridHeight + gridHeight/2
+			}
+
+			if (elementType === 'brick'){
+				const x = parseInt(column)*gridWidth
+				const y = row*gridHeight
+				ctx.drawImage(brick, x , y, brickObj.width, brickObj.height)
+
 			}
 
 			if (elementType === 'chest'){
