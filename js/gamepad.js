@@ -72,6 +72,27 @@ function gameLoop() {
   if (buttonPressed(gamepad.buttons[13])) {
     game.moveHero(40)
   }
+
+  if (gamepad.axes[0] < -0.25) {
+    game.moveHero(65);
+  } 
+  if (gamepad.axes[0] > 0.25) {
+    game.moveHero(39);
+  } 
+
+  if (gamepad.axes[1] < -0.25) {
+    game.moveHero(38);
+  } 
+  if (gamepad.axes[1] > 0.25) {
+    game.moveHero(40);
+  } 
+
+
+
+
+
+
+
   
 }
 
