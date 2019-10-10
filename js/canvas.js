@@ -27,7 +27,23 @@ const graphics = {
 				}
 			}
 
-		}, 10)
+		ctx.font = '80px VT323'
+		ctx.fillStyle = 'white'
+		ctx.textAlign = 'center'
+		ctx.fillText('FEAR OF THE DARK', canvas.width/2,110)
+
+		ctx.drawImage(hero, canvas.width/2 - 50/2, 160, 50, 50)
+
+		ctx.font = '40px VT323'
+		ctx.fillStyle = 'white'
+		ctx.textAlign = 'center'
+		ctx.fillText('Collect all treasures', canvas.width/2,300)
+		ctx.fillText('and exit the room', canvas.width/2,350)
+
+		ctx.font = '55px VT323'
+		ctx.fillStyle = 'white'
+		ctx.fillText('Click anywhere to play', canvas.width/2,550)
+		}, 50)
 
 	},
 
