@@ -40,6 +40,9 @@ const graphics = {
 		ctx.fillText('Collect all treasures', canvas.width/2,300)
 		ctx.fillText('and exit the room', canvas.width/2,350)
 
+		ctx.font = '35px VT323'
+		ctx.fillText('Use arrow keys to move', canvas.width/2,450)
+
 		ctx.font = '55px VT323'
 		ctx.fillStyle = 'white'
 		ctx.fillText('Click anywhere to play', canvas.width/2,550)
