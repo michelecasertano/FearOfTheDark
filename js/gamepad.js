@@ -1,4 +1,5 @@
 window.addEventListener("gamepadconnected", function(e) {
+  game.gamepadStatus = 'connected'
   const gp = navigator.getGamepads()[e.gamepad.index];
   console.log("Gamepad connected from index %d: %s",
 	e.gamepad.index, e.gamepad.id);
@@ -7,6 +8,7 @@ window.addEventListener("gamepadconnected", function(e) {
 
 
 window.addEventListener("gamepaddisconnected", function(e) {
+  game.gamepadStatus = 'disconnected'
   console.log("Gamepad disconnected from index %d: %s",
     e.gamepad.index, e.gamepad.id);
   gamepadHandler(e,false)

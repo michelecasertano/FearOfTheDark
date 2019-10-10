@@ -112,10 +112,11 @@ const game = {
 	score: 0,
 	enemiesLeft: 0,
 	state: 'menu',
+	gamepadStatus: 'disconnected',
 
 	startTime(){
 		const intervalId = setInterval(() => {
-			gameLoop()
+			if(this.gamepadStatus === 'connected') gameLoop()
 			const integers = Math.floor(this.timeLeft/10)
 			$('#time').text(`${integers}`)
 			const decimals = this.timeLeft - integers*10
@@ -154,7 +155,8 @@ const game = {
 	start(){
 		exit.src = 'sprites/doors_leaf_closed.png'
 		this.state = 'play'
-		this.timeLeft = 450
+		if(this.currentRoom === -1) this.timeLeft = 450
+			else this.timeLeft += 50
 		this.currentRoom++
 		this.heroCoord = []
 		if(this.currentRoom === 0) this.startTime()
