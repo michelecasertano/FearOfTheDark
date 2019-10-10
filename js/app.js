@@ -108,7 +108,7 @@ const game = {
 	gameMap:[],
 	heroCoord:[],
 	currentRoom: -1,
-	timeLeft: 600,
+	timeLeft: 450,
 	score: 0,
 	enemiesLeft: 0,
 	state: 'menu',
@@ -121,8 +121,9 @@ const game = {
 			$('#timeDecimals').text(`.${decimals}`)
 			this.updateStats()
 			if(this.isTimeOver()) {
+				game.state = 'gameOver'
 				clearInterval(intervalId)
-				//launchGameOver
+				graphics.drawGameOver()
 				console.log('gameOver')
 				return false 
 			} else this.timeLeft --
@@ -134,10 +135,25 @@ const game = {
 		return false 
 	},
 
+	launch(){
+		if (game.state === 'menu' || game.state === 'gameOver'){
+			console.log('valid launch()')
+			this.doorsArray = []
+			this.gameMap = []
+			this.heroCoord = []
+			this.currentRoom = -1
+			this.timeLeft = 450
+			this.score = 0
+			this.enemiesLeft = 0
+			this.state =  'play'
+			this.start()
+		}
+	},
+
 	start(){
 		exit.src = 'sprites/doors_leaf_closed.png'
 		this.state = 'play'
-		this.timeLeft = 600
+		this.timeLeft = 450
 		this.currentRoom++
 		this.heroCoord = []
 		if(this.currentRoom === 0) this.startTime()
@@ -155,9 +171,7 @@ const game = {
 
 	moveHero(char){
 		if(game.state !== 'play') return false
-
 		if(this.isTimeOver()) {
-			this.state = 'gameOver'
 			return false
 		}
 

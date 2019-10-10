@@ -112,6 +112,15 @@ const graphics = {
 			// makeGrid()
 		}
 	},
+
+	drawGameOver() {
+		ctx.clearRect(0, 0, canvas.width, canvas.height)
+		for (i = 0 ; i < 10 ; i ++) {
+			for (j = 0; j < 10 ; j++){
+				ctx.drawImage(pavement , i*60 , j*60, 60, 60)
+			}
+		}
+	},
 	
 	makeGrid() {
 		const gridHeight = brickObj.height

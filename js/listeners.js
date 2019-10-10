@@ -4,7 +4,6 @@ $(document).on('keydown',(e) => {
 
 })
 
-
-$('#start-game').on('click',(e) => {
-	game.start()
+$('#gameScreen').on('click',(e) => {
+	game.launch()
 })
