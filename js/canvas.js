@@ -123,6 +123,7 @@ const graphics = {
 		  ctx.lineTo(canvas.width, i);
 		  ctx.stroke();
 		}
+
 	}
 
 }
