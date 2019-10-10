@@ -287,11 +287,11 @@ const mapGeneration = {
 		this.generateWalls(room)
 		this.addEnemies(room)
 		this.addHero(room)
-		this.cleanRoom(room)
+		// this.cleanRoom(room)
 		graphics.drawMap()
 
 		// game.gameMap.push(room)
-		// console.log(game.printRooms())
+		console.log(game.printRooms())
 	},
 
 	// make the room empty assiging all cells value to -
