@@ -1,3 +1,4 @@
+// load the menu when the game starts
 const canvas = document.getElementById('my-canvas');
 const ctx = canvas.getContext('2d');
 
@@ -17,22 +18,20 @@ const hero = new Image()
 hero.src = heroObj.src
 
 const graphics = {
-	menu(){
+	drawMenu(){
+		ctx.clearRect(0, 0, canvas.width, canvas.height)
+		console.log (ctx)
+		console.log(pavement)
+		ctx.drawImage(pavement , 10 , 10, 200, 200)
 		console.log('in drawMenu')
-		for (let row in map){
-			for (let column = 0; column < map[row].length; column++){
-				const elementValue = map[row][column]
-				let width = 0
-				let height = 0
-				let x = parseInt(column)*gridWidth
-				let y = row * gridHeight
-				let color = ''
-				let elementType = ''
+		// for (let i = 0; i < 10; i++){
+		// 	for (let j = 0; j < 10; j++){
+		// 		const x = i * 10
+		// 		const y = j * 10
+		// 		ctx.drawImage(pavement, 0 , 0, 10, 10)
 
-				ctx.drawImage(pavement, x , y, pavementObj.width, pavementObj.height)
-
-			}
-		}
+		// 	}
+		// }
 
 	},
 
@@ -123,10 +122,10 @@ const graphics = {
 		  ctx.lineTo(canvas.width, i);
 		  ctx.stroke();
 		}
-
 	}
-
 }
+
+graphics.drawMenu()
 
 
 

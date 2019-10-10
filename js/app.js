@@ -111,6 +111,7 @@ const game = {
 	timeLeft: 600,
 	score: 0,
 	enemiesLeft: 0,
+	state: 'menu',
 
 	startTime(){
 		const intervalId = setInterval(() => {
@@ -135,6 +136,7 @@ const game = {
 
 	start(){
 		exit.src = 'sprites/doors_leaf_closed.png'
+		this.state = 'play'
 		this.timeLeft = 600
 		this.currentRoom++
 		this.heroCoord = []
@@ -152,7 +154,8 @@ const game = {
 	},
 
 	moveHero(char){
-		
+		if(game.state !== 'play') return false
+
 		if(this.isTimeOver()) return false
 
 		const room = this.gameMap[this.currentRoom]
