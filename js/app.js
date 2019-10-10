@@ -198,7 +198,7 @@ const game = {
 				game.start()
 			}
 
-			drawMap()
+			graphics.drawMap()
 			this.updateStats()
 
 
@@ -259,7 +259,6 @@ const mapGeneration = {
 		// initiate a room object and call it room.
 		const room = new Room(10,10)
 		game.gameMap.push(room)
-		console.log('game.gameMap: ',game.gameMap)
 		this.createEmptyRoom(room)
 
 		//in this first version, doors are added to left wall and right wall.
@@ -269,7 +268,7 @@ const mapGeneration = {
 		this.addEnemies(room)
 		this.addHero(room)
 		this.cleanRoom(room)
-		drawMap()
+		graphics.drawMap()
 
 		// game.gameMap.push(room)
 		// console.log(game.printRooms())
@@ -315,15 +314,10 @@ const mapGeneration = {
 			//game now has entrances left and right wall. 
 			// logic for continuity in doors need to change if doors can be on any side.
 			xCoordEntrance = 0
-			console.log('yCoordEntrance: ', yCoordEntrance)
-			console.log('xCoordEntrance: ', xCoordEntrance)
 		} else {
-			console.log('doorsArray is zero')
 			entranceDoor = this.leftWallRandom(room)
 			yCoordEntrance = entranceDoor[0]
 			xCoordEntrance = entranceDoor[1]
-			console.log('yCoordEntrance: ', yCoordEntrance)
-			console.log('xCoordEntrance: ', xCoordEntrance)
 		}
 		
 		//update the map to have the entrance door
@@ -331,15 +325,11 @@ const mapGeneration = {
 		//remove the entrance coordinates from the available index map
 		this.removeUsedIndex(room,yCoordEntrance,xCoordEntrance);
 
-		console.log('entrance coord: ',yCoordEntrance," ",xCoordEntrance)
 
 		//find a random spot on  the rightWall to assign a door.
 		const exitDoor = this.rightWallRandom(room)
 		const yCoordExit = exitDoor[0]
 		const xCoordExit = exitDoor[1]
-
-		console.log('exit coord: ',yCoordExit," ",xCoordExit)
-
 
 		const doorCoord = {
 			roomNumber: game.gameMap.length,
@@ -347,7 +337,6 @@ const mapGeneration = {
 			exit:     [yCoordExit,xCoordExit]
 		}
 
-		console.log('doorCoord:', this.doorCoord)
 
 		game.doorsArray.push(doorCoord)
 
@@ -876,7 +865,6 @@ const mapGeneration = {
 	//select the index of a random column for the top row.
 	//because this will always be the last row, I look at mapAvailable[room.height - 1]
 	bottomWallRandom(room){
-		console.log('in bottomRowRandom')
 		if(room.mapAvailable.hasOwnProperty(room.height - 1) === false) return false
 		const availableRows = Object.keys(room.mapAvailable)
 		const randomIndex = Math.floor(Math.random()*(room.mapAvailable[room.height - 1].length))
