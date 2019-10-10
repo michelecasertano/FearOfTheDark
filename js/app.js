@@ -126,7 +126,7 @@ const game = {
 				game.state = 'gameOver'
 				clearInterval(intervalId)
 				graphics.drawGameOver()
-				console.log('gameOver')
+				menuControllerTimer()
 				return false 
 			} else this.timeLeft --
 		},100)
@@ -139,7 +139,6 @@ const game = {
 
 	launch(){
 		if (game.state === 'menu' || game.state === 'gameOver'){
-			console.log('valid launch()')
 			this.doorsArray = []
 			this.gameMap = []
 			this.heroCoord = []
@@ -212,6 +211,7 @@ const game = {
 			this.heroCoord = [yHero, xHero]
 
 			if(this.isEnemy(room, yHero, xHero)){
+				navigator.vibrate(2000,100,100);
 				room.killedEnemies++
 				this.score+= enemyObj.points
 				mapGeneration.updateMapValue(room, yHero, xHero, " ")

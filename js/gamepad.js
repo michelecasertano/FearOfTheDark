@@ -14,6 +14,17 @@ window.addEventListener("gamepaddisconnected", function(e) {
   gamepadHandler(e,false)
 });
 
+
+function menuControllerTimer(){
+  const intervalId = setInterval(() => {
+    if(game.gamepadStatus === 'disconnected') return false
+    if (game.state === 'menu' || game.state === 'gameOver') gameLoop()
+    else clearInterval(intervalId)
+  },100)
+}
+
+menuControllerTimer()
+
 const gamepads = {};
 
 function gamepadHandler(event, connecting) {
@@ -40,6 +51,15 @@ function gameLoop() {
   }
 
   const gamepad = gamepads[0];
+
+  if(game.state === 'menu' && buttonPressed(gamepad.buttons[16])) {
+    game.launch()
+  }
+
+  if(game.state === 'gameOver' &&buttonPressed(gamepad.buttons[16])) {
+    game.launch()
+  }
+
   if (buttonPressed(gamepad.buttons[15])) {
     game.moveHero(39)
   }
