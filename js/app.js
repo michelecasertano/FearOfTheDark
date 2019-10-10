@@ -156,7 +156,10 @@ const game = {
 	moveHero(char){
 		if(game.state !== 'play') return false
 
-		if(this.isTimeOver()) return false
+		if(this.isTimeOver()) {
+			this.state = 'gameOver'
+			return false
+		}
 
 		const room = this.gameMap[this.currentRoom]
 		let yHero = this.heroCoord[0]

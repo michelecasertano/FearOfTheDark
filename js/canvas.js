@@ -20,18 +20,14 @@ hero.src = heroObj.src
 const graphics = {
 	drawMenu(){
 		ctx.clearRect(0, 0, canvas.width, canvas.height)
-		console.log (ctx)
-		console.log(pavement)
-		ctx.drawImage(pavement , 10 , 10, 200, 200)
-		console.log('in drawMenu')
-		// for (let i = 0; i < 10; i++){
-		// 	for (let j = 0; j < 10; j++){
-		// 		const x = i * 10
-		// 		const y = j * 10
-		// 		ctx.drawImage(pavement, 0 , 0, 10, 10)
+		setTimeout(() => {
+			for (i = 0 ; i < 10 ; i ++) {
+				for (j = 0; j < 10 ; j++){
+					ctx.drawImage(pavement , i*60 , j*60, 60, 60)
+				}
+			}
 
-		// 	}
-		// }
+		}, 10)
 
 	},
 
