@@ -16,6 +16,27 @@ pavement.src = pavementObj.src
 const hero = new Image()
 hero.src = heroObj.src
 
+
+
+function menu(){
+	console.log('in drawMenu')
+	for (let row in map){
+		for (let column = 0; column < map[row].length; column++){
+			const elementValue = map[row][column]
+			let width = 0
+			let height = 0
+			let x = parseInt(column)*gridWidth
+			let y = row * gridHeight
+			let color = ''
+			let elementType = ''
+
+			ctx.drawImage(pavement, x , y, pavementObj.width, pavementObj.height)
+
+		}
+	}
+
+}
+
 function drawMap(){
 	ctx.clearRect(0, 0, canvas.width, canvas.height)
 

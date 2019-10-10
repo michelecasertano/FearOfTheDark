@@ -97,7 +97,6 @@ class Room {
 
 
 // game object is in charge of starting and managing the game
-
 const game = {
 	// map holds all the object rooms that were created, including the coordinates.
 	// in the first version of the game (single room), a single row will be created.
