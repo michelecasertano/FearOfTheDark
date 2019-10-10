@@ -7,3 +7,6 @@ $(document).on('keydown',(e) => {
 $('#gameScreen').on('click',(e) => {
 	game.launch()
 })
+
+
+

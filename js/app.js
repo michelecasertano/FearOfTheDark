@@ -115,6 +115,7 @@ const game = {
 
 	startTime(){
 		const intervalId = setInterval(() => {
+			gameLoop()
 			const integers = Math.floor(this.timeLeft/10)
 			$('#time').text(`${integers}`)
 			const decimals = this.timeLeft - integers*10
