@@ -120,6 +120,17 @@ const graphics = {
 				ctx.drawImage(pavement , i*60 , j*60, 60, 60)
 			}
 		}
+
+		ctx.font = '140px VT323'
+		ctx.fillStyle = 'white'
+		ctx.textAlign = 'center'
+		ctx.fillText('GAME OVER', canvas.width/2,canvas.height/2 + 20)
+
+
+		ctx.font = '45px VT323'
+		ctx.fillStyle = 'white'
+		ctx.fillText('Click anywhere to play again', canvas.width/2,550)
+
 	},
 	
 	makeGrid() {

@@ -1,6 +1,9 @@
 body {
 	font-family: 'VT323', monospace;
 	color: rgb(86,86,86);
+	display: flex;
+	justify-content: center;
+	margin-top: 40px;
 }
 
 #gameScreen {
