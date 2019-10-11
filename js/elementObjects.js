@@ -43,6 +43,14 @@ heroObj = {
 	src: 'sprites/knight_f_run_anim_f1.png'
 }
 
+hero2Obj = {
+	value: 2,
+	height: 0,
+	width: 0,
+	elementType: 'hero2',
+	src: 'sprites/elf_f_run_anim_f1.png'
+}
+
 nightObj = {
 	value: 7,
 	color: 'rgba(00,00,00,0.91)',

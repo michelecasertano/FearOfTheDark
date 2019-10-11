@@ -17,6 +17,9 @@ pavement.src = pavementObj.src
 const hero = new Image()
 hero.src = heroObj.src
 
+const hero2 = new Image()
+hero2.src = hero2Obj.src
+
 const graphics = {
 	drawMenu(){
 		ctx.clearRect(0, 0, canvas.width, canvas.height)
@@ -109,6 +112,10 @@ const graphics = {
 
 				if (game.isHero(room,parseInt(row),column)){
 					ctx.drawImage(hero, x, y, heroObj.width, heroObj.height)
+				}
+
+				if (game.isHero2(room,parseInt(row),column)){
+					ctx.drawImage(hero2, x, y, hero2Obj.width, hero2Obj.height)
 				}
 			}
 

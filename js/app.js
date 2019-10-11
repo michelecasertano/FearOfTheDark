@@ -69,6 +69,10 @@ class Room {
 		heroObj.height = 0.8 * canvas.height / this.height
 		heroObj.width = 0.8 * canvas.width / this.width
 
+		this.hero2 = hero2Obj.value;
+		hero2Obj.height = 0.8 * canvas.height / this.height
+		hero2Obj.width = 0.8 * canvas.width / this.width
+
 		pavementObj.height = canvas.height / this.height
 		pavementObj.width = canvas.width / this.width
 
@@ -107,6 +111,7 @@ const game = {
 	doorsArray: [],
 	gameMap:[],
 	heroCoord:[],
+	hero2Coord:[],
 	currentRoom: -1,
 	timeLeft: 450,
 	score: 0,
@@ -142,6 +147,7 @@ const game = {
 			this.doorsArray = []
 			this.gameMap = []
 			this.heroCoord = []
+			this.hero2Coord = []
 			this.currentRoom = -1
 			this.timeLeft = 450
 			this.score = 0
@@ -158,6 +164,7 @@ const game = {
 			else this.timeLeft += 50
 		this.currentRoom++
 		this.heroCoord = []
+		this.hero2Coord = []
 		if(this.currentRoom === 0) this.startTime()
 		mapGeneration.initiateRoom()
 	},
@@ -178,54 +185,64 @@ const game = {
 		}
 
 		const room = this.gameMap[this.currentRoom]
+
 		let yHero = this.heroCoord[0]
 		let xHero = this.heroCoord[1]
 		let yHeroOld = this.heroCoord[0]
 		let xHeroOld = this.heroCoord[1]
 
+		let yHero2 = this.hero2Coord[0]
+		let xHero2 = this.hero2Coord[1]
+		let yHero2Old = this.hero2Coord[0]
+		let xHero2Old = this.hero2Coord[1]		
+
 		switch(char){
-			case 37: 
-			case 65: {
-				xHero--
-				break;
-			}
-			case 38:
-			case 87: {
-				yHero--
-				break;
-			}
-			case 39:
-			case 68: {
-				xHero++
-				break;
-			}
-			case 40:
-			case 83: {
-				yHero++
-				break;
-			}
+			case 65: {xHero--;break;}
+			case 87: {yHero--;break;}
+			case 68: {xHero++; break;}
+			case 83: {yHero++; break;}
+
+			case 37: {xHero2--;break;}
+			case 38: {yHero2--;break;}
+			case 39: {xHero2++; break;}
+			case 40: {yHero2++; break;}
+
+
+			default: console.log('error in the char switch')
+		}
+		
+		console.log(this.heroCoord, ' this.heroCoord')
+		console.log('yHero ', yHero, 'xHero ', xHero)
+		if(this.updateHeroCoord(room, yHero,xHero, this.heroCoord, 'hero1') || this.updateHeroCoord(room,yHero2,xHero2, this.hero2Coord, 'hero2')){
+			// console.log('this.heroCoord after update ', this.heroCoord)
+			// console.log('this.hero2Coord after update ', this.hero2Coord)
+			graphics.drawMap()
+			this.updateStats()
 		}
 			
-		if(mapGeneration.outsideMap(room, yHero, xHero) === false &&
-			room.map[yHero][xHero] !== 1	){
-			this.heroCoord = [yHero, xHero]
+		if(this.isExit(room, yHero, xHero) && this.isExit(room, yHero2, xHero2) && this.noMoreEnemies(room)){
+				game.start()
+		}
+	},
 
-			if(this.isEnemy(room, yHero, xHero)){
-				navigator.vibrate(2000,100,100);
+	updateHeroCoord(room , y, x, coord, hero){
+		console.log('inside updateHeroCoord')
+		if(mapGeneration.outsideMap(room, y, x) === false &&
+			room.map[y][x] !== 1){
+			// console.log(coord, y, x , room)
+			if(hero === 'hero1') {this.heroCoord = [y , x]}
+			if(hero === 'hero2') {this.hero2Coord = [y , x]}
+
+			if(this.isEnemy(room, y, x)){
 				room.killedEnemies++
 				this.score+= enemyObj.points
-				mapGeneration.updateMapValue(room, yHero, xHero, " ")
-			}			
-			
-			if(this.isExit(room, yHero, xHero) && this.noMoreEnemies(room)){
-				game.start()
+				mapGeneration.updateMapValue(room, y, x, " ")
 			}
 
 			graphics.drawMap()
 			this.updateStats()
 
-
-
+			return true			
 		}
 	},
 
@@ -234,8 +251,18 @@ const game = {
 		return false
 	},
 
+	isVisible2(y, x){
+		if (Math.abs(y - this.hero2Coord[0]) < 2 && Math.abs(x - this.hero2Coord[1]) < 2) return true
+		return false
+	},
+
 	isHero(room, y, x){
 		if (this.heroCoord[0] === y && this.heroCoord[1] === x) return true
+		return false
+	},
+
+	isHero2(room, y, x){
+		if (this.hero2Coord[0] === y && this.hero2Coord[1] === x) return true
 		return false
 	},
 
@@ -397,6 +424,7 @@ const mapGeneration = {
 
 	addHero(room){
 		game.heroCoord = game.doorsArray[game.doorsArray.length - 1].entrance
+		game.hero2Coord = game.doorsArray[game.doorsArray.length - 1].exit
 	},
 
 	generateWalls(room){
