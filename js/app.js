@@ -211,17 +211,27 @@ const game = {
 			default: console.log('error in the char switch')
 		}
 		
-		console.log(this.heroCoord, ' this.heroCoord')
-		console.log('yHero ', yHero, 'xHero ', xHero)
-		if(this.updateHeroCoord(room, yHero,xHero, this.heroCoord, 'hero1') || this.updateHeroCoord(room,yHero2,xHero2, this.hero2Coord, 'hero2')){
-			// console.log('this.heroCoord after update ', this.heroCoord)
-			// console.log('this.hero2Coord after update ', this.hero2Coord)
+		console.log(this.hero2Coord, ' this.heroCoord')
+		console.log('yHero2 ', yHero2, 'xHero ', xHero2)
+		if(this.updateHeroCoord(room, yHero,xHero, this.heroCoord, 'hero1')){
+			if(this.isExit(room, yHero, xHero)
+				&& this.isExit(room, yHero2, xHero2)
+				&& this.noMoreEnemies(room)){
+				game.start()
+			}
 			graphics.drawMap()
 			this.updateStats()
 		}
-			
-		if(this.isExit(room, yHero, xHero) && this.isExit(room, yHero2, xHero2) && this.noMoreEnemies(room)){
+
+		if(this.updateHeroCoord(room,yHero2,xHero2, this.hero2Coord, 'hero2')){
+			// console.log('this.heroCoord after update ', this.heroCoord)
+			if(this.isExit(room, yHero, xHero)
+				&& this.isExit(room, yHero2, xHero2)
+				&& this.noMoreEnemies(room)){
 				game.start()
+			}
+			graphics.drawMap()
+			this.updateStats()
 		}
 	},
 
@@ -229,7 +239,7 @@ const game = {
 		console.log('inside updateHeroCoord')
 		if(mapGeneration.outsideMap(room, y, x) === false &&
 			room.map[y][x] !== 1){
-			// console.log(coord, y, x , room)
+			console.log(hero)
 			if(hero === 'hero1') {this.heroCoord = [y , x]}
 			if(hero === 'hero2') {this.hero2Coord = [y , x]}
 
@@ -424,7 +434,7 @@ const mapGeneration = {
 
 	addHero(room){
 		game.heroCoord = game.doorsArray[game.doorsArray.length - 1].entrance
-		game.hero2Coord = game.doorsArray[game.doorsArray.length - 1].exit
+		game.hero2Coord = game.doorsArray[game.doorsArray.length - 1].entrance
 	},
 
 	generateWalls(room){

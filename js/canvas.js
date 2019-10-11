@@ -65,7 +65,7 @@ const graphics = {
 		for (let row in map){
 			for (let column = 0; column < map[row].length; column++){
 
-				const isBlockVisible = game.isVisible(parseInt(row), column)
+				const isBlockVisible = game.isVisible(parseInt(row), column) || game.isVisible2(parseInt(row), column)
 				const elementValue = map[row][column]
 				let width = 0
 				let height = 0
