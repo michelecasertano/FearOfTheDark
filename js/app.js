@@ -211,8 +211,6 @@ const game = {
 			default: console.log('error in the char switch')
 		}
 		
-		console.log(this.hero2Coord, ' this.heroCoord')
-		console.log('yHero2 ', yHero2, 'xHero ', xHero2)
 		if(this.updateHeroCoord(room, yHero,xHero, this.heroCoord, 'hero1')){
 			if(this.isExit(room, yHero, xHero)
 				&& this.isExit(room, yHero2, xHero2)
@@ -235,11 +233,9 @@ const game = {
 		}
 	},
 
-	updateHeroCoord(room , y, x, coord, hero){
-		console.log('inside updateHeroCoord')
+	updateHeroCoord(room , y, x, coord, hero){	
 		if(mapGeneration.outsideMap(room, y, x) === false &&
 			room.map[y][x] !== 1){
-			console.log(hero)
 			if(hero === 'hero1') {this.heroCoord = [y , x]}
 			if(hero === 'hero2') {this.hero2Coord = [y , x]}
 
