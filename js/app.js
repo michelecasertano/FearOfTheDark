@@ -118,6 +118,7 @@ const game = {
 	enemiesLeft: 0,
 	state: 'menu',
 	gamepadStatus: 'disconnected',
+	numberOfPlayers: 1,
 
 	startTime(){
 		const intervalId = setInterval(() => {
@@ -191,10 +192,12 @@ const game = {
 		let yHeroOld = this.heroCoord[0]
 		let xHeroOld = this.heroCoord[1]
 
-		let yHero2 = this.hero2Coord[0]
-		let xHero2 = this.hero2Coord[1]
-		let yHero2Old = this.hero2Coord[0]
-		let xHero2Old = this.hero2Coord[1]		
+		if(this.numberOfPlayers === 2){
+			let yHero2 = this.hero2Coord[0]
+			let xHero2 = this.hero2Coord[1]
+			let yHero2Old = this.hero2Coord[0]
+			let xHero2Old = this.hero2Coord[1]		
+		}
 
 		switch(char){
 			case 65: {xHero--;break;}
@@ -212,16 +215,22 @@ const game = {
 		}
 		
 		if(this.updateHeroCoord(room, yHero,xHero, this.heroCoord, 'hero1')){
-			if(this.isExit(room, yHero, xHero)
-				&& this.isExit(room, yHero2, xHero2)
-				&& this.noMoreEnemies(room)){
-				game.start()
-			}
+			if(this.numberOfPlayers === 2){
+				if(this.isExit(room, yHero, xHero)
+					&& this.isExit(room, yHero2, xHero2)
+					&& this.noMoreEnemies(room)){
+					game.start()
+				}
+			} else if(this.isExit(room, yHero, xHero)
+					&& this.noMoreEnemies(room)){
+					game.start()
+				}
+
 			graphics.drawMap()
 			this.updateStats()
 		}
 
-		if(this.updateHeroCoord(room,yHero2,xHero2, this.hero2Coord, 'hero2')){
+		if(this.numberOfPlayers === 2 && this.updateHeroCoord(room,yHero2,xHero2, this.hero2Coord, 'hero2')){
 			// console.log('this.heroCoord after update ', this.heroCoord)
 			if(this.isExit(room, yHero, xHero)
 				&& this.isExit(room, yHero2, xHero2)
@@ -309,7 +318,6 @@ const game = {
 // in the first version of the game, mapGeneration only creates a single room.
 
 const mapGeneration = {
-	// room: {}, -> i don't think I need this
 	
 	initiateRoom(){
 		// initiate a room object and call it room.
@@ -323,11 +331,9 @@ const mapGeneration = {
 		this.generateWalls(room)
 		this.addEnemies(room)
 		this.addHero(room)
-		// this.cleanRoom(room)
+		this.cleanRoom(room)
 		graphics.drawMap()
 
-		// game.gameMap.push(room)
-		console.log(game.printRooms())
 	},
 
 	// make the room empty assiging all cells value to -
@@ -430,7 +436,7 @@ const mapGeneration = {
 
 	addHero(room){
 		game.heroCoord = game.doorsArray[game.doorsArray.length - 1].entrance
-		game.hero2Coord = game.doorsArray[game.doorsArray.length - 1].entrance
+		if(game.numberOfPlayers === 2) {game.hero2Coord = game.doorsArray[game.doorsArray.length - 1].entrance}
 	},
 
 	generateWalls(room){
