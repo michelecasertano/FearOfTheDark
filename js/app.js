@@ -180,8 +180,47 @@ const game = {
 		$('#roomNum').text(`${this.currentRoom + 1}`)
 	},
 
+	manageClick(){
+		if(game.state === 'menu'){
+			graphics.drawPlayerSelection()
+			setTimeout(() => {
+				game.state = 'playerSelection'
+			},50)
+		}
+
+		if(game.state === 'playerSelection'){
+			game.launch()
+		}
+	},
+
+	manageKeyboard(char){
+		if(game.state === 'playerSelection'){
+			game.updatePlayerNumber(char)
+			return true
+		}
+
+		if(game.state === 'play'){
+			game.moveHero(char)
+			return true
+		}
+
+		return false
+	},
+
+	updatePlayerNumber(char){
+		console.log('inside updatePlayerNumber')
+		console.log('char ', char)
+		if(char === 37 || char === 39){
+			console.log('inside the if loop')
+			console.log('game.numberOfPlayers', game.numberOfPlayers)
+			if (game.numberOfPlayers === 2) {game.numberOfPlayers = 1}
+			else if (game.numberOfPlayers === 1) {game.numberOfPlayers = 2}
+			graphics.drawPlayerSelection()
+		}
+	},
+
 	moveHero(char){
-		if(game.state !== 'play') return false
+		// if(game.state !== 'play') return false
 		if(this.isTimeOver()) {
 			return false
 		}

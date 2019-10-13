@@ -56,7 +56,11 @@ function gameLoop() {
 
   // 1st player buttons
   if(game.state === 'menu' && buttonPressed(gamepad.buttons[16])) {
-    game.launch()
+    game.drawPlayerSelection()
+  }
+
+  if(game.state === 'playerSelection' && buttonPressed(gamepad.buttons[16])) {
+    game.drawPlayerSelection()
   }
 
   if(game.state === 'gameOver' &&buttonPressed(gamepad.buttons[16])) {

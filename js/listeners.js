@@ -1,11 +1,12 @@
 $(document).on('keydown',(e) => {
 	const char = e.which
-	game.moveHero(char)
+	game.manageKeyboard(char)
+	// game.moveHero(char)
 
 })
 
 $('#gameScreen').on('click',(e) => {
-	game.launch()
+	game.manageClick()
 })
 
 

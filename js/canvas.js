@@ -53,6 +53,37 @@ const graphics = {
 
 	},
 
+	drawPlayerSelection(){
+		// game.state = 'playerSelection'
+		ctx.clearRect(0, 0, canvas.width, canvas.height)
+		for (i = 0 ; i < 10 ; i ++) {
+			for (j = 0; j < 10 ; j++){
+				ctx.drawImage(pavement , i*60 , j*60, 60, 60)
+			}
+		}
+
+		ctx.font = '60px VT323'
+		ctx.fillStyle = 'white'
+		ctx.textAlign = 'center'
+		ctx.fillText('Select number of players', canvas.width/2,200)
+		ctx.fillText('<', 50,350)
+		ctx.fillText('>', 550,350)
+
+		if (game.numberOfPlayers === 2) {
+			ctx.drawImage(hero, canvas.width/2 - 120, 270, 100, 100)
+			ctx.drawImage(hero2, canvas.width/2 + 60, 260, 100, 100)
+
+			ctx.fillText('Two players', canvas.width/2,450)
+
+		}
+
+		if (game.numberOfPlayers === 1) {
+			ctx.drawImage(hero, canvas.width/2 - 100/2, 270, 100, 100)
+			ctx.fillText('One player', canvas.width/2,450)
+
+		}
+	},
+
 	drawMap(){
 		ctx.clearRect(0, 0, canvas.width, canvas.height)
 
