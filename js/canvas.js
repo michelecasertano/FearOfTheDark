@@ -17,10 +17,8 @@ pavement.src = pavementObj.src
 const hero = new Image()
 hero.src = heroObj.src
 
-if (game.numberOfPlayers === 2 ){
-	const hero2 = new Image()
-	hero2.src = hero2Obj.src
-}
+const hero2 = new Image()
+hero2.src = hero2Obj.src
 
 const graphics = {
 	drawMenu(){

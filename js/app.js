@@ -118,7 +118,7 @@ const game = {
 	enemiesLeft: 0,
 	state: 'menu',
 	gamepadStatus: 'disconnected',
-	numberOfPlayers: 1,
+	numberOfPlayers: 2,
 
 	startTime(){
 		const intervalId = setInterval(() => {
@@ -192,11 +192,16 @@ const game = {
 		let yHeroOld = this.heroCoord[0]
 		let xHeroOld = this.heroCoord[1]
 
+		let yHero2 = null
+		let xHero2 = null
+		let yHero2Old = null 
+		let xHero2Old = null 
+
 		if(this.numberOfPlayers === 2){
-			let yHero2 = this.hero2Coord[0]
-			let xHero2 = this.hero2Coord[1]
-			let yHero2Old = this.hero2Coord[0]
-			let xHero2Old = this.hero2Coord[1]		
+			yHero2 = this.hero2Coord[0]
+			xHero2 = this.hero2Coord[1]
+			yHero2Old = this.hero2Coord[0]
+			xHero2Old = this.hero2Coord[1]	
 		}
 
 		switch(char){
@@ -213,6 +218,8 @@ const game = {
 
 			default: console.log('error in the char switch')
 		}
+
+
 		
 		if(this.updateHeroCoord(room, yHero,xHero, this.heroCoord, 'hero1')){
 			if(this.numberOfPlayers === 2){
