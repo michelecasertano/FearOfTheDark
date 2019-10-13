@@ -18,7 +18,7 @@ window.addEventListener("gamepaddisconnected", function(e) {
 function menuControllerTimer(){
   const intervalId = setInterval(() => {
     if(game.gamepadStatus === 'disconnected') return false
-    if (game.state === 'menu' || game.state === 'gameOver') gameLoop()
+    if (game.state !== 'play') gameLoop()
     else clearInterval(intervalId)
   },100)
 }

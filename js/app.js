@@ -116,6 +116,7 @@ const game = {
 	timeLeft: 450,
 	score: 0,
 	enemiesLeft: 0,
+	// available states: menu, playerSelection, play, gameOver
 	state: 'menu',
 	gamepadStatus: 'disconnected',
 	numberOfPlayers: 2,
@@ -144,7 +145,7 @@ const game = {
 	},
 
 	launch(){
-		if (game.state === 'menu' || game.state === 'gameOver'){
+		if (game.state !== 'play'){
 			this.doorsArray = []
 			this.gameMap = []
 			this.heroCoord = []
