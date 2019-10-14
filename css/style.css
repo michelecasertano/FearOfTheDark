@@ -24,7 +24,7 @@ body {
 
 .scoreBoards {
 	background-color: rgb(230,211,173);
-	border: 3px solid black;
+	border: 2px solid black;
 	height: 600px;
 	width: 200px;
 	display: flex;
@@ -51,6 +51,6 @@ body {
 }
 
 canvas {
-	border: 3px solid black;
+	border: 2px solid black;
 	background-color: rgb(72,72,72);
 }
