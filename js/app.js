@@ -32,10 +32,9 @@ class Room {
 		// [ , , , , , , , , , ],
 		// [ , , , , , , , , , ],
 		// ]
-		// when walls, obstacles, enemies are added using a code as specified in dictionatry below
+		// when walls, treasures are added using a code as specified in dictionatry below
 		// each element is also stored in separete array -> I might not need this.
 		
-		//this.map = [height,width]
 		this.map = [];
 		//map available is a map of all the available indexes.
 		//it allows me to reduce computational need, by only focusing on a 
@@ -53,9 +52,9 @@ class Room {
 
 		this.trap = 2;
 
-		this.enemy = enemyObj.value;
-		enemyObj.width = 0.6*(canvas.height / this.height) 
-		enemyObj.height = 0.6*(canvas.width / this.width)
+		this.treasure = treasureObj.value;
+		treasureObj.width = 0.6*(canvas.height / this.height) 
+		treasureObj.height = 0.6*(canvas.width / this.width)
 
 		this.door = entranceObj.value;
 		entranceObj.height = canvas.height / this.height
@@ -86,13 +85,13 @@ class Room {
 		this.maxWallCoverage = 0.8;
 		this.maxNumberBricks = Math.floor(this.width * this.height * this.maxWallCoverage)
 
-		//restrictions on enemy 
-		this.maxNumberOfEnemies = 12
-		this.minNumberOfEnemies = 8
+		//restrictions on treasures
+		this.maxNumberOfTreasures = 12
+		this.minNumberOfTreasures = 8
 
-		//total number of Enemies
-		this.totalEnemies = 0
-		this.killedEnemies = 0
+		//total number of treasures
+		this.totalTreasures = 0
+		this.collectedTreasures = 0
 	}
 }
 
@@ -115,7 +114,7 @@ const game = {
 	currentRoom: -1,
 	timeLeft: 450,
 	score: 0,
-	enemiesLeft: 0,
+	treasuresLeft: 0,
 	// available states: menu, playerSelection, play, gameOver
 	state: 'menu',
 	// status is connected or disconnected
@@ -167,7 +166,7 @@ const game = {
 			this.currentRoom = -1
 			this.timeLeft = 450
 			this.score = 0
-			this.enemiesLeft = 0
+			this.treasuresLeft = 0
 			this.state =  'play'
 			this.start()
 		}
@@ -189,9 +188,9 @@ const game = {
 	// update stats on display
 	updateStats(){
 		const room = this.gameMap[this.currentRoom]
-		this.enemiesLeft = room.totalEnemies - room.killedEnemies
-		if (this.enemiesLeft <= 0) exit.src = 'sprites/doors_leaf_open.png'
-		$('#coinsLeft').text(`${this.enemiesLeft}`)
+		this.treasuresLeft = room.totalTreasures - room.collectedTreasures
+		if (this.treasuresLeft <= 0) exit.src = 'sprites/doors_leaf_open.png'
+		$('#coinsLeft').text(`${this.treasuresLeft}`)
 		$('#score').text(`${this.score}`)
 		$('#roomNum').text(`${this.currentRoom + 1}`)
 	},
@@ -219,7 +218,8 @@ const game = {
 		}
 
 		if(game.state === 'play'){
-			game.moveHero(char)
+			game.moveHero1(char)
+			game.moveHero2(char)
 			return true
 		}
 
@@ -237,7 +237,7 @@ const game = {
 
 	// move hero on the board
 	// WASD for player one arrows for player 2
-	moveHero(char){
+	moveHero1(char){
 		if(this.isTimeOver()) {
 			return false
 		}
@@ -249,31 +249,13 @@ const game = {
 		let yHeroOld = this.heroCoord[0]
 		let xHeroOld = this.heroCoord[1]
 
-		let yHero2 = null
-		let xHero2 = null
-		let yHero2Old = null 
-		let xHero2Old = null 
-
-		if(this.numberOfPlayers === 2){
-			yHero2 = this.hero2Coord[0]
-			xHero2 = this.hero2Coord[1]
-			yHero2Old = this.hero2Coord[0]
-			xHero2Old = this.hero2Coord[1]	
-		}
-
 		switch(char){
 			case 65: {xHero--;break;}
 			case 87: {yHero--;break;}
 			case 68: {xHero++; break;}
 			case 83: {yHero++; break;}
 
-			case 37: {xHero2--;break;}
-			case 38: {yHero2--;break;}
-			case 39: {xHero2++; break;}
-			case 40: {yHero2++; break;}
-
-
-			default: console.log('error in the char switch')
+			default: return false
 		}
 
 
@@ -284,24 +266,50 @@ const game = {
 		if(this.updateHeroCoord(room, yHero,xHero, this.heroCoord, 'hero1')){
 			if(this.numberOfPlayers === 2){
 				if(this.isExit(room, yHero, xHero)
-					&& this.isExit(room, yHero2, xHero2)
-					&& this.noMoreEnemies(room)){
+					&& this.isExit(room, this.hero2Coord[0], this.hero2Coord[1])
+					&& this.noMoreTreasures(room)){
 					game.start()
 				}
 			} else if(this.isExit(room, yHero, xHero)
-					&& this.noMoreEnemies(room)){
+					&& this.noMoreTreasures(room)){
 					game.start()
 				}
 
 			graphics.drawMap()
 			this.updateStats()
 		}
+	},
 
-		// same as above but for player 2
-		if(this.numberOfPlayers === 2 && this.updateHeroCoord(room,yHero2,xHero2, this.hero2Coord, 'hero2')){
-			if(this.isExit(room, yHero, xHero)
+	moveHero2(char){
+		if(this.numberOfPlayers === 1){return false}
+		if(this.isTimeOver()) {
+			return false
+		}
+
+		const room = this.gameMap[this.currentRoom]
+
+		let yHero2 = this.hero2Coord[0]
+		let xHero2 = this.hero2Coord[1]
+		let yHero2Old = this.hero2Coord[0]
+		let xHero2Old = this.hero2Coord[1]
+
+		switch(char){
+			case 37: {xHero2--;break;}
+			case 38: {yHero2--;break;}
+			case 39: {xHero2++; break;}
+			case 40: {yHero2++; break;}
+
+			default: return false
+		}
+
+		// update heroCoord in map. 
+		// if there is only one player, treasures are over, and player on exit
+		// go to next room.
+		// if two players, both need to be on exit
+		if(this.updateHeroCoord(room,yHero2,xHero2, this.hero2Coord, 'hero2')){
+			if(this.isExit(room, this.heroCoord[0], this.heroCoord[1])
 				&& this.isExit(room, yHero2, xHero2)
-				&& this.noMoreEnemies(room)){
+				&& this.noMoreTreasures(room)){
 				game.start()
 			}
 			graphics.drawMap()
@@ -317,9 +325,9 @@ const game = {
 			if(hero === 'hero2') {this.hero2Coord = [y , x]}
 
 			// if there is a treasure chest, remove treasure chest and update score
-			if(this.isEnemy(room, y, x)){
-				room.killedEnemies++
-				this.score+= enemyObj.points
+			if(this.isTreasure(room, y, x)){
+				room.collectedTreasures++
+				this.score+= treasureObj.points
 				mapGeneration.updateMapValue(room, y, x, " ")
 			}
 
@@ -328,7 +336,7 @@ const game = {
 			this.updateStats()
 
 			return true			
-		}
+		} else return false 
 	},
 
 	// can that part of the map be seen? 
@@ -357,8 +365,8 @@ const game = {
 	},
 
 	// check if coordinates of treasure chest
-	isEnemy(room, y , x){
-		if (room.map[y][x] === enemyObj.value) return true
+	isTreasure(room, y , x){
+		if (room.map[y][x] === treasureObj.value) return true
 		return false 
 	},
 
@@ -369,8 +377,8 @@ const game = {
 	},
 
 	// check if all treasures have been picked up
-	noMoreEnemies(room){
-		if (room.totalEnemies === room.killedEnemies) return true
+	noMoreTreasures(room){
+		if (room.totalTreasures === room.collectedTreasures) return true
 		return false
 	},
 
@@ -408,7 +416,7 @@ const mapGeneration = {
 		//in expansion could be randomized.
 		this.addDoors(room)
 		this.generateWalls(room)
-		this.addEnemies(room)
+		this.addTreasures(room)
 		this.addHero(room)
 		this.cleanRoom(room)
 		graphics.drawMap()
@@ -489,23 +497,23 @@ const mapGeneration = {
 	},
 
 	// add treasures to the map
-	addEnemies(room){
-		const numberOfEnemies = Math.floor(Math.random()*(room.maxNumberOfEnemies - room.minNumberOfEnemies)) + room.minNumberOfEnemies
-		room.totalEnemies = numberOfEnemies
-		for (let i = 0; i < numberOfEnemies; i++){
-			//select a random row to place an enemy
+	addTreasures(room){
+		const numberOfTreasures = Math.floor(Math.random()*(room.maxNumberOfTreasures - room.minNumberOfTreasures)) + room.minNumberOfTreasures
+		room.totalTreasures = numberOfTreasures
+		for (let i = 0; i < numberOfTreasures; i++){
+			//select a random row to place a treasure
 			const availableRows = Object.keys(room.mapAvailable)
 			const randomRowKeyIndex = Math.floor(Math.random()*availableRows.length)
 			const randomRow = availableRows[randomRowKeyIndex]
-			const yCoordEnemy = parseInt(randomRow)
+			const yCoordTreasure = parseInt(randomRow)
 
-			//select random column to place enemy
+			//select random column to place treasure
 			const availableSpotsInRow = room.mapAvailable[randomRow]
 			const randomColumnIndex = Math.floor(Math.random()*availableSpotsInRow.length)
-			const xCoordEnemy = availableSpotsInRow[randomColumnIndex]
+			const xCoordTreasure = availableSpotsInRow[randomColumnIndex]
 
-			this.updateMapValue(room, yCoordEnemy, xCoordEnemy, room.enemy)
-			this.removeUsedIndex(room,yCoordEnemy,xCoordEnemy);		
+			this.updateMapValue(room, yCoordTreasure, xCoordTreasure, room.treasure)
+			this.removeUsedIndex(room,yCoordTreasure,xCoordTreasure);		
 		}
 	},
 

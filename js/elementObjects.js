@@ -14,12 +14,12 @@ brickObj = {
 	src: 'sprites/wall_corner_front_left.png'
 }
 
-enemyObj = {
+treasureObj = {
 	value: 3,
 	color: 'red',
 	height: 0,
 	width: 0,
-	elementType: 'chest',
+	elementType: 'treasure',
 	points: 10,
 	src: 'sprites/chest_full_open_anim_f0.png'
 }

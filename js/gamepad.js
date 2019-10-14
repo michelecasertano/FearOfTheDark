@@ -99,60 +99,61 @@ function gameLoop() {
 
   if(game.state === 'play'){
     if (buttonPressed(gamepad.buttons[15])) {
-      game.moveHero(68)
+      game.moveHero1(68)
     }
     if (buttonPressed(gamepad.buttons[14])) {
-      game.moveHero(65)
+      game.moveHero1(65)
     }
     if (buttonPressed(gamepad.buttons[12])) {
-      game.moveHero(87)
+      game.moveHero1(87)
     }
     if (buttonPressed(gamepad.buttons[13])) {
-      game.moveHero(83)
+      game.moveHero1(83)
     }
 
     if (gamepad.axes[0] < -0.25) {
-      game.moveHero(65);
+      game.moveHero1(65);
     } 
     if (gamepad.axes[0] > 0.25) {
-      game.moveHero(68);
+      game.moveHero1(68);
     } 
 
     if (gamepad.axes[1] < -0.25) {
-      game.moveHero(87);
+      game.moveHero1(87);
     } 
     if (gamepad.axes[1] > 0.25) {
-      game.moveHero(83);
+      game.moveHero1(83);
     } 
   
     // 2nd player buttons
+    if(game.numberOfPlayers === 2 && gamepad2 !== null){
+      if (buttonPressed(gamepad2.buttons[15])) {
+        game.moveHero2(39)
+      }
+      if (buttonPressed(gamepad2.buttons[14])) {
+        game.moveHero2(37)
+      }
+      if (buttonPressed(gamepad2.buttons[12])) {
+        game.moveHero2(38)
+      }
+      if (buttonPressed(gamepad2.buttons[13])) {
+        game.moveHero2(40)
+      }
 
-    if (buttonPressed(gamepad2.buttons[15])) {
-      game.moveHero(39)
-    }
-    if (buttonPressed(gamepad2.buttons[14])) {
-      game.moveHero(37)
-    }
-    if (buttonPressed(gamepad2.buttons[12])) {
-      game.moveHero(38)
-    }
-    if (buttonPressed(gamepad2.buttons[13])) {
-      game.moveHero(40)
-    }
+      if (gamepad2.axes[0] < -0.25) {
+        game.moveHero2(37);
+      } 
+      if (gamepad2.axes[0] > 0.25) {
+        game.moveHero2(39);
+      } 
 
-    if (gamepad2.axes[0] < -0.25) {
-      game.moveHero(37);
-    } 
-    if (gamepad2.axes[0] > 0.25) {
-      game.moveHero(39);
-    } 
-
-    if (gamepad2.axes[1] < -0.25) {
-      game.moveHero(38);
-    } 
-    if (gamepad2.axes[1] > 0.25) {
-      game.moveHero(40);
-    }  
+      if (gamepad2.axes[1] < -0.25) {
+        game.moveHero2(38);
+      } 
+      if (gamepad2.axes[1] > 0.25) {
+        game.moveHero2(40);
+      }  
+    }
   }
 }
 

@@ -2,8 +2,8 @@
 const canvas = document.getElementById('my-canvas');
 const ctx = canvas.getContext('2d');
 
-const chest = new Image()
-chest.src = enemyObj.src
+const treasure = new Image()
+treasure.src = treasureObj.src
 
 const exit = new Image()
 exit.src = exitObj.src
@@ -111,8 +111,8 @@ const graphics = {
 						case brickObj.value: {
 							ctx.drawImage(brick, x , y, brickObj.width, brickObj.height)
 							break}
-						case enemyObj.value: {
-						    elementType = enemyObj.elementType
+						case treasureObj.value: {
+						    elementType = treasureObj.elementType
 						    break}
 						case exitObj.value: {
 							elementType = exitObj.elementType
@@ -134,11 +134,11 @@ const graphics = {
 					ctx.drawImage(exit, xExit, yExit , exitObj.width, exitObj.height)
 				}
 
-				if (elementType === 'chest'){
-					const xChest = x + (gridWidth - enemyObj.width)/2
-					const yChest = y + (gridHeight - enemyObj.width)/2
+				if (elementType === 'treasure'){
+					const xTreasure = x + (gridWidth - treasureObj.width)/2
+					const yTreasure = y + (gridHeight - treasureObj.width)/2
 					ctx.drawImage(pavement, x , y , pavementObj.width, pavementObj.height)
-					ctx.drawImage(chest, xChest , yChest, enemyObj.width, enemyObj.height)
+					ctx.drawImage(treasure, xTreasure , yTreasure, treasureObj.width, treasureObj.height)
 				}
 
 				if (game.isHero(room,parseInt(row),column)){
