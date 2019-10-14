@@ -1,3 +1,5 @@
+
+//add listner for gamePad. Print status to console to check controller is connected
 window.addEventListener("gamepadconnected", function(e) {
   game.gamepadStatus = 'connected'
   const gp = navigator.getGamepads()[e.gamepad.index];
@@ -6,7 +8,7 @@ window.addEventListener("gamepadconnected", function(e) {
   gamepadHandler(e,true)
 });
 
-
+//add listner for gamePad. Print status to console to check controller is disconnected
 window.addEventListener("gamepaddisconnected", function(e) {
   game.gamepadStatus = 'disconnected'
   console.log("Gamepad disconnected from index %d: %s",
@@ -15,6 +17,7 @@ window.addEventListener("gamepaddisconnected", function(e) {
 });
 
 
+//reads controller status while in menus
 function menuControllerTimer(){
   const intervalId = setInterval(() => {
     if(game.gamepadStatus === 'disconnected') return false
@@ -23,10 +26,14 @@ function menuControllerTimer(){
   },100)
 }
 
+// call previous function while state of game is not play.
+// without this, controller would only work during game
 menuControllerTimer()
 
+// create object of gamepad objects
 const gamepads = {};
 
+// once a controller is connected, add the correspoding object to the gamepad object.
 function gamepadHandler(event, connecting) {
   const gamepad = event.gamepad;
 
@@ -37,6 +44,7 @@ function gamepadHandler(event, connecting) {
   }
 }
 
+// check that the button presses is a button of a connected gamepad
 function buttonPressed(b) {
   if (typeof(b) == "object") {
     return b.pressed;
@@ -44,85 +52,110 @@ function buttonPressed(b) {
   return b == 1.0;
 }
 
+
+// check with button was pressed
 function gameLoop() {
   const gamepads = navigator.getGamepads ? navigator.getGamepads() : (navigator.webkitGetGamepads ? navigator.webkitGetGamepads : []);
   if (!gamepads) {
     return;
   }
 
+  //access first and second gamepad
   const gamepad = gamepads[0];
   const gamepad2 = gamepads[1]
 
 
   // 1st player buttons
   if(game.state === 'menu' && buttonPressed(gamepad.buttons[16])) {
-    game.drawPlayerSelection()
+    graphics.drawPlayerSelection()
+    setTimeout(() => {
+        game.state = 'playerSelection'
+      },500)
   }
 
-  if(game.state === 'playerSelection' && buttonPressed(gamepad.buttons[16])) {
-    game.drawPlayerSelection()
+  if(game.state === 'playerSelection' && (buttonPressed(gamepad.buttons[14]))) {
+    setTimeout(() => {
+      if(game.numberOfPlayers === 2) game.numberOfPlayers = 1
+      else if(game.numberOfPlayers === 1) game.numberOfPlayers = 2
+      graphics.drawPlayerSelection()
+    },500)
+  }
+
+  if(game.state === 'playerSelection' && (buttonPressed(gamepad.buttons[15]))) {
+    setTimeout(() => {
+      if(game.numberOfPlayers === 2) game.numberOfPlayers = 1
+      else if(game.numberOfPlayers === 1) game.numberOfPlayers = 2
+      graphics.drawPlayerSelection()
+    },500)
+  }
+
+  if(game.state === 'playerSelection' && (buttonPressed(gamepad.buttons[16]))) {
+    game.launch()
   }
 
   if(game.state === 'gameOver' &&buttonPressed(gamepad.buttons[16])) {
     game.launch()
   }
 
-  if (buttonPressed(gamepad.buttons[15])) {
-    game.moveHero(68)
-  }
-  if (buttonPressed(gamepad.buttons[14])) {
-    game.moveHero(65)
-  }
-  if (buttonPressed(gamepad.buttons[12])) {
-    game.moveHero(87)
-  }
-  if (buttonPressed(gamepad.buttons[13])) {
-    game.moveHero(83)
-  }
+  if(game.state === 'play'){
+    if (buttonPressed(gamepad.buttons[15])) {
+      game.moveHero(68)
+    }
+    if (buttonPressed(gamepad.buttons[14])) {
+      game.moveHero(65)
+    }
+    if (buttonPressed(gamepad.buttons[12])) {
+      game.moveHero(87)
+    }
+    if (buttonPressed(gamepad.buttons[13])) {
+      game.moveHero(83)
+    }
 
-  if (gamepad.axes[0] < -0.25) {
-    game.moveHero(65);
-  } 
-  if (gamepad.axes[0] > 0.25) {
-    game.moveHero(68);
-  } 
+    if (gamepad.axes[0] < -0.25) {
+      game.moveHero(65);
+    } 
+    if (gamepad.axes[0] > 0.25) {
+      game.moveHero(68);
+    } 
 
-  if (gamepad.axes[1] < -0.25) {
-    game.moveHero(87);
-  } 
-  if (gamepad.axes[1] > 0.25) {
-    game.moveHero(83);
-  } 
+    if (gamepad.axes[1] < -0.25) {
+      game.moveHero(87);
+    } 
+    if (gamepad.axes[1] > 0.25) {
+      game.moveHero(83);
+    } 
+  
+    // 2nd player buttons
 
-  // 2nd player buttons
+    if (buttonPressed(gamepad2.buttons[15])) {
+      game.moveHero(39)
+    }
+    if (buttonPressed(gamepad2.buttons[14])) {
+      game.moveHero(37)
+    }
+    if (buttonPressed(gamepad2.buttons[12])) {
+      game.moveHero(38)
+    }
+    if (buttonPressed(gamepad2.buttons[13])) {
+      game.moveHero(40)
+    }
 
-  if (buttonPressed(gamepad2.buttons[15])) {
-    game.moveHero(39)
+    if (gamepad2.axes[0] < -0.25) {
+      game.moveHero(37);
+    } 
+    if (gamepad2.axes[0] > 0.25) {
+      game.moveHero(39);
+    } 
+
+    if (gamepad2.axes[1] < -0.25) {
+      game.moveHero(38);
+    } 
+    if (gamepad2.axes[1] > 0.25) {
+      game.moveHero(40);
+    }  
   }
-  if (buttonPressed(gamepad2.buttons[14])) {
-    game.moveHero(37)
-  }
-  if (buttonPressed(gamepad2.buttons[12])) {
-    game.moveHero(38)
-  }
-  if (buttonPressed(gamepad2.buttons[13])) {
-    game.moveHero(40)
-  }
-
-  if (gamepad2.axes[0] < -0.25) {
-    game.moveHero(37);
-  } 
-  if (gamepad2.axes[0] > 0.25) {
-    game.moveHero(39);
-  } 
-
-  if (gamepad2.axes[1] < -0.25) {
-    game.moveHero(38);
-  } 
-  if (gamepad2.axes[1] > 0.25) {
-    game.moveHero(40);
-  }  
 }
 
+// gamepad listners
 window.addEventListener("gamepadconnected", function(e) { gamepadHandler(e, true); }, false);
 window.addEventListener("gamepaddisconnected", function(e) { gamepadHandler(e, false); }, false);

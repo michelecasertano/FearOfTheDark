@@ -1,3 +1,9 @@
+// this file contains all the objects to be rendered on the map
+// map referes to the code used in the matrix
+// color is the color of the element on canvas
+// height and width are the dimension of the sprite (updated depending on canvas size)
+// elemenType used for visualization on canvas
+// src is the sprite address for the object 
 
 brickObj = {
 	value: 1,

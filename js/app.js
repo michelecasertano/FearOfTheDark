@@ -118,32 +118,46 @@ const game = {
 	enemiesLeft: 0,
 	// available states: menu, playerSelection, play, gameOver
 	state: 'menu',
+	// status is connected or disconnected
 	gamepadStatus: 'disconnected',
+	// can be 1 or 2
 	numberOfPlayers: 2,
 
+	// manages in game time
 	startTime(){
 		const intervalId = setInterval(() => {
+			// this needs to be called each time to check if a button was pressed
 			if(this.gamepadStatus === 'connected') gameLoop()
+			// time is split into two for visualizaiton purposes (i.e., to have smaller decimal)
 			const integers = Math.floor(this.timeLeft/10)
 			$('#time').text(`${integers}`)
 			const decimals = this.timeLeft - integers*10
 			$('#timeDecimals').text(`.${decimals}`)
+			
+			// update stats on the page
 			this.updateStats()
+
+			// it the game is over, end timer and drawGameOver screen
 			if(this.isTimeOver()) {
 				game.state = 'gameOver'
 				clearInterval(intervalId)
 				graphics.drawGameOver()
+				// because timer is over, this function is called to make sure gameLoop() happens and 
+				// controller can be used
 				menuControllerTimer()
 				return false 
 			} else this.timeLeft --
 		},100)
 	},
 
+	// checks if there is time left
 	isTimeOver(){
 		if(this.timeLeft <= 0) return true
 		return false 
 	},
 
+
+    // reset game values and start game
 	launch(){
 		if (game.state !== 'play'){
 			this.doorsArray = []
@@ -159,6 +173,7 @@ const game = {
 		}
 	},
 
+	// start the game
 	start(){
 		exit.src = 'sprites/doors_leaf_closed.png'
 		this.state = 'play'
@@ -171,6 +186,7 @@ const game = {
 		mapGeneration.initiateRoom()
 	},
 
+	// update stats on display
 	updateStats(){
 		const room = this.gameMap[this.currentRoom]
 		this.enemiesLeft = room.totalEnemies - room.killedEnemies
@@ -180,6 +196,8 @@ const game = {
 		$('#roomNum').text(`${this.currentRoom + 1}`)
 	},
 
+	// manage click depending on game state
+	// setTimeout needed to avoid double click effect
 	manageClick(){
 		if(game.state === 'menu'){
 			graphics.drawPlayerSelection()
@@ -193,6 +211,7 @@ const game = {
 		}
 	},
 
+	// manage input on arrows and wasd depending on state of game
 	manageKeyboard(char){
 		if(game.state === 'playerSelection'){
 			game.updatePlayerNumber(char)
@@ -207,20 +226,18 @@ const game = {
 		return false
 	},
 
+	// change player number using keyboard
 	updatePlayerNumber(char){
-		console.log('inside updatePlayerNumber')
-		console.log('char ', char)
 		if(char === 37 || char === 39){
-			console.log('inside the if loop')
-			console.log('game.numberOfPlayers', game.numberOfPlayers)
 			if (game.numberOfPlayers === 2) {game.numberOfPlayers = 1}
 			else if (game.numberOfPlayers === 1) {game.numberOfPlayers = 2}
 			graphics.drawPlayerSelection()
 		}
 	},
 
+	// move hero on the board
+	// WASD for player one arrows for player 2
 	moveHero(char){
-		// if(game.state !== 'play') return false
 		if(this.isTimeOver()) {
 			return false
 		}
@@ -260,7 +277,10 @@ const game = {
 		}
 
 
-		
+		// update heroCoord in map. 
+		// if there is only one player, treasures are over, and player on exit
+		// go to next room.
+		// if two players, both need to be on exit
 		if(this.updateHeroCoord(room, yHero,xHero, this.heroCoord, 'hero1')){
 			if(this.numberOfPlayers === 2){
 				if(this.isExit(room, yHero, xHero)
@@ -277,8 +297,8 @@ const game = {
 			this.updateStats()
 		}
 
+		// same as above but for player 2
 		if(this.numberOfPlayers === 2 && this.updateHeroCoord(room,yHero2,xHero2, this.hero2Coord, 'hero2')){
-			// console.log('this.heroCoord after update ', this.heroCoord)
 			if(this.isExit(room, yHero, xHero)
 				&& this.isExit(room, yHero2, xHero2)
 				&& this.noMoreEnemies(room)){
@@ -289,18 +309,21 @@ const game = {
 		}
 	},
 
+	// update coordinate of hero on map
 	updateHeroCoord(room , y, x, coord, hero){	
 		if(mapGeneration.outsideMap(room, y, x) === false &&
 			room.map[y][x] !== 1){
 			if(hero === 'hero1') {this.heroCoord = [y , x]}
 			if(hero === 'hero2') {this.hero2Coord = [y , x]}
 
+			// if there is a treasure chest, remove treasure chest and update score
 			if(this.isEnemy(room, y, x)){
 				room.killedEnemies++
 				this.score+= enemyObj.points
 				mapGeneration.updateMapValue(room, y, x, " ")
 			}
 
+			// draw udpated map and update stats
 			graphics.drawMap()
 			this.updateStats()
 
@@ -308,41 +331,50 @@ const game = {
 		}
 	},
 
+	// can that part of the map be seen? 
+	// currently set for spaces that are less than two away from hero 1
 	isVisible(y , x){
 		if (Math.abs(y - this.heroCoord[0]) < 2 && Math.abs(x - this.heroCoord[1]) < 2) return true
 		return false
 	},
 
+	// same as above but for hero2
 	isVisible2(y, x){
 		if (Math.abs(y - this.hero2Coord[0]) < 2 && Math.abs(x - this.hero2Coord[1]) < 2) return true
 		return false
 	},
 
+	// check if these are the coordinates of hero1
 	isHero(room, y, x){
 		if (this.heroCoord[0] === y && this.heroCoord[1] === x) return true
 		return false
 	},
 
+	// check if these are the coordinate for hero2
 	isHero2(room, y, x){
 		if (this.hero2Coord[0] === y && this.hero2Coord[1] === x) return true
 		return false
 	},
 
+	// check if coordinates of treasure chest
 	isEnemy(room, y , x){
 		if (room.map[y][x] === enemyObj.value) return true
 		return false 
 	},
 
+	// check if coordinates of exit
 	isExit(room, y , x){
 		if (room.map[y][x] === exitObj.value) return true
 		return false 
 	},
 
+	// check if all treasures have been picked up
 	noMoreEnemies(room){
 		if (room.totalEnemies === room.killedEnemies) return true
 		return false
 	},
 
+	// print room to console. Used for debugging
 	printRooms(){
 		this.gameMap.forEach(function(room,i){
 			console.log(`---- ROOM ${i} ----`)
@@ -397,6 +429,7 @@ const mapGeneration = {
 		}
 	},
 
+	// remove matrix values that indicate a spot had been tried to place a brick unsuccessfully
 	cleanRoom(room){
 		for (let i = 0; i < room.height; i++){
 			for (let j = 0; j < room.width; j++){
@@ -409,7 +442,7 @@ const mapGeneration = {
 
 	// This function adds the entrance and the exit door to the room.
 	// Currently the function will add the entrance room on the left wall, and the 
-	// exit door in the right door. This could be expanded to be on any room.
+	// exit door in the right door. This could be expanded to be on any wall.
 
 	addDoors(room){
 
@@ -455,6 +488,7 @@ const mapGeneration = {
 		this.removeUsedIndex(room,yCoordExit,xCoordExit);
 	},
 
+	// add treasures to the map
 	addEnemies(room){
 		const numberOfEnemies = Math.floor(Math.random()*(room.maxNumberOfEnemies - room.minNumberOfEnemies)) + room.minNumberOfEnemies
 		room.totalEnemies = numberOfEnemies
@@ -470,34 +504,27 @@ const mapGeneration = {
 			const randomColumnIndex = Math.floor(Math.random()*availableSpotsInRow.length)
 			const xCoordEnemy = availableSpotsInRow[randomColumnIndex]
 
-			// console.log('randomRow: ', randomRow)
-			// console.log('availableSpotsInRow: ', availableSpotsInRow)
-			// console.log('xCoordEnemy: ',xCoordEnemy)
-			// console.log('yCoordEnemy: ',yCoordEnemy)
-			// console.log('room.Enemy: ',room.enemy)
-
 			this.updateMapValue(room, yCoordEnemy, xCoordEnemy, room.enemy)
 			this.removeUsedIndex(room,yCoordEnemy,xCoordEnemy);		
 		}
 	},
 
+	// add heros to the map
 	addHero(room){
 		game.heroCoord = game.doorsArray[game.doorsArray.length - 1].entrance
 		if(game.numberOfPlayers === 2) {game.hero2Coord = game.doorsArray[game.doorsArray.length - 1].entrance}
 	},
 
 	generateWalls(room){
-		// for the while loop conditions, I need to make sure that not to much wall is 
+		// for the while loop conditions, I need to make sure that not too many bricks are 
 		// on the map. I do this with a variable called wallUsedMap. This variable
 		// is updated within the for loop for each wall.
 		let bricksUsedMap = 0
 
 		const numberOfWallSeeds = Math.floor(Math.random()*
 			(room.maxNumberWalls - room.minNumberWalls + 1)) + room.minNumberWalls
-		// console.log(numberOfWallSeeds, ' random number of wall seeds')
-		// for each random wall, build the wall
-		// console.log('numberOfWallSeeds: ',numberOfWallSeeds)
 
+		// for each random wall, build the wall
 		for (let i = 0; i < numberOfWallSeeds; i++){
 
 			// for each wall, pick a side of the map where to plant the wall seed
@@ -509,11 +536,13 @@ const mapGeneration = {
 				case 3: {brickCoord = this.leftWallRandom(room); break}
 			}
 			
+			// send brick coord to build the wall
 			this.buildWall(brickCoord, bricksUsedMap, room)
 
 		}
 	},
 
+	// build the wall function. Function is a helper of a backtracking recursive alghoritm
 	buildWall(brickCoord, bricksUsedMap, room){
 		
 		// checks to make sure that not too many bricks are used in a single wall
@@ -538,8 +567,8 @@ const mapGeneration = {
 			return false			
 		}
 
+		// check to make sure the seed of the wall is not next to another seed
 		if (this.isSoloSeed(room,seedYcoord,seedXcoord)){
-			// console.log('it is a solo seed')
 			this.buildWallRecursion(bricksUsedWall, bricksUsedMap,nextCoordArray,room)
 		} else {
 			this.updateMapValue(room, seedYcoord, seedXcoord, room.visited)
@@ -547,16 +576,14 @@ const mapGeneration = {
 		}
 	},
 
+	// recursively build walls
 	buildWallRecursion(bricksUsedWall, bricksUsedMap,coordArray, room){
-		// console.log('in buildWallRecursion')
-		
 		if(coordArray.length === 0){return false} // this condition should never happen.
 		
+		// pick first possible position for a brick
 		const coord = coordArray.shift()
 		const yCoord = coord[0]
 		const xCoord = coord[1]
-		// console.log('yCoord: ', yCoord)
-		// console.log('xCoord: ', xCoord)
 
 		// check if the block is on the entrance door 
 		if(room.map[yCoord][xCoord] === 4){
@@ -621,49 +648,41 @@ const mapGeneration = {
 		const yCoord1 = yCoord - 1 
 		const xCoord1 = xCoord
 		const block1Value = this.blockValue(room,yCoord1,xCoord1)
-		// console.log('block1Value: ',block1Value)
 		if (block1Value !== 0) return false
 
 		const yCoord2 = yCoord - 1 
 		const xCoord2 = xCoord + 1
 		const block2Value = this.blockValue(room,yCoord2,xCoord2)
-		// console.log('block2Value: ',block2Value)
 		if (block2Value !== 0) return false
 
 		const yCoord3 = yCoord 
 		const xCoord3 = xCoord + 1
 		const block3Value = this.blockValue(room,yCoord3,xCoord3)
-		// console.log('block3Value: ',block3Value)
 		if (block3Value !== 0) return false
 
 		const yCoord4 = yCoord + 1 
 		const xCoord4 = xCoord + 1
 		const block4Value = this.blockValue(room,yCoord4,xCoord4)
-		// console.log('block4Value: ',block4Value)
 		if (block4Value !== 0) return false
 
 		const yCoord5 = yCoord + 1
 		const xCoord5 = xCoord
 		const block5Value = this.blockValue(room,yCoord5,xCoord5)
-		// console.log('block5Value: ',block5Value)
 		if (block5Value !== 0) return false
 
 		const yCoord6 = yCoord + 1
 		const xCoord6 = xCoord - 1
 		const block6Value = this.blockValue(room,yCoord6,xCoord6)
-		// console.log('block6Value: ',block6Value)
 		if (block6Value !== 0) return false
 
 		const yCoord7 = yCoord 
 		const xCoord7 = xCoord - 1
 		const block7Value = this.blockValue(room,yCoord7,xCoord7)
-		// console.log('block7Value: ',block7Value)
 		if (block7Value !== 0) return false
 
 		const yCoord8 = yCoord - 1 
 		const xCoord8 = xCoord - 1
 		const block8Value = this.blockValue(room,yCoord8,xCoord8)
-		// console.log('block8Value: ',block8Value)
 		if (block8Value !== 0) return false
 
 		return true
@@ -672,7 +691,6 @@ const mapGeneration = {
 
 	// check if block is inside the map
 	outsideMap(room,yCoord,xCoord){
-		// console.log('in outsideMap')
 		if(yCoord < 0) return true
 		if(xCoord < 0) return true
 		if(yCoord >= room.height) return true
@@ -771,7 +789,6 @@ const mapGeneration = {
 	},
 
 	blockValue(room, yCoord, xCoord){
-		// console.log('in blockValue')
 		// the first four statements check if the brick is outiside the matrix
 		// if that is a acase, return 1, as I am at checking outsie the room.
 		if(this.outsideMap(room, yCoord, xCoord)) return 0
@@ -786,7 +803,6 @@ const mapGeneration = {
 	},
 
 	selectNextBrick(room, yCoord, xCoord){
-		// console.log('in selectNextBrick')
 		// Depending where the previous brick is, I need to limit the 
 	    // possibilities for the next brick
 		// Next brick coded as per below
@@ -811,7 +827,6 @@ const mapGeneration = {
 		//     bottomLeft(6) bottomWall(7)  bottomRight (8)
 		
 		const currentPosition = this.brickPositionString(room, yCoord, xCoord)
-		// console.log('currentPosition: ',currentPosition,' ',typeof(currentPosition))
 		let availablePositions = 0
 		const positionsArray = []
 		switch (currentPosition){
@@ -827,10 +842,6 @@ const mapGeneration = {
 			default: console.log('ERROR in switch currentBrickPosition')
 		}
 
-		// console.log(availablePositions, ' availablePositions')
-		// console.log(positionsArray, ' positionsArray')
-
-
 		const potentialPositions = this.shuffleArray(positionsArray)
 		const nextCoordArray = []
 		
@@ -845,11 +856,6 @@ const mapGeneration = {
 			}
 			nextCoordArray.push(nextCoord)
 		}
-
-		// console.log('---selectNextBrick---')
-		// for (i = 0 ; i < nextCoordArray.length; i++){
-		// 	console.log(nextCoordArray[i])
-		// }
 		return nextCoordArray
 
 	},
@@ -867,11 +873,6 @@ const mapGeneration = {
 	},
 
 	brickPositionString(room, yCoord,xCoord){
-	// console.log('in brickPositionString')
-	// console.log('yCoord: ',yCoord)
-	// console.log('xCoord: ',xCoord)
-	// console.log('room.height: ',room.height)
-	// console.log('room.width', room.width)
 	//Position naming convention
 	//       topLeft(0)  topWall(1) topRight(2)
 	//             ---------------------
@@ -940,8 +941,6 @@ const mapGeneration = {
 		const availableRows = Object.keys(room.mapAvailable)
 		const randomRowKeyIndex = Math.floor(Math.random()*availableRows.length)
 		const randomRow = availableRows[randomRowKeyIndex]
-		// console.log('randomRow ',randomRow)
-		// console.log('value from leftWallRandom -> ', [parseInt(randomRow),0])
 		return [parseInt(randomRow),0]
 	},
 
@@ -952,23 +951,17 @@ const mapGeneration = {
 		const availableRows = Object.keys(room.mapAvailable)
 		const randomRowKeyIndex = Math.floor(Math.random()*availableRows.length)
 		const randomRow = availableRows[randomRowKeyIndex]
-			// console.log('randomRow ',randomRow)
-			// console.log('value from RigthWallRandom -> ', [parseInt(randomRow),room.width - 1])
 		return [parseInt(randomRow),room.width - 1]
 	},
 
 	//select the index of a random column for the top row.
 	//because this will always be the first row, I look at mapAvailable[0]
 	topWallRandom(room){
-		// console.log('topWallRandom')
 		const availableRows = Object.keys(room.mapAvailable)
 		if(room.mapAvailable.hasOwnProperty(0) === false) return false
 
 		const randomIndex = Math.floor(Math.random()*(room.mapAvailable[0].length));
-		// console.log('random = ',randomIndex)
 		const randomColumnIndex = room.mapAvailable[0][randomIndex]
-		// console.log('value from RandomColumnTop ',randomColumnIndex)
-		// console.log('topWallAvailable: ',room.mapAvailable[0])
 		return [0, randomColumnIndex]
 	},
 
@@ -978,9 +971,7 @@ const mapGeneration = {
 		if(room.mapAvailable.hasOwnProperty(room.height - 1) === false) return false
 		const availableRows = Object.keys(room.mapAvailable)
 		const randomIndex = Math.floor(Math.random()*(room.mapAvailable[room.height - 1].length))
-		// console.log('random = ',randomIndex)
 		const randomColumnIndex = room.mapAvailable[room.height - 1][randomIndex]
-		// console.log('value from RandomColumnBottom ',randomColumnIndex)
 		return [room.height - 1, randomColumnIndex]
 	},
 
